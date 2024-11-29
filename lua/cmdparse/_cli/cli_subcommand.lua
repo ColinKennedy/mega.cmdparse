@@ -150,7 +150,7 @@ end
 ---@return string # The stripped remainder text. e.g. `"thing"`.
 ---
 local function _remove_first_word(text)
-    return text:gsub("^%S+%s*", "")
+    return (text:gsub("^%S+%s*", ""))
 end
 
 --- Run `parser` and pass it the user's raw input `text`.
