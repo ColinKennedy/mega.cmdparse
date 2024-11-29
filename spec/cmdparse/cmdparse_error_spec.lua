@@ -534,10 +534,14 @@ thing]],
         end)
 
         it("ignores an optional position argument", function()
-            local parser = cmdparse.ParameterParser.new({ help = "Test" })
-            parser:add_parameter({ name = "foo", required = false, help = "Test." })
+            local parser_1 = cmdparse.ParameterParser.new({ help = "Test" })
+            parser_1:add_parameter({ name = "foo", required = false, help = "Test." })
+            parser_1:parse_arguments("")
 
-            parser:parse_arguments("")
+            local parser_2 = cmdparse.ParameterParser.new({ help = "Test" })
+            parser_2:add_parameter({ name = "foo", required = true, help = "Test." })
+            local success = pcall(function() parser_2:parse_arguments("") end)
+            assert.is_false(success)
         end)
 
         it("errors if the user is #missing one of several arguments - 003 - position argument", function()
