@@ -3,6 +3,7 @@
 ---@module 'cmdparse.cmdparse_error_spec'
 ---
 
+local top_cmdparse = require("cmdparse")
 local cmdparse = require("cmdparse._cli.cmdparse")
 
 describe("bad auto-complete input", function()
@@ -72,7 +73,7 @@ describe("bad definition input", function()
             assert.equal('Parameter "--foo" cannot use action "store_true" and nargs at the same time.', result)
         end)
 
-        it("errors if you define a position parameter + action store_true #asdf", function()
+        it("errors if you define a position parameter + action store_true", function()
             local parser = cmdparse.ParameterParser.new({ help = "Test" })
 
             local success, result = pcall(function()
@@ -540,7 +541,9 @@ thing]],
 
             local parser_2 = cmdparse.ParameterParser.new({ help = "Test" })
             parser_2:add_parameter({ name = "foo", required = true, help = "Test." })
-            local success = pcall(function() parser_2:parse_arguments("") end)
+            local success = pcall(function()
+                parser_2:parse_arguments("")
+            end)
             assert.is_false(success)
         end)
 
@@ -638,6 +641,29 @@ describe("bugs", function()
             parser:add_parameter({ "--foo", action = "store_true", help = "The -foo flag." })
 
             assert.same({}, parser:get_completion("-a -b "))
+        end)
+    end)
+
+    describe("execute", function()
+        it("works with the README.md example", function()
+            local parser = top_cmdparse.ParameterParser.new({ name = "Test", help = "Nested Subparsers" })
+            local top_subparsers = parser:add_subparsers({ destination = "commands" })
+            local view = top_subparsers:add_parser({ name = "view", help = "View some data." })
+            local view_subparsers = view:add_subparsers({ destination = "view_commands" })
+
+            local log = view_subparsers:add_parser({ name = "log" })
+            log:add_parameter({ name = "path", help = "Open a log path file." })
+            log:add_parameter({ name = "--relative", action = "store_true", help = "A relative log path." })
+            log:set_execute(function(data)
+                print(string.format('Opening "%s" log path.', data.namespace.path))
+            end)
+
+            top_cmdparse.create_user_command(parser)
+            local success, message = pcall(function()
+                vim.cmd([[Test view log]])
+            end)
+            assert.is_false(success)
+            assert.equal('vim/_editor.lua:0: nvim_exec2(): Vim:Parameter "path" must be defined.', message)
         end)
     end)
 end)

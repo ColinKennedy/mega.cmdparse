@@ -1957,11 +1957,12 @@ end
 ---    All of the parsed data as one group.
 ---
 function M.ParameterParser:_parse_arguments(data, namespace)
-    local function _validate_current_parser()
+    local function _validate_parser(parser)
+        parser = parser or self
         -- NOTE: Because `_parse_arguments` is called recursively, this validation
         -- runs at every subparser level.
         --
-        local issues = self:_get_issues()
+        local issues = parser:_get_issues()
 
         if not vim.tbl_isempty(issues) then
             error(vim.fn.join(issues, "\n"), 0)
@@ -1988,7 +1989,7 @@ function M.ParameterParser:_parse_arguments(data, namespace)
     local function _handle_not_found(data_, index)
         -- NOTE: We lost our place in the parse so we can't continue.
 
-        _validate_current_parser()
+        _validate_parser()
 
         local remaining_arguments = tabler.get_slice(data_.arguments, index)
 
@@ -2029,7 +2030,13 @@ function M.ParameterParser:_parse_arguments(data, namespace)
             --- @cast argument argparse.PositionArgument
             local argument_name = text_parse.get_argument_name(argument)
 
-            found = self:_handle_subparsers(argparse_helper.lstrip_arguments(data, index + 1), argument_name, namespace)
+            local parser
+            found, parser =
+                self:_handle_subparsers(argparse_helper.lstrip_arguments(data, index + 1), argument_name, namespace)
+
+            if found and index == count then
+                _validate_parser(parser)
+            end
 
             if found then
                 -- NOTE: We can only do this because `self:_handle_subparsers`
@@ -2070,7 +2077,7 @@ function M.ParameterParser:_parse_arguments(data, namespace)
         -- us to do that and could accidentally break stuff. But If this burns
         -- us later, we can change it.
         --
-        _validate_current_parser()
+        _validate_parser()
     end
 
     return namespace

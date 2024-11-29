@@ -35,6 +35,8 @@ command mode parser for Neovim.
  - Add GIFs for each of these
 
 TODO: This is broken. Fix
+ - The command prints the help string, which is wrong. It should just run.
+
 <details>
 <summary>Hello, World! Parser</summary>
 
@@ -45,9 +47,9 @@ cmdparse.create_user_command(
     cmdparse.ParameterParser.new({ name = "Test", help = "Hello, World!"})
 )
 ```
+Run: `:Test`
 </details>
 
-TODO: This is broken somehow. It isn't erroring when `path` is missing!
 <details>
 <summary>Nested Subparsers</summary>
 
@@ -68,8 +70,10 @@ end)
 
 cmdparse.create_user_command(parser)
 ```
+Run: `:Test view log /some/path.txt`
 </details>
 
+TODO: Finish
 <details>
 <summary>Static Auto-Complete Values</summary>
 
@@ -77,6 +81,7 @@ cmdparse.create_user_command(parser)
 ```
 </details>
 
+TODO: Finish
 <details>
 <summary>Dynamic Auto-Complete Values</summary>
 
@@ -84,6 +89,7 @@ cmdparse.create_user_command(parser)
 ```
 </details>
 
+TODO: Finish
 <details>
 <summary>Dynamic Plug-ins</summary>
 
@@ -96,6 +102,7 @@ writing a plugin that supports CLI hooks, like how
 ```
 </details>
 
+TODO: Finish
 <details>
 <summary>Customizable / Automated `--help` flag</summary>
 
