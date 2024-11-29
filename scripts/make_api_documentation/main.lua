@@ -1,4 +1,4 @@
---- The file that auto-creates documentation for `plugin_template`.
+--- The file that auto-creates documentation for `cmdparse`.
 
 local success, doc = pcall(require, "mini.doc")
 
@@ -81,8 +81,8 @@ end
 
 --- Add the text that Vimdoc uses to generate doc/tags (basically surround the text with *s).
 ---
----@param text string Any text, e.g. `"plugin_template.ClassName"`.
----@return string # The wrapped text, e.g. `"*plugin_template.ClassName*"`.
+---@param text string Any text, e.g. `"cmdparse.ClassName"`.
+---@return string # The wrapped text, e.g. `"*cmdparse.ClassName*"`.
 ---
 local function _add_tag(text)
     return (text:gsub("(%S+)", "%*%1%*"))
@@ -174,7 +174,7 @@ end
 ---    Usually a function in Lua is defined with `function M.foo`. In this
 ---    example, `module_identifier` would be the `M` part.
 ---@param module_name string
----    The real name for the module. e.g. `"plugin_template"`.
+---    The real name for the module. e.g. `"cmdparse"`.
 ---
 local function _replace_function_name(section, module_identifier, module_name)
     local prefix = string.format("^%s%%.", module_identifier)
@@ -392,18 +392,18 @@ local function _get_module_identifier(path) -- luacheck: ignore 212 -- unused ar
     return "M"
 end
 
----@class plugin_template.AutoDocumentationEntry
+---@class cmdparse.AutoDocumentationEntry
 ---    The simple source/destination of "Lua file that we want to auto-create
 ---    documentation from + the .txt file that we want auto-create to".
 ---@field source string
 ---    An absolute path to a Lua file on-disk. e.g. `"/path/to/init.lua"`.
 ---@field destination string
 ---    An absolute path for the auto-created documentation.
----    e.g. `"/out/plugin_template.txt"`.
+---    e.g. `"/out/cmdparse.txt"`.
 
 --- Make sure `paths` can be processed by this script.
 ---
----@param paths plugin_template.AutoDocumentationEntry[]
+---@param paths cmdparse.AutoDocumentationEntry[]
 ---    The source/destination pairs to check.
 ---
 local function _validate_paths(paths)
@@ -420,12 +420,12 @@ local function main()
     local root = vim.fs.normalize(vim.fs.joinpath(current_directory, "..", ".."))
     local paths = {
         {
-            source = vim.fs.joinpath(root, "lua", "plugin_template", "init.lua"),
-            destination = vim.fs.joinpath(root, "doc", "plugin_template_api.txt"),
+            source = vim.fs.joinpath(root, "lua", "cmdparse", "init.lua"),
+            destination = vim.fs.joinpath(root, "doc", "cmdparse_api.txt"),
         },
         {
-            source = vim.fs.joinpath(root, "lua", "plugin_template", "types.lua"),
-            destination = vim.fs.joinpath(root, "doc", "plugin_template_types.txt"),
+            source = vim.fs.joinpath(root, "lua", "cmdparse", "types.lua"),
+            destination = vim.fs.joinpath(root, "doc", "cmdparse_types.txt"),
         },
     }
 

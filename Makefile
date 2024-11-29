@@ -7,10 +7,10 @@ llscheck:
 	VIMRUNTIME=`nvim -l scripts/print_vimruntime_environment_variable.lua` llscheck --configpath .luarc.json .
 
 luacheck:
-	luacheck lua plugin scripts spec
+	luacheck lua scripts spec
 
 stylua:
-	stylua lua plugin scripts spec
+	stylua lua scripts spec
 
 test:
 	eval $(luarocks path --lua-version 5.1 --bin)
