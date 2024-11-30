@@ -64,14 +64,51 @@ cmdparse.create_user_command(parser)
 Run: `:Test`
 </details>
 
-TODO: Finish
 <details>
 <summary>Automated value type conversions</summary>
+
+```lua
+local cmdparse = require("cmdparse")
+
+local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Hello, World!" })
+parser:add_parameter({ name = "thing", type = tonumber, help = "Test." })
+parser:add_parameter({ name = "another", type = "number", help = "Test." })
+parser:set_execute(function(data)
+    print(string.format('Thing: "%d"', data.namespace.thing + 10))
+    print(string.format('Another: "%d"', data.namespace.another + 10))
+end)
+
+cmdparse.create_user_command(parser)
+```
+Run: `:Test 10 -123`
 </details>
 
-TODO: Finish
 <details>
 <summary>Multi-argument-per-parameter</summary>
+
+In this example, the "thing" parameter takes exactly `2` arguments, indicated
+by `nargs=2`.
+
+- `nargs="*"` = 0-or-more
+- `nargs="+"` = 1-or-more
+
+```lua
+local cmdparse = require("cmdparse")
+
+local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Hello, World!" })
+parser:add_parameter({ name = "thing", nargs=2, type=tonumber, help = "Test." })
+parser:set_execute(function(data)
+    local values = data.namespace.thing
+    local first = values[1]
+    local second = values[2]
+    local total = first + second
+
+    print(string.format('Thing: "%f + %f = %f"', first, second, total))
+end)
+
+cmdparse.create_user_command(parser)
+```
+Run: `:Test 123 54545.1231`
 </details>
 
 TODO: Finish
@@ -82,6 +119,16 @@ TODO: Finish
 TODO: Finish
 <details>
 <summary>Supports required / optional arguments</summary>
+
+By default, flag / named arguments like `--foo` or `--foo=bar` are optional.
+By default, position arguments like `thing` are required.
+
+But you can explicitly make flag / named arguments required or position
+arguments optional, using `required=true` and `required=false`.
+
+TODO Finish
+```lua
+```
 </details>
 
 <details>
@@ -185,6 +232,28 @@ TODO: Add unicode characters
 ```lua
 ```
 </details>
+
+
+## API
+Most people will use `cmdparse.nvim` to create Neovim user commands but if you
+want to use the Lua API directly, here are the most common cases.
+
+
+### get_completions
+You can query the available auto-complete values whenever you want.
+
+```lua
+TODO
+```
+
+This also supports a cursor column position (starting at 1-or-more).
+
+TODO
+
+
+### parse_arguments
+TODO: Finish
+
 
 
 # Installation
