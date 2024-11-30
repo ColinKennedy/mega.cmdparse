@@ -263,6 +263,7 @@ end
 ---
 local function _get_all_parsers(parser)
     local stack = { parser }
+    ---@type string[]
     local output = {}
 
     while #stack > 0 do
@@ -352,6 +353,7 @@ local function _get_named_argument_completion_choices(parameter, argument, conte
     local prefix = argument.name
     local current_value = argument.value
     ---@cast current_value string
+    ---@type string[]
     local output = {}
 
     for _, choice in
@@ -520,6 +522,7 @@ local function _resolve_value(type_converter, values)
         return type_converter(values)
     end
 
+    ---@type any
     local output = {}
 
     for _, value in ipairs(values) do
@@ -639,6 +642,7 @@ end
 ---@return string # A one/two liner explanation of this instance's expected parameters.
 ---
 function _P.get_usage_summary(parser)
+    ---@type string[]
     local output = {}
 
     local names = parser:get_names()
@@ -1029,6 +1033,7 @@ end
 
 ---@return string[] # Find all unfinished parameters in this instance.
 function M.ParameterParser:_get_issues()
+    ---@type string[]
     local output = {}
 
     for parameter in tabler.chain(self:get_flag_parameters(), self:get_position_parameters()) do
@@ -1089,6 +1094,7 @@ function M.ParameterParser:_get_completion(data, column, options)
     column = column or count
     local stripped = _rstrip_input(data, column)
     local remainder = stripped.remainder.value
+    ---@type string[]
     local output = {}
 
     if vim.tbl_isempty(stripped.arguments) then
@@ -1244,6 +1250,7 @@ end
 
 ---@return cmdparse.Namespace # All default values from all (direct) child parameters.
 function M.ParameterParser:_get_default_namespace()
+    ---@type cmdparse.Namespace
     local output = {}
 
     for parameter in tabler.chain(self:get_position_parameters(), self:get_flag_parameters()) do
@@ -2124,6 +2131,7 @@ end
 ---    Some position / flag that we don't know what to do with.
 ---
 function M.ParameterParser:_raise_suggested_positional_argument_fix(argument)
+    ---@type string[]
     local names = {}
 
     for _, parameter in ipairs(self:get_all_parameters()) do
@@ -2193,9 +2201,10 @@ end
 
 --- Get all registered or implicit child parameters of this instance.
 ---
----@return cmdparse.Parameter # All found parameters, if any.
+---@return cmdparse.Parameter[] # All found parameters, if any.
 ---
 function M.ParameterParser:get_all_parameters()
+    ---@type cmdparse.Parameter[]
     local output = {}
 
     for _, parameter in tabler.chain(self:get_position_parameters(), self:get_flag_parameters()) do
@@ -2222,6 +2231,7 @@ function M.ParameterParser:get_completion(data, column, options)
         local unsorted_output = self:_get_completion(data, column, options)
         local categories = sorter.categorize_arguments(unsorted_output)
 
+        ---@type string[]
         local output = {}
 
         vim.list_extend(output, vim.fn.sort(categories.positions))
@@ -2304,6 +2314,7 @@ function M.ParameterParser:get_flag_parameters(options)
         return self._flag_parameters
     end
 
+    ---@type cmdparse.Parameter[]
     local output = {}
 
     vim.list_extend(output, self._flag_parameters)

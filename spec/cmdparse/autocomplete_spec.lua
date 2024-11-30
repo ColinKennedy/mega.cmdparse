@@ -382,6 +382,73 @@ describe("simple", function()
     end)
 end)
 
+describe("escaping", function()
+    describe("flag argument", function()
+        it("escapes spaces and adds quotes as needed", function()
+            local parser = cmdparse.ParameterParser.new({ name = "top", help = "Test." })
+
+            parser:add_parameter({
+                name = "--thing",
+                choices = { "a choice with spaces", 'a choice that "has quotes"' },
+                help = "Test.",
+            })
+
+            assert.same(
+                { '"a choice that \\"has quotes\\""', '"a choice with spaces"' },
+                parser:get_completion("--thing a")
+            )
+        end)
+    end)
+
+    describe("position argument", function()
+        it("escapes spaces and adds quotes as needed", function()
+            local parser = cmdparse.ParameterParser.new({ name = "top", help = "Test." })
+
+            parser:add_parameter({
+                name = "thing",
+                choices = { "a choice with spaces", 'a choice that "has quotes"' },
+                help = "Test.",
+            })
+
+            assert.same({ '"a choice that \\"has quotes\\""', '"a choice with spaces"' }, parser:get_completion("a"))
+        end)
+    end)
+
+    describe("named argument", function()
+        it("escapes spaces and adds quotes as needed - 001", function()
+            local parser = cmdparse.ParameterParser.new({ name = "top", help = "Test." })
+
+            parser:add_parameter({
+                name = "--thing",
+                choices = { "a choice with spaces", 'a choice that "has quotes"' },
+                help = "Test.",
+            })
+
+            assert.same(
+                { '--thing="a choice with spaces"', '--thing="a choice that \\"has quotes\\""' },
+                parser:get_completion("--thing=a")
+            )
+        end)
+
+        -- -- TODO: This case is still broken and needs fixing
+        -- it("escapes spaces and adds quotes as needed - 002", function()
+        --     -- TODO: Finish
+        --     local parser = cmdparse.ParameterParser.new({ name = "top", help = "Test." })
+        --
+        --     parser:add_parameter({
+        --         name = "--thing",
+        --         choices = { '"a choice" with "spaces"' },
+        --         help = "Test.",
+        --     })
+        --
+        --     assert.same(
+        --         {'--thing="\\"a choice with "spaces\\""'},
+        --         parser:get_completion("--thing=a")
+        --     )
+        -- end)
+    end)
+end)
+
 describe("named argument", function()
     describe("++foo=bar", function()
         it("allow named argument as key", function()

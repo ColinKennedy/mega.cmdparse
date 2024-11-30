@@ -4,6 +4,7 @@
 ---
 
 local argparse = require("cmdparse._cli.argparse")
+local texter = require("cmdparse._core.texter")
 
 local M = {}
 
@@ -60,6 +61,7 @@ end
 ---@return string[] # All raw user input text.
 ---
 function M.get_arguments_raw_text(arguments)
+    ---@type string[]
     local output = {}
 
     for _, argument in ipairs(arguments) do
@@ -86,6 +88,22 @@ function M.get_nice_name(text)
     end
 
     return (text:gsub(string.format("^[%s]+", bad_characters), ""))
+end
+
+--- Add and escape quotes from `text`.
+---
+---@param text string Some text that might contains spaces or "s. e.g. `'something "text""`.
+---@return string # The escaped text. e.g. `'"something \"text\""'`.
+---
+function M.escape_argument(text)
+    local needs_wrap = texter.has_space(text) and (not text:match('^"') or not text:match('"$'))
+    local escaped_text = text:gsub('"', '\\"')
+
+    if needs_wrap then
+        escaped_text = '"' .. escaped_text .. '"'
+    end
+
+    return escaped_text
 end
 
 return M

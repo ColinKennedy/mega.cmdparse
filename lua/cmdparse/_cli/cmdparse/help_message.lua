@@ -81,6 +81,7 @@ function _Private.get_parameter_usage_help_text(parameter)
     local nargs = parameter:get_nargs()
 
     if type(nargs) == "number" then
+        ---@type string[]
         local output = {}
 
         for _ = 1, nargs do
@@ -107,6 +108,7 @@ end
 ---@return string[] # The labels of all of the flags.
 ---
 function _Private.get_parser_child_parser_help_text(parser)
+    ---@type string[]
     local output = {}
 
     for parser_ in iterator_helper.iter_parsers(parser) do
@@ -139,6 +141,7 @@ end
 ---@return string[] # The labels of all of the flags.
 ---
 function _Private.get_parser_flag_help_text(parser)
+    ---@type string[]
     local output = {}
 
     for _, flag in ipairs(iterator_helper.sort_parameters(parser:get_flag_parameters())) do
@@ -189,6 +192,7 @@ end
 ---@return string[] # The labels of all of the flags.
 ---
 function _Private.get_parser_position_help_text(parser)
+    ---@type string[]
     local output = {}
 
     for _, position in ipairs(parser:get_position_parameters()) do
@@ -262,6 +266,7 @@ end
 ---    The generated help message lines.
 ---
 function M.get_parser_help_text_body(parser)
+    ---@type string[]
     local output = {}
 
     local position_text = _Private.get_parser_position_help_text(parser)

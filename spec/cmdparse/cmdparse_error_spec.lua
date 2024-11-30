@@ -6,7 +6,6 @@
 local top_cmdparse = require("cmdparse")
 local cmdparse = require("cmdparse._cli.cmdparse")
 
-
 local _COMMAND_NAME = "Test"
 
 describe("bad auto-complete input", function()
@@ -648,16 +647,26 @@ describe("bugs", function()
     end)
 end)
 
-
 describe("README.md examples", function()
-    before_each(function() pcall(function() vim.cmd.delcommand(_COMMAND_NAME) end) end)
+    before_each(function()
+        pcall(function()
+            vim.cmd.delcommand(_COMMAND_NAME)
+        end)
+    end)
+
+    it('works with the "Automated value type conversions" example', function() local parser = cmdparse.ParameterParser.new({ name = _COMMAND_NAME, help = "Hello, World!" })
+        parser:add_parameter({ name = "thing", type = tonumber, help = "Test." })
+        parser:add_parameter({ name = "another", type = "number", help = "Test." })
+        top_cmdparse.create_user_command(parser)
+
+        local namespace = parser:parse_arguments('10 "-123"')
+        assert.same({ another = -123, thing = 10 }, namespace)
+    end)
 
     it('works with the "Static Auto-Complete Values" example', function()
-        local cmdparse = require("cmdparse")
-
-        local parser = cmdparse.ParameterParser.new({ name = _COMMAND_NAME, help = "Hello, World!"})
-        parser:add_parameter({ name = "thing", choices={ "aaa", "apple", "apply" } , help="Test."})
-        cmdparse.create_user_command(parser)
+        local parser = cmdparse.ParameterParser.new({ name = _COMMAND_NAME, help = "Hello, World!" })
+        parser:add_parameter({ name = "thing", choices = { "aaa", "apple", "apply" }, help = "Test." })
+        top_cmdparse.create_user_command(parser)
 
         vim.cmd(string.format("%s apple", _COMMAND_NAME))
     end)

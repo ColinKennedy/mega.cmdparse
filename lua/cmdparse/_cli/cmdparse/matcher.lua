@@ -33,6 +33,7 @@ end
 ---    The found auto-completion results, if any.
 ---
 function M.get_current_parser_completions(parser, options)
+    ---@type string[]
     local output = {}
 
     -- NOTE: Get all possible initial arguments (check all parameters / subparsers)
@@ -74,24 +75,7 @@ end
 ---@return string[] # The matching names, if any.
 ---
 function M.get_exact_or_partial_matches(parameter, argument, parser, contexts, options)
-    -- local function _get_longest_match(prefix, options)
-    --     local longest_match_count = 0
-    --     local longest_match
-    --
-    --     for _, name in ipairs(options) do
-    --         if vim.startswith(name, prefix) then
-    --             local count = #prefix
-    --
-    --             if count > longest_match_count then
-    --                 longest_match = name
-    --                 longest_match_count = count
-    --             end
-    --         end
-    --     end
-    --
-    --     return longest_match
-    -- end
-
+    ---@type string[]
     local output = {}
 
     local prefix = text_parse.get_argument_name(argument)
@@ -113,7 +97,14 @@ function M.get_exact_or_partial_matches(parameter, argument, parser, contexts, o
     prefix = text_parse.get_argument_value_text(argument)
 
     if argument.argument_type == argparse.ArgumentType.position and parameter.choices then
-        return parameter.choices({ current_value = prefix, contexts = contexts })
+        ---@type string[]
+        local choices = {}
+
+        for _, text in ipairs(parameter.choices({ current_value = prefix, contexts = contexts })) do
+            table.insert(choices, text_parse.escape_argument(text))
+        end
+
+        return choices
     end
 
     local value = argument.value or nil
@@ -150,6 +141,7 @@ local function _get_single_choices_text(parameter, value, contexts)
 
     contexts = contexts or {}
 
+    ---@type string[]
     local output = {}
 
     for _, choice in
@@ -158,7 +150,7 @@ local function _get_single_choices_text(parameter, value, contexts)
             current_value = value,
         }))
     do
-        table.insert(output, parameter.names[1] .. "=" .. choice)
+        table.insert(output, parameter.names[1] .. "=" .. text_parse.escape_argument(choice))
     end
 
     return output
@@ -194,12 +186,14 @@ end
 ---    `cmdparse.Parameter.choices()`.
 ---@param options cmdparse._core.DisplayOptions?
 ---    Control minor behaviors of this function. e.g. What data to show.
----@return cmdparse.Parameter[]
+---@return string[]
 ---    The matched parameters, if any.
 ---
 function M.get_matching_partial_flag_text(prefix, flags, value, contexts, options)
+    ---@type string[]
     local output = {}
 
+    ---@type string[]
     local excluded_names = {}
 
     if options then
@@ -257,12 +251,13 @@ end
 ---
 function M.get_matching_position_parameters(name, parameters, contexts)
     contexts = contexts or {}
-    local output = {}
+    ---@type string[]
+    local choices = {}
 
     for _, parameter in ipairs(iterator_helper.sort_parameters(parameters)) do
         if not parameter:is_exhausted() and parameter.choices then
             vim.list_extend(
-                output,
+                choices,
                 texter.get_array_startswith(
                     parameter.choices({
                         contexts = vim.list_extend({ constant.ChoiceContext.position_matching }, contexts),
@@ -272,6 +267,13 @@ function M.get_matching_position_parameters(name, parameters, contexts)
                 )
             )
         end
+    end
+
+    ---@type string[]
+    local output = {}
+
+    for _, text in ipairs(choices) do
+        table.insert(output, text_parse.escape_argument(text))
     end
 
     return output
@@ -286,6 +288,7 @@ end
 ---@return string[] # The names of all matching child parsers.
 ---
 function M.get_matching_subparser_names(prefix, parser)
+    ---@type string[]
     local output = {}
 
     for parser_ in iterator_helper.iter_parsers(parser) do
@@ -316,6 +319,7 @@ end
 ---
 function M.get_parser_exact_or_partial_matches(parser, prefix, value, contexts, options)
     prefix = _remove_contiguous_whitespace(prefix)
+    ---@type string[]
     local output = {}
 
     vim.list_extend(output, M.get_matching_position_parameters(prefix, parser:get_position_parameters(), contexts))

@@ -24,6 +24,7 @@ function M.iter_parsers(parser)
     local current_subparsers = all_subparsers[subparsers_index]
 
     local parser_index = 1
+    ---@type cmdparse.ParameterParser[]
     local parsers = {}
 
     if current_subparsers then

@@ -5,6 +5,15 @@
 
 local M = {}
 
+--- Check if `text` has a raw space. Escaped spaces such as `"foo\ bar"` do not count.
+---
+---@param text string Some word / phrase to check.
+---@return boolean # If `text` has a space, return `true`.
+---
+function M.has_space(text)
+    return text:match("[^\\] ? ") ~= nil
+end
+
 --- Check if `character` is a standard A-Z 0-9ish character.
 ---
 ---@param character string Some single-value to check.

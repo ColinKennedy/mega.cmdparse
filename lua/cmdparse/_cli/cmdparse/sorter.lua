@@ -95,8 +95,10 @@ end
 ---    "--named=b", "--zoo", "-a", "--help"}`.
 ---
 function M.sort_and_flatten_flags(arguments)
+    ---@type string[]
     local output = {}
 
+    ---@type string[]
     local found_help_names = {}
 
     for _, key in ipairs(vim.fn.sort(vim.tbl_keys(arguments))) do
