@@ -6,86 +6,64 @@ If a function's signature here changes in some incompatible way, this
 package must get a new **major** version.
 
 ------------------------------------------------------------------------------
-                                                *cmdparse.run_arbitrary_thing()*
+                                                *cmdparse.create_user_command()*
 
-`run_arbitrary_thing`({names})
+`create_user_command`({parser})
 
-Print the `names`.
+Create a Neovim command according to `parser`.
+
+Raises:
+    If `parser` does not have a name defined. It's normally optional for
+    a parser to have a name but here, specifically, it must have a name.
 
 Parameters ~
-    {names} `(string[]?)` Some text to print out. e.g. `{"a", "b", "c"}`.
+    {parser} cmdparse.ParameterParser The top-level command to define.
 
 ------------------------------------------------------------------------------
-                                                      *cmdparse.run_copy_logs()*
+                                              *cmdparse.make_parser_completer()*
 
-`run_copy_logs`({path})
+`make_parser_completer`({parser_creator})
 
-Copy the log data from the given `path` to the user's clipboard.
+Make a function that can auto-complete based on the parser of `parser_creator`.
 
 Parameters ~
-    {path} `(string?)`
-       A path on-disk to look for logs. If none is given, the default fallback
-       location is used instead.
+    {parser_creator} cmdparse.ParserCreator
+       A function that creates the decision tree that parses text.
+Return ~
+`(fun(_: any, all_text: string, _: any): string[]?)`
+   A deferred function that creates the COMMAND mode parser, runs it, and
+   gets all auto-complete values back if any were found.
 
 ------------------------------------------------------------------------------
-                                         *cmdparse.run_hello_world_say_phrase()*
+                                                *cmdparse.make_parser_triager()*
 
-`run_hello_world_say_phrase`({phrase}, {repeat_}, {style})
+`make_parser_triager`({parser_creator})
 
-Print `phrase` according to the other options.
+Create a deferred function that can parse and execute a user's arguments.
 
 Parameters ~
-    {phrase} `(string[])`
-       The text to say.
-    {repeat_} `(number?)`
-       A 1-or-more value. The number of times to print `word`.
-    {style} `(string?)`
-       Control how the text should be shown.
+    {parser_creator} cmdparse.ParserCreator
+       A function that creates the decision tree that parses text.
+Return ~
+`(fun(opts: table): nil)`
+   A function that will parse the user's arguments.
 
 ------------------------------------------------------------------------------
-                                           *cmdparse.run_hello_world_say_word()*
+                                                *cmdparse.ParameterParser.new()*
 
-`run_hello_world_say_word`({word}, {repeat_}, {style})
+`ParameterParser.new`({options})
 
-Print `phrase` according to the other options.
+Create a new `cmdparse.ParameterParser`.
 
-Parameters ~
-    {word} `(string)`
-       The text to say.
-    {repeat_} `(number?)`
-       A 1-or-more value. The number of times to print `word`.
-    {style} `(string?)`
-       Control how the text should be shown.
-
-------------------------------------------------------------------------------
-                                     *cmdparse.run_goodnight_moon_count_sheep()*
-
-`run_goodnight_moon_count_sheep`({count})
-
-Count a sheep for each `count`.
+If the parser is a child of a subparser then this instance must be given
+a name via `{name="foo"}` or this function will error.
 
 Parameters ~
-    {count} `(number)` Prints 1 sheep per `count`. A value that is 1-or-greater.
-
-------------------------------------------------------------------------------
-                                            *cmdparse.run_goodnight_moon_read()*
-
-`run_goodnight_moon_read`({book})
-
-Print the name of the book.
-
-Parameters ~
-    {book} `(string)` The name of the book.
-
-------------------------------------------------------------------------------
-                                           *cmdparse.run_goodnight_moon_sleep()*
-
-`run_goodnight_moon_sleep`({count})
-
-Print Zzz each `count`.
-
-Parameters ~
-    {count} `(number?)` Prints 1 Zzz per `count`. A value that is 1-or-greater.
+    {options} cmdparse.ParameterParserInputOptions | cmdparse.ParameterParserOptions
+       The options that we might pass to `cmdparse.ParameterParser.new`.
+Return ~
+cmdparse.ParameterParser
+   The created instance.
 
 WARNING: This file is auto-generated. Do not edit it!
 

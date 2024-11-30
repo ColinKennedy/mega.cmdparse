@@ -19,11 +19,8 @@ cmdparse.Configuration	cmdparse_types.txt	/*cmdparse.Configuration*
 cmdparse.ConfigurationCmdparse	cmdparse_types.txt	/*cmdparse.ConfigurationCmdparse*
 cmdparse.ConfigurationCmdparseAutoComplete	cmdparse_types.txt	/*cmdparse.ConfigurationCmdparseAutoComplete*
 cmdparse.LoggingConfiguration	cmdparse_types.txt	/*cmdparse.LoggingConfiguration*
-cmdparse.run_arbitrary_thing()	cmdparse_api.txt	/*cmdparse.run_arbitrary_thing()*
-cmdparse.run_copy_logs()	cmdparse_api.txt	/*cmdparse.run_copy_logs()*
-cmdparse.run_goodnight_moon_count_sheep()	cmdparse_api.txt	/*cmdparse.run_goodnight_moon_count_sheep()*
-cmdparse.run_goodnight_moon_read()	cmdparse_api.txt	/*cmdparse.run_goodnight_moon_read()*
-cmdparse.run_goodnight_moon_sleep()	cmdparse_api.txt	/*cmdparse.run_goodnight_moon_sleep()*
-cmdparse.run_hello_world_say_phrase()	cmdparse_api.txt	/*cmdparse.run_hello_world_say_phrase()*
-cmdparse.run_hello_world_say_word()	cmdparse_api.txt	/*cmdparse.run_hello_world_say_word()*
+cmdparse.ParameterParser.new()	cmdparse_api.txt	/*cmdparse.ParameterParser.new()*
+cmdparse.create_user_command()	cmdparse_api.txt	/*cmdparse.create_user_command()*
+cmdparse.make_parser_completer()	cmdparse_api.txt	/*cmdparse.make_parser_completer()*
+cmdparse.make_parser_triager()	cmdparse_api.txt	/*cmdparse.make_parser_triager()*
 cmdparse.txt	cmdparse.txt	/*cmdparse.txt*
