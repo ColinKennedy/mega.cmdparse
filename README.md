@@ -14,7 +14,7 @@ command mode parser for Neovim.
 - Position, flag, and named arguments support. e.g. `foo bar --fizz=buzz -z`
 - Parser / Parameter paradigm
 - Builtin auto-complete
-- Auto-generated `--help` parameter support
+- Auto-generated `--help` parameter support.
 - Auto-complete any argument in any cursor position
 - Auto-complete a flag argument's values
 - Non-standard arguments support. e.g. `--foo`, `++bar`, `-f`, etc
@@ -27,15 +27,29 @@ command mode parser for Neovim.
 - Supports required / optional arguments
 - 2 flag formats support. `--foo bar` and `--foo=bar`
 - Dynamic parsers (supports plugin-like interfaces like Telescope and more)
-- This plugin is defer-evaluated (~1 ms plugin start-up time)
+- This plugin is defer-evaluated (<1 ms plugin start-up time)
+
+
+## Demos
+### Builtin auto-complete
+- TODO: Make a GIF
+
+
+### Auto-generated `--help` parameter support
+- TODO: Make a GIF
+
+
+### Automated parameter validation
+- TODO: Make a GIF
+
+
+### 2 flag formats support
+- TODO: Make a GIF
 
 
 ## Examples
 - TODO: Finish this later
  - Add GIFs for each of these
-
-TODO: This is broken. Fix
- - The command prints the help string, which is wrong. It should just run.
 
 <details>
 <summary>Hello, World! Parser</summary>
@@ -43,11 +57,31 @@ TODO: This is broken. Fix
 ```lua
 local cmdparse = require("cmdparse")
 
-cmdparse.create_user_command(
-    cmdparse.ParameterParser.new({ name = "Test", help = "Hello, World!"})
-)
+local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Hello, World!"})
+parser:set_execute(function(data) print("Hello, World!") end)
+cmdparse.create_user_command(parser)
 ```
 Run: `:Test`
+</details>
+
+TODO: Finish
+<details>
+<summary>Automated value type conversions</summary>
+</details>
+
+TODO: Finish
+<details>
+<summary>Multi-argument-per-parameter</summary>
+</details>
+
+TODO: Finish
+<details>
+<summary>Position, flag, and named arguments support. e.g. `foo bar --fizz=buzz -z`</summary>
+</details>
+
+TODO: Finish
+<details>
+<summary>Supports required / optional arguments</summary>
 </details>
 
 <details>
@@ -73,20 +107,45 @@ cmdparse.create_user_command(parser)
 Run: `:Test view log /some/path.txt`
 </details>
 
-TODO: Finish
+TODO: Why does this not error if a choice is not selected? FIX
 <details>
 <summary>Static Auto-Complete Values</summary>
 
 ```lua
+local cmdparse = require("cmdparse")
+
+local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Static Auto-Complete Values."})
+parser:add_parameter({ name = "thing", choices={ "aaa", "apple", "apply" }, help="Test word."})
+parser:set_execute(function(data) print(data.namespace.thing) end)
+cmdparse.create_user_command(parser)
 ```
+Run: `:Test apply`
 </details>
 
-TODO: Finish
 <details>
 <summary>Dynamic Auto-Complete Values</summary>
 
 ```lua
+local cmdparse = require("cmdparse")
+
+local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Dynamic Auto-Complete Values."})
+local choices = function(data)
+    local output = {}
+    local value = data.value or 0
+
+    for index = 1, 5 do
+        table.insert(output, "text " .. tostring(value + index))
+    end
+
+    return output
+end
+parser:add_parameter({ name = "--thing", choices=choices, help="Test word."})
+parser:set_execute(
+    function(data) print(data.namespace.thing) end,
+)
+cmdparse.create_user_command(parser)
 ```
+Run: `:Test --thing=4`
 </details>
 
 TODO: Finish
@@ -105,6 +164,15 @@ writing a plugin that supports CLI hooks, like how
 TODO: Finish
 <details>
 <summary>Customizable / Automated `--help` flag</summary>
+
+```lua
+```
+</details>
+
+
+TODO: Make sur to explain that ++ / etc flags are just considered a regular flag
+<details>
+<summary>Non-standard arguments support. e.g. `--foo`, `++bar`, `-f`, etc</summary>
 
 ```lua
 ```

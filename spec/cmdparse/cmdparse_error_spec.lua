@@ -650,13 +650,13 @@ end)
 
 
 describe("README.md examples", function()
-    before_each(function() vim.cmd.delcommand("Test") end)
+    before_each(function() pcall(function() vim.cmd.delcommand(_COMMAND_NAME) end) end)
 
     it('works with the "Static Auto-Complete Values" example', function()
         local cmdparse = require("cmdparse")
 
         local parser = cmdparse.ParameterParser.new({ name = _COMMAND_NAME, help = "Hello, World!"})
-        parser:add_parameter({ name = "thing", choices={ "aaa", "apple", "apply" } })
+        parser:add_parameter({ name = "thing", choices={ "aaa", "apple", "apply" } , help="Test."})
         cmdparse.create_user_command(parser)
 
         vim.cmd(string.format("%s apple", _COMMAND_NAME))

@@ -1335,6 +1335,11 @@ end
 function M.ParameterParser:_handle_exact_flag_parameters(flags, arguments, namespace, contexts)
     contexts = contexts or {}
 
+    --- Check if `parameter` is the type that requires a value (or, if not, it is a flag).
+    ---
+    ---@param parameter cmdparse.Parameter The option to check.
+    ---@return boolean # If `parameter` requires 1-or-more value, return `true`.
+    ---
     local function _needs_a_value(parameter)
         local nargs = parameter._nargs
 
@@ -1345,6 +1350,16 @@ function M.ParameterParser:_handle_exact_flag_parameters(flags, arguments, names
         return nargs == constant.Counter.one_or_more
     end
 
+    --- Get all of the next arguments that could be values of some position parameter.
+    ---
+    --- If a flag or named argument is found, we've reached the end of the
+    --- position parameter's possible arguments.
+    ---
+    ---@param value_arguments argparse.Argument[]
+    ---    All of the values to consider as possible arguments.
+    ---@return argparse.Argument[]
+    ---    The found arguments for a single position parameter, if any.
+    ---
     local function _get_next_position_arguments(value_arguments)
         for index = 1, #value_arguments do
             local argument = value_arguments[index]
@@ -1465,6 +1480,23 @@ function M.ParameterParser:_handle_exact_flag_parameters(flags, arguments, names
         end
     end
 
+    --- Check if `flag` allows for `choices`, starting from `values`.
+    ---
+    --- Raises:
+    ---     If `values` doesn't match the expected choices.
+    ---
+    ---@param flag cmdparse.Parameter
+    ---    A flag to check. e.g. `--foo`.
+    ---@param values any
+    ---    The starting value(s) to check from. For example a flag might have
+    ---    choices `{"a", "aaa", "b", "c"}` but if `values` is `"a"`. then only
+    ---    `{"a", "aa"}` might return.
+    ---@param choices string[]?
+    ---    The precomputed choices for `flag`.
+    ---@param argument_name string
+    ---    The user-provided name that matches `flag`. Since `flag` can go by
+    ---    multiple names, we keep track of "the name that they user actually used".
+    ---
     local function _validate_value_choices(flag, values, choices, argument_name)
         if choices == nil then
             local expected = flag.choices({
