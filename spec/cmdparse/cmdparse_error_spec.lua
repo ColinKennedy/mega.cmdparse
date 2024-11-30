@@ -6,6 +6,9 @@
 local top_cmdparse = require("cmdparse")
 local cmdparse = require("cmdparse._cli.cmdparse")
 
+
+local _COMMAND_NAME = "Test"
+
 describe("bad auto-complete input", function()
     it("errors if an incorrect flag is given", function()
         local parser = cmdparse.ParameterParser.new({ "arbitrary-thing", help = "Prepare to sleep or sleep." })
@@ -643,27 +646,40 @@ describe("bugs", function()
             assert.same({}, parser:get_completion("-a -b "))
         end)
     end)
+end)
 
-    describe("execute", function()
-        it("works with the README.md example", function()
-            local parser = top_cmdparse.ParameterParser.new({ name = "Test", help = "Nested Subparsers" })
-            local top_subparsers = parser:add_subparsers({ destination = "commands" })
-            local view = top_subparsers:add_parser({ name = "view", help = "View some data." })
-            local view_subparsers = view:add_subparsers({ destination = "view_commands" })
 
-            local log = view_subparsers:add_parser({ name = "log" })
-            log:add_parameter({ name = "path", help = "Open a log path file." })
-            log:add_parameter({ name = "--relative", action = "store_true", help = "A relative log path." })
-            log:set_execute(function(data)
-                print(string.format('Opening "%s" log path.', data.namespace.path))
-            end)
+describe("README.md examples", function()
+    before_each(function() vim.cmd.delcommand("Test") end)
 
-            top_cmdparse.create_user_command(parser)
-            local success, message = pcall(function()
-                vim.cmd([[Test view log]])
-            end)
-            assert.is_false(success)
-            assert.equal('vim/_editor.lua:0: nvim_exec2(): Vim:Parameter "path" must be defined.', message)
+    it('works with the "Static Auto-Complete Values" example', function()
+        local cmdparse = require("cmdparse")
+
+        local parser = cmdparse.ParameterParser.new({ name = _COMMAND_NAME, help = "Hello, World!"})
+        parser:add_parameter({ name = "thing", choices={ "aaa", "apple", "apply" } })
+        cmdparse.create_user_command(parser)
+
+        vim.cmd(string.format("%s apple", _COMMAND_NAME))
+    end)
+
+    it('works with the "Nested Subparsers" example', function()
+        local parser = top_cmdparse.ParameterParser.new({ name = _COMMAND_NAME, help = "Nested Subparsers" })
+        local top_subparsers = parser:add_subparsers({ destination = "commands" })
+        local view = top_subparsers:add_parser({ name = "view", help = "View some data." })
+        local view_subparsers = view:add_subparsers({ destination = "view_commands" })
+
+        local log = view_subparsers:add_parser({ name = "log" })
+        log:add_parameter({ name = "path", help = "Open a log path file." })
+        log:add_parameter({ name = "--relative", action = "store_true", help = "A relative log path." })
+        log:set_execute(function(data)
+            print(string.format('Opening "%s" log path.', data.namespace.path))
         end)
+
+        top_cmdparse.create_user_command(parser)
+        local success, message = pcall(function()
+            vim.cmd(string.format("%s view log", _COMMAND_NAME))
+        end)
+        assert.is_false(success)
+        assert.equal('vim/_editor.lua:0: nvim_exec2(): Vim:Parameter "path" must be defined.', message)
     end)
 end)
