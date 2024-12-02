@@ -70,7 +70,7 @@ Run: `:Test`
 ```lua
 local cmdparse = require("cmdparse")
 
-local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Hello, World!" })
+local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Automated value type conversions" })
 parser:add_parameter({ name = "thing", type = tonumber, help = "Test." })
 parser:add_parameter({ name = "another", type = "number", help = "Test." })
 parser:set_execute(function(data)
@@ -95,7 +95,7 @@ by `nargs=2`.
 ```lua
 local cmdparse = require("cmdparse")
 
-local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Hello, World!" })
+local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Multi-argument-per-parameter" })
 parser:add_parameter({ name = "thing", nargs=2, type=tonumber, help = "Test." })
 parser:set_execute(function(data)
     local values = data.namespace.thing
@@ -111,14 +111,34 @@ cmdparse.create_user_command(parser)
 Run: `:Test 123 54545.1231`
 </details>
 
-TODO: Finish
 <details>
-<summary>Position, flag, and named arguments support. e.g. `foo bar --fizz=buzz -z`</summary>
+<summary>Position, flag, and named arguments support. e.g. `foo bar --fizz=buzz -dbz`</summary>
+
+```lua
+local cmdparse = require("cmdparse")
+
+local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Position, flag, and named arguments support." })
+parser:add_parameter({ name = "items", nargs="*", help="non-flag arguments." })
+parser:add_parameter({ name = "--fizz", help="A word." })
+parser:add_parameter({ name = "-d", action="store_true", help="Delta single-word." })
+parser:add_parameter({ names = {"--beta", "-b"}, action="store_true", help="Beta single-word." })
+parser:add_parameter({ name = "-z", action="store_true", help="Zulu single-word." })
+
+parser:set_execute(function(data)
+    local namespace = data.namespace
+    local items = namespace.items
+    print(vim.fn.join(vim.fn.sort(items), ", "))
+
+    print(string.format('-d: %s, -b: %s, -z: %s', namespace.d, namespace.beta, namespace.z))
+end)
+
+cmdparse.create_user_command(parser)
+```
+Run: `:Test foo bar --fizz=buzz -dbz`
 </details>
 
-TODO: Finish
 <details>
-<summary>Supports required / optional arguments</summary>
+<summary>Supports Required / Optional Arguments</summary>
 
 By default, flag / named arguments like `--foo` or `--foo=bar` are optional.
 By default, position arguments like `thing` are required.
@@ -126,9 +146,22 @@ By default, position arguments like `thing` are required.
 But you can explicitly make flag / named arguments required or position
 arguments optional, using `required=true` and `required=false`.
 
-TODO Finish
 ```lua
+local cmdparse = require("cmdparse")
+
+local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Unicode Parameters." })
+parser:add_parameter({ name = "required_thing", help = "Test." })
+parser:add_parameter({ name = "optional_thing", required=false, help = "Test." })
+parser:add_parameter({ name = "--optional-flag", help = "Test." })
+parser:add_parameter({ name = "--required-flag", required=true, help = "Test." })
+
+parser:set_execute(function(data)
+    print(vim.inspect(data.namespace))
+end)
+
+cmdparse.create_user_command(parser)
 ```
+Run: `:Test foo bar --required-flag=aaa`
 </details>
 
 <details>
@@ -155,6 +188,7 @@ Run: `:Test view log /some/path.txt`
 </details>
 
 TODO: Why does this not error if a choice is not selected? FIX
+TODO: This example is completely broken. FIX
 <details>
 <summary>Static Auto-Complete Values</summary>
 
@@ -195,7 +229,6 @@ cmdparse.create_user_command(parser)
 Run: `:Test --thing=4`
 </details>
 
-TODO: Finish
 <details>
 <summary>Dynamic Plug-ins</summary>
 
@@ -205,32 +238,144 @@ writing a plugin that supports CLI hooks, like how
 [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) behaves.
 
 ```lua
+---@return cmdparse.ParameterParser # Some example parser.
+local function make_example_plugin_a()
+    local parser = cmdparse.ParameterParser.new({ name = "plugin-a", help = "Test plugin-a." })
+    parser:add_parameter({ name = "--foo", action="store_true", help="A required value for plugin-a." })
+
+    parser:set_execute(function(data)
+        print("Running plugin-a")
+    end)
+
+    return parser
+end
+
+---@return cmdparse.ParameterParser # Another example parser.
+local function make_example_plugin_b()
+    local parser = cmdparse.ParameterParser.new({ name = "plugin-b", help = "Test plugin-b." })
+    parser:add_parameter({ name = "foo", help="A required value for plugin-b." })
+
+    parser:set_execute(function(data)
+        print("Running plugin-b")
+    end)
+
+    return parser
+end
+
+---@return cmdparse.ParameterParser # A parser whose auto-complete and executer uses auto-found plugins.
+local function create_parser()
+    local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Test." })
+    local subparsers = parser:add_subparsers({ destination = "commands", help = "All main commands." })
+
+    -- NOTE: These functions would normally be "automatically discovered"
+    -- somehow, not hard-coded. But the purpose is the same, it's to add some
+    -- name and callable function so we can refer to it later in the parser.
+    --
+    subparsers:add_parser(make_example_plugin_a())
+    subparsers:add_parser(make_example_plugin_b())
+
+    return parser
+end
+
+local parser = create_parser()
+cmdparse.create_user_command(parser)
 ```
+Run: `Test plugin-a --foo`
+Run: `Test plugin-b 12345`
 </details>
 
-TODO: Finish
 <details>
 <summary>Customizable / Automated `--help` flag</summary>
 
+The help message is automatically generated but you can influence the output
+a bit, using `value_hint`.
+
+For example this code below:
 ```lua
+local cmdparse = require("cmdparse")
+
+local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Position, flag, and named arguments support." })
+parser:add_parameter({ name = "items", nargs="*", help="non-flag arguments." })
+parser:add_parameter({ name = "--fizz", nargs="+", help="A word." })
+parser:add_parameter({ name = "-b", action="store_true", help="Zulu single-word." })
+
+parser:set_execute(function(data)
+    print("Ran it")
+end)
+
+cmdparse.create_user_command(parser)
 ```
+
+Creates this help message:
+```
+Usage: Test [ITEMS ...] [--fizz FIZZ [FIZZ ...]] [-b] [--help]
+
+Positional Arguments:
+    [ITEMS ...]    non-flag arguments.
+
+Options:
+    --fizz FIZZ [FIZZ ...]    A word.
+    -b    Zulu single-word.
+    --help -h    Show this help message and exit.
+```
+
+If you don't like the auto-generated value text, you can change it. For example
+
+`parser:add_parameter({ name = "--fizz", nargs="+", help="A word." })`
+
+can be changed to
+`parser:add_parameter({ name = "--fizz", nargs="+", value_hint="/path/to/file.txt", help="A word." })`
+
+And the help message becomes
+
+`--fizz /path/to/file.txt [/path/to/file.txt ...]    A word.`
 </details>
 
 
-TODO: Make sur to explain that ++ / etc flags are just considered a regular flag
 <details>
 <summary>Non-standard arguments support. e.g. `--foo`, `++bar`, `-f`, etc</summary>
 
+The difference between a position parameter and a flag / named parameter is
+just the prefix. Position parameters must start with alphanumeric text. But
+this means that anything else can be a flag. e.g. `++foo` is a valid flag name
+and so is `--bar`. It's all allowed.
+
 ```lua
+local cmdparse = require("cmdparse")
+
+local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Position, flag, and named arguments support." })
+parser:add_parameter({ name = "--fizz", action="store_true", help="A word." })
+parser:add_parameter({ name = "++buzz", help="Some argument." })
+
+parser:set_execute(function(data)
+    print(string.format('--fizz: %s', data.namespace.fizz))
+    print(string.format('++buzz: "%s"', data.namespace.buzz))
+end)
+
+cmdparse.create_user_command(parser)
 ```
+Run: `:Test --fizz ++buzz "some text here"`
 </details>
 
-TODO: Add unicode characters
 <details>
-<summary>Non-Standard Flags. e.g. `++foo`, `--unicode-thing`</summary>
+<summary>Unicode Parameters</summary>
 
+You can use unicode for position / flag / named parameters if you want to.
 ```lua
+local cmdparse = require("cmdparse")
+
+local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Unicode Parameters." })
+parser:add_parameter({ name = "𝒻ⓡ𝓊𝒾🅃🆂", nargs="+", help = "Test." })
+parser:add_parameter({ name = "--😊", help = "Test." })
+
+parser:set_execute(function(data)
+    print(vim.fn.join(data.namespace["𝒻ⓡ𝓊𝒾🅃🆂"], ", "))
+    print(data.namespace["--😊"])
+end)
+
+cmdparse.create_user_command(parser)
 ```
+Run: `:Test apple 🄱🄰🄽🄰🄽🄰 --😊=ttt`
 </details>
 
 
@@ -243,17 +388,46 @@ want to use the Lua API directly, here are the most common cases.
 You can query the available auto-complete values whenever you want.
 
 ```lua
-TODO
+local cmdparse = require("cmdparse")
+
+local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Unicode Parameters." })
+parser:add_parameter({ name = "--foo", choices = {"apple", "apply", "banana"}, help = "Test." })
+
+print(vim.inspect(parser:get_completion("-")))
+print(vim.inspect(parser:get_completion("--")))
+print(vim.inspect(parser:get_completion("--f")))
+print(vim.inspect(parser:get_completion("--fo")))
+-- Result: {"--foo="}
+
+print(vim.inspect(parser:get_completion("--foo=")))
+-- Result: { "--foo=apple", "--foo=apply", "--foo=banana" }
+
+print(vim.inspect(parser:get_completion("--foo=appl")))
+-- Result: { "--foo=apple", "--foo=apply" }
+
+print(vim.inspect(parser:get_completion("--foo appl")))
+-- Result: { "apple", "apply" }
 ```
 
 This also supports a cursor column position (starting at 1-or-more).
 
-TODO
+```lua
+print(vim.inspect(parser:get_completion("--foo=appl", 4)))
+-- Result: { TODO finish this, fix }
+```
 
 
 ### parse_arguments
-TODO: Finish
+You can compute the final values with `parse_arguments`.
 
+```lua
+local cmdparse = require("cmdparse")
+
+local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Unicode Parameters." })
+parser:add_parameter({ name = "--foo", choices = {"apple", "apply", "banana"}, help = "Test." })
+print(vim.inspect(parser:parse_arguments("--foo=apple")))
+-- Result: { foo = "apple" }
+```
 
 
 # Installation
