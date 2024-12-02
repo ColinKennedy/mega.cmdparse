@@ -419,8 +419,6 @@ local function _get_next_parameter_if_needed(parser, parameter, argument)
 
             return positions[#positions]
         end
-
-        error("Bug encountered. Normally this situation cannot come up. Add a better error message here.")
     end
 
     if argument.argument_type ~= argparse.ArgumentType.position then
@@ -1629,7 +1627,7 @@ function M.ParameterParser:_handle_exact_flag_parameters(flags, arguments, names
                 if values == nil then
                     error(
                         string.format(
-                            'Parameter "%s" failed to find a value. This could be a parser bug!',
+                            'Parameter "%s" requires a value. Got nothing.',
                             argument.name
                         ),
                         0

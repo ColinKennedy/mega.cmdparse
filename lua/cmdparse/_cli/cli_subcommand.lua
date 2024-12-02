@@ -233,7 +233,13 @@ function M.make_parser_completer(parser_creator)
 
         local remainder = _remove_first_word(all_text)
         local parser = parser_creator()
-        local column = vim.fn.getcmdpos()
+
+        -- NOTE: A command like `:Command foo bar` has `getcmdpos() == 15` but
+        -- since we stripped the beginning `Command ` part, the real position
+        -- is 15 - 8 = 7. So we need to account for that here.
+        --
+        local absolute_column = vim.fn.getcmdpos()
+        local column = absolute_column - (#all_text - #remainder + 1)
 
         return parser:get_completion(remainder, column)
     end
