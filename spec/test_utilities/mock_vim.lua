@@ -19,8 +19,16 @@ end
 
 local _MOCKED_NOTIFY = function(...)
     local data = {...}
+    local level = data[2]
     table.insert(_NOTIFICATIONS, data[1])
-    _ORIGINAL_NOTIFY(...)
+
+    if level == vim.log.levels.ERROR then
+        -- NOTE: This level triggers errors in Vim's UI so we can't not send
+        -- these notifications. Otherwise unittests that are meant to error
+        -- will pass by accident instead.
+        --
+        _ORIGINAL_NOTIFY(...)
+    end
 end
 
 

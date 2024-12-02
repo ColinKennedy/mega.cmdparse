@@ -790,9 +790,12 @@ Options:
     it('works with the "Static Auto-Complete Values" example', function()
         local parser = cmdparse.ParameterParser.new({ name = _COMMAND_NAME, help = "Hello, World!" })
         parser:add_parameter({ name = "thing", choices = { "aaa", "apple", "apply" }, help = "Test." })
+        parser:set_execute(function(data) print(data.namespace.thing) end)
         top_cmdparse.create_user_command(parser)
 
         vim.cmd(string.format("%s apple", _COMMAND_NAME))
+
+        assert.same({"apple"}, mock_vim.get_prints())
     end)
 
     it('works with the "Supports Required / Optional Arguments" example', function()
