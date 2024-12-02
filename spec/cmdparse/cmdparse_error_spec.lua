@@ -646,6 +646,22 @@ describe("bugs", function()
             assert.same({}, parser:get_completion("-a -b "))
         end)
     end)
+
+    describe("parsing arguments", function()
+        it("forces flag arguments to not take any arguments", function()
+            local parser = cmdparse.ParameterParser.new({ "top", help = "Test." })
+            parser:add_parameter({"--thing", action="store_true", help="Test."})
+
+            local success, message = pcall(function() parser:parse_arguments("--thing=foo") end)
+            assert.is_false(success)
+            assert.equal("TTTT", message)
+
+            success, message = pcall(function() parser:parse_arguments("--thing foo") end)
+            assert.equal("TTTT", message)
+
+            assert.is_true(parser:parse_arguments("--thing").thing)
+        end)
+    end)
 end)
 
 describe("README.md examples", function()
