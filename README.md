@@ -387,6 +387,9 @@ want to use the Lua API directly, here are the most common cases.
 ### get_completions
 You can query the available auto-complete values whenever you want.
 
+<details>
+<summary>Expand to show more</summary>
+
 ```lua
 local cmdparse = require("cmdparse")
 
@@ -416,9 +419,14 @@ print(vim.inspect(parser:get_completion("--foo=appl", 4)))
 -- Result: { TODO finish this, fix }
 ```
 
+</details>
+
 
 ### parse_arguments
 You can compute the final values with `parse_arguments`.
+
+<details>
+<summary>Expand to show more</summary>
 
 ```lua
 local cmdparse = require("cmdparse")
@@ -428,6 +436,7 @@ parser:add_parameter({ name = "--foo", choices = {"apple", "apply", "banana"}, h
 print(vim.inspect(parser:parse_arguments("--foo=apple")))
 -- Result: { foo = "apple" }
 ```
+</details>
 
 
 # Installation
