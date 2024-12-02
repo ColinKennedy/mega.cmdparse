@@ -650,16 +650,17 @@ describe("bugs", function()
     describe("parsing arguments", function()
         it("forces flag arguments to not take any arguments", function()
             local parser = cmdparse.ParameterParser.new({ "top", help = "Test." })
-            parser:add_parameter({"--thing", action="store_true", help="Test."})
+            parser:add_parameter({ "--thing", action = "store_true", help = "Test." })
 
-            local success, message = pcall(function() parser:parse_arguments("--thing=foo") end)
+            local success, message = pcall(function()
+                parser:parse_arguments("--thing=foo")
+            end)
             assert.is_false(success)
-            assert.equal(
-                'Parameter "--thing" is a flag and expects no arguments. Got "foo" value.',
-                message
-            )
+            assert.equal('Parameter "--thing" is a flag and expects no arguments. Got "foo" value.', message)
 
-            success, message = pcall(function() parser:parse_arguments("--thing foo") end)
+            success, message = pcall(function()
+                parser:parse_arguments("--thing foo")
+            end)
             assert.is_false(success)
             assert.equal('Unexpected argument "foo".', message)
             assert.is_true(parser:parse_arguments("--thing").thing)
@@ -696,7 +697,7 @@ describe("README.md examples", function()
         ---@return cmdparse.ParameterParser # Some example parser.
         local function make_example_plugin_a()
             local parser = cmdparse.ParameterParser.new({ name = "plugin-a", help = "Test plugin-a." })
-            parser:add_parameter({ name = "--foo", action="store_true", help="A required value for plugin-a." })
+            parser:add_parameter({ name = "--foo", action = "store_true", help = "A required value for plugin-a." })
 
             parser:set_execute(function()
                 print("Running plugin-a")
@@ -708,7 +709,7 @@ describe("README.md examples", function()
         ---@return cmdparse.ParameterParser # Another example parser.
         local function make_example_plugin_b()
             local parser = cmdparse.ParameterParser.new({ name = "plugin-b", help = "Test plugin-b." })
-            parser:add_parameter({ name = "foo", help="A required value for plugin-b." })
+            parser:add_parameter({ name = "foo", help = "A required value for plugin-b." })
 
             parser:set_execute(function()
                 print("Running plugin-b")
@@ -735,16 +736,15 @@ describe("README.md examples", function()
         local parser = create_parser()
         top_cmdparse.create_user_command(parser)
 
-        vim.cmd[[Test plugin-a --foo]]
-        vim.cmd[[Test plugin-b 1234]]
+        vim.cmd([[Test plugin-a --foo]])
+        vim.cmd([[Test plugin-b 1234]])
 
         assert.same({ "Running plugin-a", "Running plugin-b" }, mock_vim.get_prints())
 
-        vim.cmd[[Test --help]]
+        vim.cmd([[Test --help]])
 
-        assert.same(
-            {
-[[
+        assert.same({
+            [[
 Usage: Test {plugin-a,plugin-b} [--help]
 
 Commands:
@@ -753,10 +753,8 @@ Commands:
 
 Options:
     --help -h    Show this help message and exit.
-]]
-            },
-            mock_vim.get_vim_notify_messages()
-        )
+]],
+        }, mock_vim.get_vim_notify_messages())
     end)
 
     it('works with the "Position, flag, and named arguments support" example', function()
@@ -764,24 +762,24 @@ Options:
             name = "Test",
             help = "Position, flag, and named arguments support.",
         })
-        parser:add_parameter({ name = "items", nargs="*", help="non-flag arguments." })
-        parser:add_parameter({ name = "--fizz", help="A word." })
-        parser:add_parameter({ name = "-d", action="store_true", help="Delta single-word." })
-        parser:add_parameter({ names = {"--beta", "-b"}, action="store_true", help="Beta single-word." })
-        parser:add_parameter({ name = "-z", action="store_true", help="Zulu single-word." })
+        parser:add_parameter({ name = "items", nargs = "*", help = "non-flag arguments." })
+        parser:add_parameter({ name = "--fizz", help = "A word." })
+        parser:add_parameter({ name = "-d", action = "store_true", help = "Delta single-word." })
+        parser:add_parameter({ names = { "--beta", "-b" }, action = "store_true", help = "Beta single-word." })
+        parser:add_parameter({ name = "-z", action = "store_true", help = "Zulu single-word." })
 
         parser:set_execute(function(data)
             local namespace = data.namespace
             local items = namespace.items
             print(vim.fn.join(vim.fn.sort(items), ", "))
-            print(string.format('-d: %s, -b: %s, -z: %s', namespace.d, namespace.beta, namespace.z))
+            print(string.format("-d: %s, -b: %s, -z: %s", namespace.d, namespace.beta, namespace.z))
         end)
 
         top_cmdparse.create_user_command(parser)
 
-        vim.cmd[[Test foo bar --fizz=buzz -dbz]]
+        vim.cmd([[Test foo bar --fizz=buzz -dbz]])
 
-        assert.same({"bar, foo", "-d: true, -b: true, -z: true"}, mock_vim.get_prints())
+        assert.same({ "bar, foo", "-d: true, -b: true, -z: true" }, mock_vim.get_prints())
     end)
 
     it('works with the "Nested Subparsers" example', function()
@@ -809,20 +807,22 @@ Options:
     it('works with the "Static Auto-Complete Values" example', function()
         local parser = cmdparse.ParameterParser.new({ name = _COMMAND_NAME, help = "Hello, World!" })
         parser:add_parameter({ name = "thing", choices = { "aaa", "apple", "apply" }, help = "Test." })
-        parser:set_execute(function(data) print(data.namespace.thing) end)
+        parser:set_execute(function(data)
+            print(data.namespace.thing)
+        end)
         top_cmdparse.create_user_command(parser)
 
         vim.cmd(string.format("%s apple", _COMMAND_NAME))
 
-        assert.same({"apple"}, mock_vim.get_prints())
+        assert.same({ "apple" }, mock_vim.get_prints())
     end)
 
     it('works with the "Supports Required / Optional Arguments" example', function()
         local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Unicode Parameters." })
         parser:add_parameter({ name = "required_thing", help = "Test." })
-        parser:add_parameter({ name = "optional_thing", required=false, help = "Test." })
+        parser:add_parameter({ name = "optional_thing", required = false, help = "Test." })
         parser:add_parameter({ name = "--optional-flag", help = "Test." })
-        parser:add_parameter({ name = "--required-flag", required=true, help = "Test." })
+        parser:add_parameter({ name = "--required-flag", required = true, help = "Test." })
 
         local output = {}
 
@@ -836,17 +836,14 @@ Options:
 
         top_cmdparse.create_user_command(parser)
 
-        vim.cmd[[Test foo bar --required-flag=aaa]]
+        vim.cmd([[Test foo bar --required-flag=aaa]])
 
-        assert.same(
-            { ["required-flag"]="aaa", optional_thing="bar", required_thing="foo" },
-            output
-        )
+        assert.same({ ["required-flag"] = "aaa", optional_thing = "bar", required_thing = "foo" }, output)
     end)
 
     it('works with the "Unicode Parameters" example', function()
         local parser = cmdparse.ParameterParser.new({ name = _COMMAND_NAME, help = "Unicode Parameters." })
-        parser:add_parameter({ name = "𝒻ⓡ𝓊𝒾🅃🆂", nargs="+", help = "Test." })
+        parser:add_parameter({ name = "𝒻ⓡ𝓊𝒾🅃🆂", nargs = "+", help = "Test." })
         parser:add_parameter({ name = "--😊", help = "Test." })
 
         parser:set_execute(function(data)

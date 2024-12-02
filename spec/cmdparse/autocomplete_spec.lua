@@ -218,14 +218,13 @@ describe("simple", function()
         local parser = cmdparse.ParameterParser.new({ name = _COMMAND_NAME, help = "Static Auto-Complete Values." })
         parser:add_parameter({ name = "thing", choices = { "aaa", "apple", "apply" }, help = "Test." })
 
-        assert.same({"--help"}, parser:get_completion("apply --help"))
+        assert.same({ "--help" }, parser:get_completion("apply --help"))
 
         top_cmdparse.create_user_command(parser)
-        vim.cmd[[Test --help]]
+        vim.cmd([[Test --help]])
 
-        assert.same(
-            {
-[[
+        assert.same({
+            [[
 Usage: Test {aaa,apple,apply} [--help]
 
 Positional Arguments:
@@ -233,10 +232,8 @@ Positional Arguments:
 
 Options:
     --help -h    Show this help message and exit.
-]]
-            },
-            mock_vim.get_vim_notify_messages()
-        )
+]],
+        }, mock_vim.get_vim_notify_messages())
     end)
 
     it("works with multiple position arguments", function()

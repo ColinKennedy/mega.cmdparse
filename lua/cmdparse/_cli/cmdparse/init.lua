@@ -308,8 +308,8 @@ local function _get_child_parser_names(parser)
     ---@type string[]
     local output = {}
 
-    for parser in iterator_helper.iter_parsers(parser) do
-        vim.list_extend(output, parser:get_names())
+    for parser_ in iterator_helper.iter_parsers(parser) do
+        vim.list_extend(output, parser_:get_names())
     end
 
     return output
@@ -1591,7 +1591,10 @@ function M.ParameterParser:_handle_exact_flag_parameters(flags, arguments, names
                             0
                         )
                     elseif nargs > 1 then
-                        error(string.format('Parameter "%s" requires "%s" values. Got "1" value.', flag.names[1], nargs), 0)
+                        error(
+                            string.format('Parameter "%s" requires "%s" values. Got "1" value.', flag.names[1], nargs),
+                            0
+                        )
                     end
                 end
 

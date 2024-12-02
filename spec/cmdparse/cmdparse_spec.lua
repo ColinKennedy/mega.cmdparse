@@ -363,12 +363,12 @@ Options:
         end)
 
         it("shows all parser name choices", function()
-            local parser = cmdparse.ParameterParser.new({name="top", help="Test."})
-            local subparsers = parser:add_subparsers({ name = "commands", help="Sub commands."})
-            subparsers:add_parser({name="foo", choices={"a", "b", "c"}})
+            local parser = cmdparse.ParameterParser.new({ name = "top", help = "Test." })
+            local subparsers = parser:add_subparsers({ name = "commands", help = "Sub commands." })
+            subparsers:add_parser({ name = "foo", choices = { "a", "b", "c" } })
 
             assert.equal(
-[[
+                [[
 Usage: top {a,b,c} [--help]
 
 Commands:

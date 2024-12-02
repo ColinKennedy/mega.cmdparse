@@ -18,7 +18,7 @@ local _MOCKED_PRINT = function(message)
 end
 
 local _MOCKED_NOTIFY = function(...)
-    local data = {...}
+    local data = { ... }
     local level = data[2]
     table.insert(_NOTIFICATIONS, data[1])
 
@@ -30,7 +30,6 @@ local _MOCKED_NOTIFY = function(...)
         _ORIGINAL_NOTIFY(...)
     end
 end
-
 
 ---@return string[] # Get all saved `print` calls.
 function M.get_prints()
