@@ -654,11 +654,14 @@ describe("bugs", function()
 
             local success, message = pcall(function() parser:parse_arguments("--thing=foo") end)
             assert.is_false(success)
-            assert.equal("TTTT", message)
+            assert.equal(
+                'Parameter "--thing" is a flag and expects no arguments. Got "foo" value.',
+                message
+            )
 
             success, message = pcall(function() parser:parse_arguments("--thing foo") end)
-            assert.equal("TTTT", message)
-
+            assert.is_false(success)
+            assert.equal('Unexpected argument "foo".', message)
             assert.is_true(parser:parse_arguments("--thing").thing)
         end)
     end)
