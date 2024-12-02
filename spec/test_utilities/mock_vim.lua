@@ -17,8 +17,10 @@ local _MOCKED_PRINT = function(message)
     table.insert(_PRINTS, message)
 end
 
-local _MOCKED_NOTIFY = function(message)
-    table.insert(_NOTIFICATIONS, message)
+local _MOCKED_NOTIFY = function(...)
+    local data = {...}
+    table.insert(_NOTIFICATIONS, data[1])
+    _ORIGINAL_NOTIFY(...)
 end
 
 

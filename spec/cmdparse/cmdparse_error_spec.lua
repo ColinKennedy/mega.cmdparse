@@ -779,6 +779,7 @@ Options:
         end)
 
         top_cmdparse.create_user_command(parser)
+
         local success, message = pcall(function()
             vim.cmd(string.format("%s view log", _COMMAND_NAME))
         end)
