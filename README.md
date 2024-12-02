@@ -187,8 +187,6 @@ cmdparse.create_user_command(parser)
 Run: `:Test view log /some/path.txt`
 </details>
 
-TODO: Why does this not error if a choice is not selected? FIX
-TODO: This example is completely broken. FIX
 <details>
 <summary>Static Auto-Complete Values</summary>
 
@@ -393,8 +391,12 @@ You can query the available auto-complete values whenever you want.
 ```lua
 local cmdparse = require("cmdparse")
 
-local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Unicode Parameters." })
-parser:add_parameter({ name = "--foo", choices = {"apple", "apply", "banana"}, help = "Test." })
+local parser = cmdparse.ParameterParser.new(
+    { name = "Test", help = "Unicode Parameters." }
+)
+parser:add_parameter(
+    { name = "--foo", choices = {"apple", "apply", "banana"}, help = "Test." }
+)
 
 print(vim.inspect(parser:get_completion("-")))
 print(vim.inspect(parser:get_completion("--")))

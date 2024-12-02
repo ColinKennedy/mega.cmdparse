@@ -1087,7 +1087,7 @@ function M.ParameterParser:_get_issues()
                         '%s Valid choices are "%s"',
                         text,
                         vim.fn.join(
-                            vim.fn.sorted(parameter.choices({ contexts = { constant.ChoiceContext.error_message } })),
+                            vim.fn.sort(parameter.choices({ contexts = { constant.ChoiceContext.error_message } })),
                             ", "
                         )
                     )

@@ -502,6 +502,20 @@ describe("named argument", function()
             assert.same({}, parser:get_completion("--s", 2))
         end)
 
+        it("auto-completes on a #partial argument name - 002", function()
+            local parser = cmdparse.ParameterParser.new(
+                { name = "Test", help = "Unicode Parameters." }
+            )
+            parser:add_parameter(
+                { name = "--foo", choices = {"apple", "apply", "banana"}, help = "Test." }
+            )
+
+            assert.same({"--foo="}, parser:get_completion("--fo", 4))
+            assert.same({"--foo=apple", "--foo=apply"}, parser:get_completion("--foo=appl", 4))
+            assert.same({"--foo=apple", "--foo=apply"}, parser:get_completion("--foo=appl", 8))
+            assert.same({"apple", "apply"}, parser:get_completion("--foo appl", 8))
+        end)
+
         it("auto-completes on a #partial argument value - 001", function()
             local parser = _make_style_parser("++")
 
