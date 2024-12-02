@@ -362,6 +362,25 @@ Options:
             )
         end)
 
+        it("shows all parser name choices", function()
+            local parser = cmdparse.ParameterParser.new({name="top", help="Test."})
+            local subparsers = parser:add_subparsers({ name = "commands", help="Sub commands."})
+            subparsers:add_parser({name="foo", choices={"a", "b", "c"}})
+
+            assert.equal(
+[[
+Usage: top {a,b,c} [--help]
+
+Commands:
+    {a,b,c}
+
+Options:
+    --help -h    Show this help message and exit.
+]],
+                parser:get_full_help("--help")
+            )
+        end)
+
         it("shows even if there parsing errors", function()
             local function _assert(parser, command, expected)
                 local success, result = pcall(function()
@@ -418,7 +437,7 @@ Options:
             subparsers:add_parser({ name = "thing", choices = { "aaa", "bbb", "ccc" }, help = "Do a thing." })
 
             assert.equal(
-                [[Usage: {aaa} [--help]
+                [[Usage: {aaa,bbb,ccc} [--help]
 
 Commands:
     {aaa,bbb,ccc}    Do a thing.

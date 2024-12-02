@@ -305,11 +305,14 @@ end
 ---@return string[] # All parser names, if any are defined.
 ---
 local function _get_child_parser_names(parser)
-    return vim.iter(iterator_helper.iter_parsers(parser))
-        :map(function(parser_)
-            return parser_:get_names()[1]
-        end)
-        :totable()
+    ---@type string[]
+    local output = {}
+
+    for parser in iterator_helper.iter_parsers(parser) do
+        vim.list_extend(output, parser:get_names())
+    end
+
+    return output
 end
 
 --- Scan `input` and stop processing arguments after `column`.
