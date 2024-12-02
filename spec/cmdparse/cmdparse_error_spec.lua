@@ -801,15 +801,24 @@ Options:
         parser:add_parameter({ name = "--optional-flag", help = "Test." })
         parser:add_parameter({ name = "--required-flag", required=true, help = "Test." })
 
+        local output = {}
+
         parser:set_execute(function(data)
-            print(vim.inspect(data.namespace))
+            local namespace = data.namespace
+            output.optional_thing = namespace.optional_thing
+            output.required_thing = namespace.required_thing
+            output["optional-flag"] = namespace["optional-flag"]
+            output["required-flag"] = namespace["required-flag"]
         end)
 
         top_cmdparse.create_user_command(parser)
 
         vim.cmd[[Test foo bar --required-flag=aaa]]
 
-        assert.same({"TTTTT"}, mock_vim.get_prints())
+        assert.same(
+            { ["required-flag"]="aaa", optional_thing="bar", required_thing="foo" },
+            output
+        )
     end)
 
     it('works with the "Unicode Parameters" example', function()
@@ -819,13 +828,13 @@ Options:
 
         parser:set_execute(function(data)
             print(vim.fn.join(data.namespace["𝒻ⓡ𝓊𝒾🅃🆂"], ", "))
-            print(data.namespace["--😊"])
+            print(data.namespace["😊"])
         end)
 
         top_cmdparse.create_user_command(parser)
 
         vim.cmd(string.format("%s apple 🄱🄰🄽🄰🄽🄰 --😊=ttt", _COMMAND_NAME))
 
-        assert.same({"TTTTT"}, mock_vim.get_prints())
+        assert.same({ "apple, 🄱🄰🄽🄰🄽🄰", "ttt" }, mock_vim.get_prints())
     end)
 end)

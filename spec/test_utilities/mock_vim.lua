@@ -24,7 +24,7 @@ end
 
 ---@return string[] # Get all saved `print` calls.
 function M.get_prints()
-    return _HEALTH_ERROR_MESSAGES
+    return _PRINTS
 end
 
 ---@return string[] # Get all saved vim.health.error calls.
