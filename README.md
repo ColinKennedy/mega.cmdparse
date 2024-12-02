@@ -9,6 +9,15 @@
 A [Python argparse-inspired](https://docs.python.org/3/library/argparse.html)
 command mode parser for Neovim.
 
+This library is for people who have to define a command like `:Foo` and it
+takes arguments. This library supports customizable arguments and subcommands
+so no more needing to define `:FooToggle` `:FooOpen /path/to/file.txt`
+`:FooClose 2`, etc commands. You can easily create one command with completely
+separate interfaces like `:Foo toggle`, `:Foo open /path/to/file.txt`, and
+`:Foo close --buffer=2`.
+
+There's a lot of features. Whatever you need, `cmdparse.nvim` has you covered!
+
 
 # Features
 - Position, flag, and named arguments support. e.g. `foo bar --fizz=buzz -z`
@@ -36,14 +45,22 @@ command mode parser for Neovim.
 
 
 ### Auto-generated `--help` parameter support
+If you want details on what to type, add `-h` or `--help` to any command and
+the automated help message will show.
+
 - TODO: Make a GIF
 
+A summarized version may also show if you make a mistake in your input.
+
+- TODO: GIF
 
 ### Automated parameter validation
+Parameters know how many arguments they need and in what order.
 - TODO: Make a GIF
 
 
 ### 2 flag formats support
+`--foo bar` and `--foo=bar` are both supported styles.
 - TODO: Make a GIF
 
 
