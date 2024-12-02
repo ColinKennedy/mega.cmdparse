@@ -4,8 +4,10 @@
 ---
 
 local cmdparse = require("cmdparse._cli.cmdparse")
+local mock_vim = require("test_utilities.mock_vim")
+local top_cmdparse = require("cmdparse")
 
----@return cmdparse.ParameterParser # Create a tree of commands for unittests.
+local _COMMAND_NAME = "Test"
 
 --- Add `--repeat=` to `parser`.
 ---
@@ -200,6 +202,43 @@ describe("plugin", function()
 end)
 
 describe("simple", function()
+    before_each(function()
+        pcall(function()
+            vim.cmd.delcommand(_COMMAND_NAME)
+        end)
+
+        mock_vim.mock_vim_notify()
+    end)
+
+    after_each(function()
+        mock_vim.reset_vim_notify()
+    end)
+
+    it("works not auto-complete at the end of --help", function()
+        local parser = cmdparse.ParameterParser.new({ name = _COMMAND_NAME, help = "Static Auto-Complete Values." })
+        parser:add_parameter({ name = "thing", choices = { "aaa", "apple", "apply" }, help = "Test." })
+
+        assert.same({}, parser:get_completion("apply --help"))
+
+        top_cmdparse.create_user_command(parser)
+        vim.cmd[[Test --help]]
+
+        assert.same(
+            {
+[[
+Usage: Test {aaa,apple,apply} [--help]
+
+Positional Arguments:
+    {aaa,apple,apply}    Test.
+
+Options:
+    --help -h    Show this help message and exit.
+]]
+            },
+            mock_vim.get_vim_notify_messages()
+        )
+    end)
+
     it("works with multiple position arguments", function()
         local parser = _make_simple_parser()
 

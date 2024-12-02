@@ -3,45 +3,11 @@
 ---@module 'cmdparse.cmdparse_error_spec'
 ---
 
-local top_cmdparse = require("cmdparse")
 local cmdparse = require("cmdparse._cli.cmdparse")
-
-local _ORIGINAL_NOTIFY = vim.notify
-local _ORIGINAL_PRINT = print
-
-local _NOTIFICATIONS = {}
-local _PRINTS = {}
-
-local _MOCKED_PRINT = function(message)
-    table.insert(_PRINTS, message)
-end
-
-local _MOCKED_NOTIFY = function(message)
-    table.insert(_NOTIFICATIONS, message)
-end
+local mock_vim = require("test_utilities.mock_vim")
+local top_cmdparse = require("cmdparse")
 
 local _COMMAND_NAME = "Test"
-
---- Track vim.notify messages, for unittests.
-local function _mock_notify()
-    vim.notify = _MOCKED_NOTIFY
-end
-
-local function _mock_print()
-    print = _MOCKED_PRINT
-end
-
---- Reset all mocked vim.notify messages.
-local function _reset_notify()
-    vim.notify = _ORIGINAL_NOTIFY
-    _NOTIFICATIONS = {}
-end
-
---- Reset all mocked print messages.
-local function _reset_print()
-    print = _ORIGINAL_PRINT
-    _PRINTS = {}
-end
 
 describe("bad auto-complete input", function()
     it("errors if an incorrect flag is given", function()
@@ -688,13 +654,13 @@ describe("README.md examples", function()
             vim.cmd.delcommand(_COMMAND_NAME)
         end)
 
-        _mock_print()
-        _mock_notify()
+        mock_vim.mock_print()
+        mock_vim.mock_vim_notify()
     end)
 
     after_each(function()
-        _reset_notify()
-        _reset_print()
+        mock_vim.reset_vim_notify()
+        mock_vim.reset_print()
     end)
 
     it('works with the "Automated value type conversions" example', function()
@@ -713,7 +679,7 @@ describe("README.md examples", function()
             local parser = cmdparse.ParameterParser.new({ name = "plugin-a", help = "Test plugin-a." })
             parser:add_parameter({ name = "--foo", action="store_true", help="A required value for plugin-a." })
 
-            parser:set_execute(function(data)
+            parser:set_execute(function()
                 print("Running plugin-a")
             end)
 
@@ -725,7 +691,7 @@ describe("README.md examples", function()
             local parser = cmdparse.ParameterParser.new({ name = "plugin-b", help = "Test plugin-b." })
             parser:add_parameter({ name = "foo", help="A required value for plugin-b." })
 
-            parser:set_execute(function(data)
+            parser:set_execute(function()
                 print("Running plugin-b")
             end)
 
@@ -753,7 +719,7 @@ describe("README.md examples", function()
         vim.cmd[[Test plugin-a --foo]]
         vim.cmd[[Test plugin-b 1234]]
 
-        assert.same({ "Running plugin-a", "Running plugin-b" }, _PRINTS)
+        assert.same({ "Running plugin-a", "Running plugin-b" }, mock_vim.get_prints())
 
         vim.cmd[[Test --help]]
 
@@ -770,12 +736,15 @@ Options:
     --help -h    Show this help message and exit.
 ]]
             },
-            _NOTIFICATIONS
+            mock_vim.get_vim_notify_messages()
         )
     end)
 
     it('works with the "Position, flag, and named arguments support" example', function()
-        local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Position, flag, and named arguments support." })
+        local parser = cmdparse.ParameterParser.new({
+            name = "Test",
+            help = "Position, flag, and named arguments support.",
+        })
         parser:add_parameter({ name = "items", nargs="*", help="non-flag arguments." })
         parser:add_parameter({ name = "--fizz", help="A word." })
         parser:add_parameter({ name = "-d", action="store_true", help="Delta single-word." })
@@ -793,7 +762,7 @@ Options:
 
         vim.cmd[[Test foo bar --fizz=buzz -dbz]]
 
-        assert.same({"bar, foo", "-d: true, -b: true, -z: true"}, _PRINTS)
+        assert.same({"bar, foo", "-d: true, -b: true, -z: true"}, mock_vim.get_prints())
     end)
 
     it('works with the "Nested Subparsers" example', function()
@@ -826,8 +795,6 @@ Options:
     end)
 
     it('works with the "Supports Required / Optional Arguments" example', function()
-        local cmdparse = require("cmdparse")
-
         local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Unicode Parameters." })
         parser:add_parameter({ name = "required_thing", help = "Test." })
         parser:add_parameter({ name = "optional_thing", required=false, help = "Test." })
@@ -838,11 +805,11 @@ Options:
             print(vim.inspect(data.namespace))
         end)
 
-        cmdparse.create_user_command(parser)
+        top_cmdparse.create_user_command(parser)
 
         vim.cmd[[Test foo bar --required-flag=aaa]]
 
-        assert.same({"TTTTT"}, _PRINTS)
+        assert.same({"TTTTT"}, mock_vim.get_prints())
     end)
 
     it('works with the "Unicode Parameters" example', function()
@@ -859,6 +826,6 @@ Options:
 
         vim.cmd(string.format("%s apple 🄱🄰🄽🄰🄽🄰 --😊=ttt", _COMMAND_NAME))
 
-        assert.same({"TTTTT"}, _PRINTS)
+        assert.same({"TTTTT"}, mock_vim.get_prints())
     end)
 end)
