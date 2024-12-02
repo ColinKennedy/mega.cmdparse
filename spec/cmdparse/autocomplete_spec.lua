@@ -218,7 +218,7 @@ describe("simple", function()
         local parser = cmdparse.ParameterParser.new({ name = _COMMAND_NAME, help = "Static Auto-Complete Values." })
         parser:add_parameter({ name = "thing", choices = { "aaa", "apple", "apply" }, help = "Test." })
 
-        assert.same({}, parser:get_completion("apply --help"))
+        assert.same({"--help"}, parser:get_completion("apply --help"))
 
         top_cmdparse.create_user_command(parser)
         vim.cmd[[Test --help]]

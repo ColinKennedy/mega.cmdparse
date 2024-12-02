@@ -1580,8 +1580,19 @@ function M.ParameterParser:_handle_exact_flag_parameters(flags, arguments, names
             if argument.argument_type == argparse.ArgumentType.named then
                 local nargs = flag:get_nargs()
 
-                if type(nargs) == "number" and nargs ~= 1 then
-                    error(string.format('Parameter "%s" requires "2" values. Got "1" value.', flag.names[1]), 0)
+                if type(nargs) == "number" then
+                    if nargs == 0 then
+                        error(
+                            string.format(
+                                'Parameter "%s" is a flag and expects no arguments. Got "%s" value.',
+                                flag.names[1],
+                                text_parse.get_argument_value_text(argument)
+                            ),
+                            0
+                        )
+                    elseif nargs > 1 then
+                        error(string.format('Parameter "%s" requires "%s" values. Got "1" value.', flag.names[1], nargs), 0)
+                    end
                 end
 
                 values = argument.value
