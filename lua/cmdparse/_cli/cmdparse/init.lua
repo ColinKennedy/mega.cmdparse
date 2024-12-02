@@ -235,6 +235,34 @@ local function _is_help_flag_enabled(data)
     return value
 end
 
+--- If `parameter` is expected to have one value or a array-of-values.
+---
+---@param parameter cmdparse.Parameter The position / flag / named parameter to check.
+---@return boolean # If single-value, return `false`.
+---
+local function _is_listicle(parameter)
+    local nargs = parameter:get_nargs()
+
+    if type(nargs) ~= "number" then
+        if nargs == constant.Counter.one_or_more then
+            return true
+        elseif nargs == constant.Counter.zero_or_more then
+            return true
+        end
+
+        error(
+            string.format('Bug: Unknown "%s" nargs was found. Please fix!', nargs),
+            0
+        )
+    end
+
+    if nargs == 1 or nargs == 0 then
+        return false
+    end
+
+    return true
+end
+
 --- Check if `object` is a `cmdparse.ParameterParser`.
 ---
 ---@param object any Anything.
@@ -1684,8 +1712,17 @@ end
 ---    The matching parameter, if any.
 ---
 function M.ParameterParser:_handle_exact_position_parameters(positions, arguments, namespace, contexts)
-    local function _get_values(arguments_, count)
-        if count == 1 then
+    ---@param parameter cmdparse.Parameter
+    ---@param arguments_ argparse.Argument[]
+    ---@param count number
+    ---@return string[] | string
+    local function _get_values(parameter, arguments_, count)
+        if not _is_listicle(parameter) then
+            -- NOTE: In this situation, because we expect a position parameter,
+            -- `value` cannot be a boolean. But lua-language-server doesn't
+            -- know that so we just ignore it here.
+            --
+            ---@diagnostic disable-next-line return-type-mismatch
             return arguments_[1].value
         end
 
@@ -1703,7 +1740,7 @@ function M.ParameterParser:_handle_exact_position_parameters(positions, argument
             local total = _get_used_position_arguments_count(position, arguments)
 
             local name = position:get_nice_name()
-            local values = _get_values(arguments, total)
+            local values = _get_values(position, arguments, total)
 
             if position.choices and vim.tbl_contains(contexts, constant.ChoiceContext.parsing) then
                 local values_ = values
@@ -1711,6 +1748,8 @@ function M.ParameterParser:_handle_exact_position_parameters(positions, argument
                 if type(values) ~= "table" then
                     values_ = { values }
                 end
+
+                ---@cast values_ string[]
 
                 local current_value = values_[#values_]
 

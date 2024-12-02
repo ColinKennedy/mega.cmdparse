@@ -862,7 +862,15 @@ Options:
 end)
 
 describe("nargs", function()
-    it("flag + nargs + should parse into a string[]", function()
+    it("flag + nargs + should parse into a string[] - 001 - #single argument", function()
+        local parser = cmdparse.ParameterParser.new({ help = "Test." })
+        parser:add_parameter({ "--items", nargs = "+", help = "Test." })
+
+        local namespace = parser:parse_arguments("--items foo")
+        assert.same({ items = { "foo" } }, namespace)
+    end)
+
+    it("flag + nargs + should parse into a string[] - 002 - multiple arguments", function()
         local parser = cmdparse.ParameterParser.new({ help = "Test." })
         parser:add_parameter({ "--items", nargs = 2, help = "Test." })
 
@@ -927,6 +935,14 @@ describe("nargs", function()
 
         local namespace = parser:parse_arguments("--items 12 2 3 --other buzz --items 12 1 93")
         assert.same({ items = { { 12, 2, 3 }, { 12, 1, 93 } }, other = "buzz" }, namespace)
+    end)
+
+    it("position + nargs + should parse into a string[] - 001 - #single argument", function()
+        local parser = cmdparse.ParameterParser.new({ help = "Test." })
+        parser:add_parameter({ "items", nargs = "+", help = "Test." })
+
+        local namespace = parser:parse_arguments("foo")
+        assert.same({ items = { "foo" } }, namespace)
     end)
 
     it("position + nargs=2 + append should parse into a string[][]", function()
