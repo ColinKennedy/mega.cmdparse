@@ -50,9 +50,8 @@ end
 ---
 ---@param results argparse.Results
 ---    The parsed arguments + any remainder text.
----@param index number
----    A 1-or-more value. 1 has not effect. 2-or-more will remove arguments
----    from the right-hand side of `results`.
+---@param column number
+---    A 1-or-more value to (basicall) lstrip by. e.g. `2`.
 ---@return argparse.Results
 ---    The stripped copy from `results`.
 ---
@@ -77,8 +76,7 @@ function M.rstrip_arguments(results, column)
         if last.range.end_column <= column then
             table.insert(arguments, last)
         elseif last.argument_type == argparse.ArgumentType.position then
-            local cropped_argument = _make_left_cropped_position(last, column)
-            table.insert(arguments, cropped_argument)
+            table.insert(arguments, _make_left_cropped_position(last, column))
         end
     end
 
