@@ -343,28 +343,6 @@ local function _get_child_parser_names(parser)
     return output
 end
 
---- Scan `input` and stop processing arguments after `column`.
----
----@param input argparse.Results
----    The user's parsed text.
----@param column number
----    The point to stop checking for arguments. Must be a 1-or-greater value.
----@return number
----    The found index. If all arguments are < `column` then the returning
----    index will cover all of `input.arguments`.
----
-local function _get_cursor_offset(input, column)
-    for index, argument in ipairs(input.arguments) do
-        if argument.range.end_column == column then
-            return index
-        elseif argument.range.end_column > column then
-            return index - 1
-        end
-    end
-
-    return #input.arguments
-end
-
 --- Complete values for `argument`, using choices from `parameter`.
 ---
 ---@param parameter cmdparse.Parameter
@@ -572,7 +550,7 @@ end
 ---    The stripped copy from `input`.
 ---
 local function _rstrip_input(input, column)
-    local stripped = argparse_helper.rstrip_arguments(input, _get_cursor_offset(input, column))
+    local stripped = argparse_helper.rstrip_arguments(input, column)
 
     local last = stripped.arguments[#stripped.arguments]
 
