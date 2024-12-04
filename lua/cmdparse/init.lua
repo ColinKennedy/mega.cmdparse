@@ -16,21 +16,37 @@ M.ParameterParser = {}
 ---     If `parser` does not have a name defined. It's normally optional for
 ---     a parser to have a name but here, specifically, it must have a name.
 ---
----@param parser cmdparse.ParameterParser The top-level command to define.
+---@param parser fun(): cmdparse.ParserCreator
+---     The top-level command to define.
 ---
-function M.create_user_command(parser)
-    if not parser.name then
-        error(string.format('Parser "%s" must have a name.', vim.inspect(parser, { depth = 1 })), 0)
-    end
+function M.create_user_command(parser, name)
+    if type(parser) == "function" then
+        if not name then
+            error(string.format("A parser function was given but no parser name was given."), 0)
+        end
 
-    local caller = function()
-        return parser
-    end
+        local caller = parser
 
-    vim.api.nvim_create_user_command(parser.name, M.make_parser_triager(caller), {
-        nargs = "*",
-        complete = M.make_parser_completer(caller),
-    })
+        vim.api.nvim_create_user_command(name, M.make_parser_triager(caller), {
+            nargs = "*",
+            complete = M.make_parser_completer(caller),
+        })
+    else
+        local name = name or parser.name
+
+        if not name then
+            error(string.format('Parser "%s" must have a name.', vim.inspect(parser, { depth = 1 })), 0)
+        end
+
+        local caller = function()
+            return parser
+        end
+
+        vim.api.nvim_create_user_command(name, M.make_parser_triager(caller), {
+            nargs = "*",
+            complete = M.make_parser_completer(caller),
+        })
+    end
 end
 
 --- Make a function that can auto-complete based on the parser of `parser_creator`.

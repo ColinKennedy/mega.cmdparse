@@ -6,7 +6,9 @@
 local cmdparse = require("cmdparse._cli.cmdparse")
 local configuration = require("cmdparse._core.configuration")
 local constant = require("cmdparse._cli.cmdparse.constant")
+local top_cmdparse = require("cmdparse")
 
+local _COMMAND_NAME = "Test"
 local _DATA
 
 --- Save the user's current configuration (so we can modify & restore it later).
@@ -1220,6 +1222,51 @@ describe("scenarios", function()
 end)
 
 describe("type", function()
+    before_each(function()
+        pcall(function()
+            vim.cmd.delcommand(_COMMAND_NAME)
+        end)
+    end)
+
+    it("allows validation directly during parsing", function()
+        local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Test" })
+        parser:add_parameter({
+            name = "value",
+            type=function(data)
+                local value = tonumber(data)
+
+                if not value then
+                    error(string.format('Data "%s" must be a 1-or-more number.', data), 0)
+                end
+
+                if value < 0 then
+                    -- NOTE: Validate that the path exists
+                    error(string.format('Value "%s" cannot be less than 1.', value), 0)
+                end
+
+                return value
+            end,
+            help = "Test.",
+        })
+
+        local namespace = parser:parse_arguments("12")
+        assert.same({ value = 12 }, namespace)
+
+        local success, message = pcall(function() parser:parse_arguments("ttt") end)
+        assert.is_false(success)
+        assert.equal('Data "ttt" must be a 1-or-more number.', message)
+
+        success, message = pcall(function() parser:parse_arguments('"-123"') end)
+        assert.is_false(success)
+        assert.equal('Value "-123" cannot be less than 1.', message)
+
+        top_cmdparse.create_user_command(parser)
+
+        success, message = pcall(function() vim.cmd[[Test "-1234"]] end)
+        assert.is_false(success)
+        assert.equal('vim/_editor.lua:0: nvim_exec2(): Vim:Value "-1234" cannot be less than 1.', message)
+    end)
+
     it("works with a known type function", function()
         local parser = cmdparse.ParameterParser.new({ help = "Test" })
         parser:add_parameter({
