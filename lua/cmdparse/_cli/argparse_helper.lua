@@ -60,18 +60,25 @@ function M.rstrip_arguments(results, column)
     ---@type argparse.Argument[]
     local arguments = {}
 
-    for _, argument in ipairs(results.arguments) do
-        if argument.range.end_column == column then
-            table.insert(arguments, argument)
-        elseif argument.range.end_column > column then
-            if argument.argument_type == argparse.ArgumentType.position then
-                local cropped_argument = _make_left_cropped_position(argument, column)
-                table.insert(arguments, cropped_argument)
+    if not vim.tbl_isempty(results.arguments) then
+        local count = results.arguments
+        local whole_arguments = tabler.get_slice(results.arguments, 1, #count - 1)
+
+        for _, argument in ipairs(whole_arguments) do
+            if argument.range.end_column > column then
+                break
             end
 
-            break
-        else
             table.insert(arguments, argument)
+        end
+
+        local last = results.arguments[#count]
+
+        if last.range.end_column <= column then
+            table.insert(arguments, last)
+        elseif last.argument_type == argparse.ArgumentType.position then
+            local cropped_argument = _make_left_cropped_position(last, column)
+            table.insert(arguments, cropped_argument)
         end
     end
 
