@@ -32,7 +32,7 @@ function M.create_user_command(parser, name)
             complete = M.make_parser_completer(caller),
         })
     else
-        local name = name or parser.name
+        name = name or parser.name
 
         if not name then
             error(string.format('Parser "%s" must have a name.', vim.inspect(parser, { depth = 1 })), 0)
