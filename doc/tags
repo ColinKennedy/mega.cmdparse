@@ -1,6 +1,20 @@
+mega.cmdparse-configuration	mega.cmdparse.txt	/*mega.cmdparse-configuration*
+mega.cmdparse-features	mega.cmdparse.txt	/*mega.cmdparse-features*
+mega.cmdparse-features-api	mega.cmdparse.txt	/*mega.cmdparse-features-api*
+mega.cmdparse-features-demos	mega.cmdparse.txt	/*mega.cmdparse-features-demos*
+mega.cmdparse-features-examples	mega.cmdparse.txt	/*mega.cmdparse-features-examples*
+mega.cmdparse-installation	mega.cmdparse.txt	/*mega.cmdparse-installation*
+mega.cmdparse-mega.cmdparse	mega.cmdparse.txt	/*mega.cmdparse-mega.cmdparse*
 mega.cmdparse-new-breaking	news.txt	/*mega.cmdparse-new-breaking*
 mega.cmdparse-new-features	news.txt	/*mega.cmdparse-new-features*
 mega.cmdparse-news.txt	news.txt	/*mega.cmdparse-news.txt*
+mega.cmdparse-other-plugins	mega.cmdparse.txt	/*mega.cmdparse-other-plugins*
+mega.cmdparse-table-of-contents	mega.cmdparse.txt	/*mega.cmdparse-table-of-contents*
+mega.cmdparse-tests	mega.cmdparse.txt	/*mega.cmdparse-tests*
+mega.cmdparse-tests-initialization	mega.cmdparse.txt	/*mega.cmdparse-tests-initialization*
+mega.cmdparse-tests-running	mega.cmdparse.txt	/*mega.cmdparse-tests-running*
+mega.cmdparse-tracking-updates	mega.cmdparse.txt	/*mega.cmdparse-tracking-updates*
+mega.cmdparse-under-construction-	mega.cmdparse.txt	/*mega.cmdparse-under-construction-*
 mega.cmdparse.Configuration	mega_cmdparse_types.txt	/*mega.cmdparse.Configuration*
 mega.cmdparse.ConfigurationCmdparse	mega_cmdparse_types.txt	/*mega.cmdparse.ConfigurationCmdparse*
 mega.cmdparse.ConfigurationCmdparseAutoComplete	mega_cmdparse_types.txt	/*mega.cmdparse.ConfigurationCmdparseAutoComplete*
@@ -9,3 +23,4 @@ mega.cmdparse.ParameterParser.new()	mega_cmdparse_api.txt	/*mega.cmdparse.Parame
 mega.cmdparse.create_user_command()	mega_cmdparse_api.txt	/*mega.cmdparse.create_user_command()*
 mega.cmdparse.make_parser_completer()	mega_cmdparse_api.txt	/*mega.cmdparse.make_parser_completer()*
 mega.cmdparse.make_parser_triager()	mega_cmdparse_api.txt	/*mega.cmdparse.make_parser_triager()*
+mega.cmdparse.txt	mega.cmdparse.txt	/*mega.cmdparse.txt*
