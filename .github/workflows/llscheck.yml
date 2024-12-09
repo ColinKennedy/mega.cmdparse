@@ -49,7 +49,30 @@ jobs:
     - name: Install llscheck
       run: |
         luarocks install llscheck
+        luarocks install nlua
 
-    - name: test
+    - name: Clone dependencies - busted
+      uses: actions/checkout@v4
+      with:
+        repository: "LuaCATS/busted"
+        path: ".dependencies/busted"
+
+    - name: Clone dependencies - luassert
+      uses: actions/checkout@v4
+      with:
+        repository: "LuaCATS/luassert"
+        path: ".dependencies/luassert"
+
+    - name: Clone dependencies - luavit-meta
+      uses: actions/checkout@v4
+      with:
+        repository: "Bilal2453/luvit-meta"
+        path: ".dependencies/luvit-meta"
+
+    - name: Print Version
       run: |
-        VIMRUNTIME=`nvim -l scripts/print_vimruntime_environment_variable.lua` llscheck --configpath .github/workflows/.luarc.json .
+        lua-language-server --version
+
+    - name: Test
+      run: |
+        VIMRUNTIME=`nlua -e 'io.write(os.getenv("VIMRUNTIME"))'` llscheck --configpath .github/workflows/.luarc.json .

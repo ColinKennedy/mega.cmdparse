@@ -18,4 +18,4 @@ jobs:
         with:
           version: latest
           token: ${{ secrets.GITHUB_TOKEN }}
-          args: --color always --check lua plugin spec
+          args: --color always --check lua spec

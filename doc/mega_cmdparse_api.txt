@@ -1,0 +1,75 @@
+==============================================================================
+------------------------------------------------------------------------------
+All function(s) that can be called externally by other Lua modules.
+
+If a function's signature here changes in some incompatible way, this
+package must get a new **major** version.
+
+------------------------------------------------------------------------------
+                                           *mega.cmdparse.create_user_command()*
+
+`mega.cmdparse.create_user_command`({parser}, {name})
+
+Create a Neovim command according to `parser`.
+
+Raises:
+    If `parser` does not have a name defined. It's normally optional for
+    a parser to have a name but here, specifically, it must have a name.
+
+Parameters ~
+    {parser} mega.cmdparse.ParserCreator
+        The top-level command to define.
+
+------------------------------------------------------------------------------
+                                         *mega.cmdparse.make_parser_completer()*
+
+`mega.cmdparse.make_parser_completer`({parser_creator})
+
+Make a function that can auto-complete based on the parser of `parser_creator`.
+
+Parameters ~
+    {parser_creator} mega.cmdparse.ParserCreator
+       A function that creates the decision tree that parses text.
+
+Return ~
+    `(fun(_: any, all_text: string, _: any): string[]?)`
+       A deferred function that creates the COMMAND mode parser, runs it, and
+       gets all auto-complete values back if any were found.
+
+------------------------------------------------------------------------------
+                                           *mega.cmdparse.make_parser_triager()*
+
+`mega.cmdparse.make_parser_triager`({parser_creator})
+
+Create a deferred function that can parse and execute a user's arguments.
+
+Parameters ~
+    {parser_creator} mega.cmdparse.ParserCreator
+       A function that creates the decision tree that parses text.
+
+Return ~
+    `(fun(opts: table): nil)`
+       A function that will parse the user's arguments.
+
+------------------------------------------------------------------------------
+                                           *mega.cmdparse.ParameterParser.new()*
+
+`mega.cmdparse.ParameterParser.new`({options})
+
+Create a new `cmdparse.ParameterParser`.
+
+If the parser is a child of a subparser then this instance must be given
+a name via `{name="foo"}` or this function will error.
+
+Parameters ~
+    {options} mega.cmdparse.ParameterParserInputOptions | mega.cmdparse.ParameterParserOptions
+       The options that we might pass to `cmdparse.ParameterParser.new`.
+
+Return ~
+    mega.cmdparse.ParameterParser
+       The created instance.
+
+
+WARNING: This file is auto-generated. Do not edit it!
+
+ vim:tw=78:ts=8:noet:ft=help:norl:
