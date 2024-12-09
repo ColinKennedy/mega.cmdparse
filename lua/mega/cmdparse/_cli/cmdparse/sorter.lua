@@ -1,15 +1,15 @@
 --- Make sorting arguments easier.
 ---
----@module 'cmdparse._cli.cmdparse.sorter'
+---@module 'mega.cmdparse._cli.cmdparse.sorter'
 ---
 
-local argparse = require("cmdparse._cli.argparse")
-local help_message = require("cmdparse._cli.cmdparse.help_message")
-local texter = require("cmdparse._core.texter")
+local argparse = require("mega.cmdparse._cli.argparse")
+local help_message = require("mega.cmdparse._cli.cmdparse.help_message")
+local texter = require("mega.cmdparse._core.texter")
 
 local M = {}
 
----@class cmdparse._sorter.ArgumentCategories
+---@class mega.cmdparse._sorter.ArgumentCategories
 ---    A series of arguments that the user wrote, split into various sections.
 ---@field flags table<string, string[]>
 ---    All arguments that starts with - / + e.g. `{"--foo", "--bar", "--fizz=buzz"}`.
@@ -45,7 +45,7 @@ end
 ---@param arguments string[]
 ---    The values to categorize based on if they are a position, flag, or named argument.
 ---    e.g. `{"a", "z", "b", "--named=foo", "--help", "--named=bar", "-a", "-z"}`
----@return cmdparse._sorter.ArgumentCategories
+---@return mega.cmdparse._sorter.ArgumentCategories
 ---    The arguments by-category. e.g. `{flags={"--named=foo", "--help",
 ---    "--named=bar", "-a", "-z"}, positions={"a", "z", "b"}}`.
 ---
@@ -87,7 +87,7 @@ end
 ---     - But their values, which come directly from the user, are not sorted!
 --- - Certain, known flags that are not likely to be picked go at the end. e.g. --help.
 ---
----@param arguments cmdparse._sorter.ArgumentCategories
+---@param arguments mega.cmdparse._sorter.ArgumentCategories
 ---    The values to sort. e.g. `{"b", "a", "zzz" "--help", "-a", "--zoo", "--abc",
 ---    "--named=a", "--named=c", "--named=b"}`.
 ---@return string[]

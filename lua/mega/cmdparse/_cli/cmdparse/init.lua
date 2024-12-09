@@ -1,46 +1,46 @@
 --- Parse text into positional / named arguments.
 ---
----@module 'cmdparse._cli.cmdparse'
+---@module 'mega.cmdparse._cli.cmdparse'
 ---
 
-local argparse = require("cmdparse._cli.argparse")
-local argparse_helper = require("cmdparse._cli.argparse_helper")
-local configuration = require("cmdparse._core.configuration")
-local constant = require("cmdparse._cli.cmdparse.constant")
-local evaluator = require("cmdparse._cli.cmdparse.evaluator")
-local help_message = require("cmdparse._cli.cmdparse.help_message")
-local iterator_helper = require("cmdparse._cli.cmdparse.iterator_helper")
-local matcher = require("cmdparse._cli.cmdparse.matcher")
-local sorter = require("cmdparse._cli.cmdparse.sorter")
-local tabler = require("cmdparse._core.tabler")
-local text_parse = require("cmdparse._cli.cmdparse.text_parse")
-local texter = require("cmdparse._core.texter")
-local types_input = require("cmdparse._cli.cmdparse.types_input")
+local argparse = require("mega.cmdparse._cli.argparse")
+local argparse_helper = require("mega.cmdparse._cli.argparse_helper")
+local configuration = require("mega.cmdparse._core.configuration")
+local constant = require("mega.cmdparse._cli.cmdparse.constant")
+local evaluator = require("mega.cmdparse._cli.cmdparse.evaluator")
+local help_message = require("mega.cmdparse._cli.cmdparse.help_message")
+local iterator_helper = require("mega.cmdparse._cli.cmdparse.iterator_helper")
+local matcher = require("mega.cmdparse._cli.cmdparse.matcher")
+local sorter = require("mega.cmdparse._cli.cmdparse.sorter")
+local tabler = require("mega.cmdparse._core.tabler")
+local text_parse = require("mega.cmdparse._cli.cmdparse.text_parse")
+local texter = require("mega.cmdparse._core.texter")
+local types_input = require("mega.cmdparse._cli.cmdparse.types_input")
 
----@alias cmdparse.Action "append" | "count" | "store_false" | "store_true" | fun(data: cmdparse.ActionData): nil
+---@alias mega.cmdparse.Action "append" | "count" | "store_false" | "store_true" | fun(data: mega.cmdparse.ActionData): nil
 ---    This controls the behavior of how parsed arguments are added into the
 ---    final parsed `cmdparse.Namespace`.
 
----@alias cmdparse.Namespace table<string, any> All parsed values.
+---@alias mega.cmdparse.Namespace table<string, any> All parsed values.
 
----@alias cmdparse.MultiNumber number | "*" | "+"
+---@alias mega.cmdparse.MultiNumber number | "*" | "+"
 ---    The number of elements needed to satisfy a parameter. * == 0-or-more.
 ---    + == 1-or-more. A number means "we need exactly this number of
 ---    elements".
 
----@class cmdparse.ActionData
+---@class mega.cmdparse.ActionData
 ---    A struct of data that gets passed to an Parameter's action.
 ---@field name string
 ---    The parameter name to set/append/etc some `value`.
----@field namespace cmdparse.Namespace
+---@field namespace mega.cmdparse.Namespace
 ---    The container where a parsed argument + value will go into. This
 ---    object gets directly modified when an action is called.
 ---@field value any
 ---    A value to add into `namespace`.
 
----@class cmdparse.ChoiceData
+---@class mega.cmdparse.ChoiceData
 ---    The information that gets passed to a typical `option.choices(...)` call.
----@field contexts cmdparse.ChoiceContext[]
+---@field contexts mega.cmdparse.ChoiceContext[]
 ---    Extra information about what caused `choices()` to be called. For
 ---    example we pass information like "I am currently auto-completing" or
 ---    other details using this value.
@@ -48,14 +48,14 @@ local types_input = require("cmdparse._cli.cmdparse.types_input")
 ---    If the argument has an existing-written value written by the user, this
 ---    text is passed as `current_value`.
 
----@class cmdparse.ParameterInputOptions
+---@class mega.cmdparse.ParameterInputOptions
 ---    All of the settings to include in a new parameter.
----@field action cmdparse.Action?
+---@field action mega.cmdparse.Action?
 ---    This controls the behavior of how parsed arguments are added into the
 ---    final parsed `cmdparse.Namespace`.
----@field choices (string[] | fun(data: cmdparse.ChoiceData?): string[])?
+---@field choices (string[] | fun(data: mega.cmdparse.ChoiceData?): string[])?
 ---    If included, the parameter can only accept these choices as values.
----@field count cmdparse.MultiNumber?
+---@field count mega.cmdparse.MultiNumber?
 ---    The number of times that this parameter must be written.
 ---@field default any?
 ---    When this parameter is visited, this value is added to the returned
@@ -71,9 +71,9 @@ local types_input = require("cmdparse._cli.cmdparse.types_input")
 ---    The ways to refer to this instance.
 ---@field names string[]?
 ---    The ways to refer to this instance.
----@field nargs cmdparse.MultiNumber?
+---@field nargs mega.cmdparse.MultiNumber?
 ---    The number of elements that this parameter consumes at once.
----@field parent cmdparse.ParameterParser?
+---@field parent mega.cmdparse.ParameterParser?
 ---    The parser that owns this instance.
 ---@field required boolean?
 ---    If `true`, this parameter must get satisfying value(s) before the
@@ -86,9 +86,9 @@ local types_input = require("cmdparse._cli.cmdparse.types_input")
 ---    Extra text to include in --help messages. Usually to indicate
 ---    the sort of value that a position / named argument needs.
 
----@class cmdparse.ParameterOptions: cmdparse.ParameterInputOptions
+---@class mega.cmdparse.ParameterOptions: mega.cmdparse.ParameterInputOptions
 ---    All of the settings to include in a new parameter.
----@field choices (fun(data: cmdparse.ChoiceData?): string[])?
+---@field choices (fun(data: mega.cmdparse.ChoiceData?): string[])?
 ---    If included, the parameter can only accept these choices as values.
 ---@field required boolean
 ---    If `true`, this parameter must get satisfying value(s) before the
@@ -98,24 +98,24 @@ local types_input = require("cmdparse._cli.cmdparse.types_input")
 ---    The expected output type. If a function is given, assume that the user
 ---    knows what they're doing and use their function's return value.
 
----@class cmdparse.ParameterParserInputOptions
+---@class mega.cmdparse.ParameterParserInputOptions
 ---    The options that we might pass to `cmdparse.ParameterParser.new`.
----@field choices (string[] | fun(data: cmdparse.ChoiceData?): string[])?
+---@field choices (string[] | fun(data: mega.cmdparse.ChoiceData?): string[])?
 ---    If included, the parameter can only accept these choices as values.
 ---@field help string
 ---    Explain what this parser is meant to do and the parameter(s) it needs.
 ---    Keep it brief (< 88 characters).
 ---@field name string?
 ---    The parser name. This only needed if this parser has a parent subparser.
----@field parent cmdparse.Subparsers?
+---@field parent mega.cmdparse.Subparsers?
 ---    A subparser that own this `cmdparse.ParameterParser`, if any.
 
----@class cmdparse.ParameterParserOptions: cmdparse.ParameterParserInputOptions
+---@class mega.cmdparse.ParameterParserOptions: mega.cmdparse.ParameterParserInputOptions
 ---    The options that we might pass to `cmdparse.ParameterParser.new`.
----@field choices (fun(data: cmdparse.ChoiceData?): string[])?
+---@field choices (fun(data: mega.cmdparse.ChoiceData?): string[])?
 ---    If included, the parameter can only accept these choices as values.
 
----@class cmdparse.SubparsersOptions
+---@class mega.cmdparse.SubparsersOptions
 ---    Customization options for the new cmdparse.Subparsers.
 ---@field destination string?
 ---    An internal name to track this subparser group.
@@ -124,33 +124,33 @@ local types_input = require("cmdparse._cli.cmdparse.types_input")
 ---    brief (< 88 characters).
 ---@field name string
 ---    The identifier for all parsers under this instance.
----@field parent cmdparse.ParameterParser?
+---@field parent mega.cmdparse.ParameterParser?
 ---    The parser that owns this instance, if any.
 ---@field required boolean?
 ---    If `true` then one of the parser children must be matched or the user's
 ---    argument input is considered invalid. If `false` then the inner parser
 ---    does not have to be explicitly written. Defaults to false.
 
----@class cmdparse.SubparsersInputOptions: cmdparse.SubparsersOptions
+---@class mega.cmdparse.SubparsersInputOptions: mega.cmdparse.SubparsersOptions
 ---    Customization options for the new cmdparse.Subparsers.
 ---@field [1] string?
 ---    A shorthand for the subparser name.
 
----@class cmdparse._core.DisplayOptions
+---@class mega.cmdparse._core.DisplayOptions
 ---    Control minor behaviors of this function. e.g. What data to show.
 ---@field excluded_names string[]?
 ---    Prevent parameters from returning from functions if they are in this
 ---    list. e.g. don't show any parameter in during auto-completion if it is
 ---    in `excluded_names`.
 
-local vlog = require("cmdparse._vendors.vlog")
+local vlog = require("mega.cmdparse._vendors.vlog")
 
 local M = {}
 local _P = {}
 
----@class cmdparse.Parameter
+---@class mega.cmdparse.Parameter
 ---    An optional / required parameter for some parser.
----@field action cmdparse.Action?
+---@field action mega.cmdparse.Action?
 ---    This controls the behavior of how parsed parameters are added into the
 ---    final parsed `cmdparse.Namespace`.
 ---@field destination string?
@@ -177,9 +177,9 @@ _P.Parameter = {
 }
 _P.Parameter.__index = _P.Parameter
 
----@class cmdparse.ParameterParser
+---@class mega.cmdparse.ParameterParser
 ---    A starting point for parameters (positional parameters, flag parameters, etc).
----@field choices (fun(data: cmdparse.ChoiceData?): string[])?
+---@field choices (fun(data: mega.cmdparse.ChoiceData?): string[])?
 ---    If included, this parser can be referred to using these names instead of its expected name.
 ---@field help string
 ---    Explain what this parser is meant to do and the parameter(s) it needs.
@@ -199,7 +199,7 @@ M.ParameterParser = {
 }
 M.ParameterParser.__index = M.ParameterParser
 
----@class cmdparse.Subparsers A group of parsers.
+---@class mega.cmdparse.Subparsers A group of parsers.
 _P.Subparsers = {
     __tostring = function(subparsers)
         return string.format(
@@ -213,7 +213,7 @@ _P.Subparsers.__index = _P.Subparsers
 
 --- Check if `data` wants to show "--help" flags during cmdparse commands.
 ---
----@param data cmdparse.ConfigurationCmdparseAutoComplete?
+---@param data mega.cmdparse.ConfigurationCmdparseAutoComplete?
 ---    The user settings to read from, if any. If no data is given, the user's
 ---    default configuration is used insteand.
 ---@return boolean
@@ -237,7 +237,7 @@ end
 
 --- If `parameter` is expected to have one value or a array-of-values.
 ---
----@param parameter cmdparse.Parameter The position / flag / named parameter to check.
+---@param parameter mega.cmdparse.Parameter The position / flag / named parameter to check.
 ---@return boolean # If single-value, return `false`.
 ---
 local function _is_listicle(parameter)
@@ -286,8 +286,8 @@ end
 --- Note:
 ---     This function is **inclusive**, meaning `parser` will be returned.
 ---
----@param parser cmdparse.ParameterParser The starting point to look for parsers.
----@return cmdparse.ParameterParser[] # All found `parser` + child parsers.
+---@param parser mega.cmdparse.ParameterParser The starting point to look for parsers.
+---@return mega.cmdparse.ParameterParser[] # All found `parser` + child parsers.
 ---
 local function _get_all_parsers(parser)
     local stack = { parser }
@@ -313,9 +313,9 @@ end
 
 --- Find the first subparser that matches `prefix`, if any.
 ---
----@param parser cmdparse.ParameterParser The starting point to look for parsers.
+---@param parser mega.cmdparse.ParameterParser The starting point to look for parsers.
 ---@param prefix string An expected name. e.g. `"sub-command"`.
----@return cmdparse.ParameterParser? # The found subparser, if any.
+---@return mega.cmdparse.ParameterParser? # The found subparser, if any.
 ---
 local function _get_child_parser_by_name(parser, prefix)
     for parser_ in iterator_helper.iter_parsers(parser) do
@@ -329,7 +329,7 @@ end
 
 --- Find all child parser names under `parser`.
 ---
----@param parser cmdparse.ParameterParser The starting point to look for child parsers.
+---@param parser mega.cmdparse.ParameterParser The starting point to look for child parsers.
 ---@return string[] # All parser names, if any are defined.
 ---
 local function _get_child_parser_names(parser)
@@ -345,11 +345,11 @@ end
 
 --- Complete values for `argument`, using choices from `parameter`.
 ---
----@param parameter cmdparse.Parameter
+---@param parameter mega.cmdparse.Parameter
 ---    The named parameter to query from.
 ---@param argument argparse.Argument
 ---    The actual user input to include in the auto-complete result.
----@param contexts cmdparse.ChoiceContext[]
+---@param contexts mega.cmdparse.ChoiceContext[]
 ---    Extra information about what caused `choices()` to be called.
 ---@return string[]
 ---    The generated output. e.g. `--foo=bar`, `--foo=fizz`, `--foo=buzz`, etc.
@@ -379,10 +379,10 @@ end
 
 --- Decide from `data` what should be displayed to a user (e.g. during auto-complete).
 ---
----@param options cmdparse.ConfigurationCmdparseAutoComplete?
+---@param options mega.cmdparse.ConfigurationCmdparseAutoComplete?
 ---    The user settings to read from, if any. If no data is given, the user's
 ---    default configuration is used insteand.
----@return cmdparse._core.DisplayOptions
+---@return mega.cmdparse._core.DisplayOptions
 ---    If `true` then the --help flag should be down. If `false`, don't.
 ---
 local function _get_display_options(options)
@@ -407,10 +407,10 @@ end
 --- If `parameter is a flag and `argument` is not a position then `argument`
 --- is definitely a starting value for another parameter.
 ---
----@param parser cmdparse.ParameterParser The direct parent to look within.
----@param parameter cmdparse.Parameter A fallback parameter to use.
+---@param parser mega.cmdparse.ParameterParser The direct parent to look within.
+---@param parameter mega.cmdparse.Parameter A fallback parameter to use.
 ---@param argument argparse.Argument The next position that we think we can match.
----@return cmdparse.Parameter # The recommended parameter that should be used next.
+---@return mega.cmdparse.Parameter # The recommended parameter that should be used next.
 ---
 local function _get_next_parameter_if_needed(parser, parameter, argument)
     if parameter:is_position() then
@@ -460,7 +460,7 @@ end
 
 --- Check `position` for matching, contiguous `arguments`.
 ---
----@param position cmdparse.Parameter
+---@param position mega.cmdparse.Parameter
 ---    The `foo`, `bar`, etc parameter to check.
 ---@param arguments argparse.Argument[]
 ---    The arguments to match against `positions`. Every element in `arguments`
@@ -504,9 +504,9 @@ end
 
 --- Combined `namespace` with all other `...` namespaces.
 ---
----@param namespace cmdparse.Namespace
+---@param namespace mega.cmdparse.Namespace
 ---    The starting namespace that will be modified.
----@param ... cmdparse.Namespace[]
+---@param ... mega.cmdparse.Namespace[]
 ---    All other namespaces to merge into `namespace`. Later entries will
 ---    override previous entries.
 ---
@@ -569,9 +569,9 @@ end
 ---
 ---@param argument argparse.Argument
 ---    Some position, flag, or named user argument.
----@param parser cmdparse.ParameterParser
+---@param parser mega.cmdparse.ParameterParser
 ---    The direct parent to look within.
----@param contexts cmdparse.ChoiceContext[]?
+---@param contexts mega.cmdparse.ChoiceContext[]?
 ---    A description of how / when this function is called. It gets passed to
 ---    `cmdparse.Parameter.choices()`.
 ---@return boolean
@@ -645,7 +645,7 @@ end
 
 --- Get the "top line" of a typical --help message.
 ---
----@param parser cmdparse.ParameterParser The root parser to get a summary for.
+---@param parser mega.cmdparse.ParameterParser The root parser to get a summary for.
 ---@return string # A one/two liner explanation of this instance's expected parameters.
 ---
 function _P.get_usage_summary(parser)
@@ -692,7 +692,7 @@ end
 --- Raises:
 ---     If `arguments` fails to meet the requirements of `nargs`.
 ---
----@param nargs number | cmdparse.Counter
+---@param nargs number | mega.cmdparse.Counter
 ---    A fixed number or "0-or-more" or "1-or-more" etc. Basically it's the
 ---    condition that this function must satisfy or raise an exception.
 ---@param arguments argparse.Argument[]
@@ -739,18 +739,18 @@ end
 
 --- Create a new group of parsers.
 ---
----@param options cmdparse.SubparsersInputOptions | cmdparse.SubparsersOptions
+---@param options mega.cmdparse.SubparsersInputOptions | mega.cmdparse.SubparsersOptions
 ---    Customization options for the new cmdparse.Subparsers.
----@return cmdparse.Subparsers
+---@return mega.cmdparse.Subparsers
 ---    A group of parsers (which will be filled with parsers later).
 ---
 function _P.Subparsers.new(options)
     if not options.name and options[1] then
         options.name = options[1]
     end
-    ---@cast options cmdparse.SubparsersOptions
+    ---@cast options mega.cmdparse.SubparsersOptions
 
-    --- @class cmdparse.Subparsers
+    --- @class mega.cmdparse.Subparsers
     local self = setmetatable({}, _P.Subparsers)
 
     self.name = options.name
@@ -766,21 +766,21 @@ end
 
 --- Create a new `cmdparse.ParameterParser` using `options`.
 ---
----@param options cmdparse.ParameterParserInputOptions | cmdparse.ParameterParserOptions | cmdparse.ParameterParser
+---@param options mega.cmdparse.ParameterParserInputOptions | mega.cmdparse.ParameterParserOptions | mega.cmdparse.ParameterParser
 ---    The options to pass to `cmdparse.ParameterParser.new`.
----@return cmdparse.ParameterParser
+---@return mega.cmdparse.ParameterParser
 ---    The created parser.
 ---
 function _P.Subparsers:add_parser(options)
     if _is_parser(options) then
-        ---@cast options cmdparse.ParameterParser
+        ---@cast options mega.cmdparse.ParameterParser
         options:set_parent(self)
         table.insert(self._parsers, options)
 
         return options
     end
 
-    ---@cast options cmdparse.ParameterParserInputOptions | cmdparse.ParameterParserOptions
+    ---@cast options mega.cmdparse.ParameterParserInputOptions | mega.cmdparse.ParameterParserOptions
     local new_options = vim.tbl_deep_extend("force", options, { parent = self })
     local parser = M.ParameterParser.new(new_options)
 
@@ -789,18 +789,18 @@ function _P.Subparsers:add_parser(options)
     return parser
 end
 
----@return cmdparse.ParameterParser[] # Get all of the child parsers for this instance.
+---@return mega.cmdparse.ParameterParser[] # Get all of the child parsers for this instance.
 function _P.Subparsers:get_parsers()
     return self._parsers
 end
 
 --- Create a new instance using `options`.
 ---
----@param options cmdparse.ParameterOptions All of the settings to include in a new parse argument.
----@return cmdparse.Parameter # The created instance.
+---@param options mega.cmdparse.ParameterOptions All of the settings to include in a new parse argument.
+---@return mega.cmdparse.Parameter # The created instance.
 ---
 function _P.Parameter.new(options)
-    --- @class cmdparse.Parameter
+    --- @class mega.cmdparse.Parameter
     local self = setmetatable({}, _P.Parameter)
 
     self._action = nil
@@ -841,17 +841,17 @@ function _P.Parameter:is_position()
     return text_parse.is_position_name(self.names[1])
 end
 
----@return fun(data: cmdparse.ActionData): nil # A function that directly modifies the contents of `data`.
+---@return fun(data: mega.cmdparse.ActionData): nil # A function that directly modifies the contents of `data`.
 function _P.Parameter:get_action()
     return self._action
 end
 
----@return cmdparse.Action # The original action type. e.g. `"store_true"`.
+---@return mega.cmdparse.Action # The original action type. e.g. `"store_true"`.
 function _P.Parameter:get_action_type()
     return self._action_type
 end
 
----@return cmdparse.MultiNumber # The number of elements that this argument consumes at once.
+---@return mega.cmdparse.MultiNumber # The number of elements that this argument consumes at once.
 function _P.Parameter:get_nargs()
     return self._nargs
 end
@@ -888,24 +888,24 @@ end
 
 --- Describe how this argument should ingest new CLI value(s).
 ---
----@param action cmdparse.Action The selected functionality.
+---@param action mega.cmdparse.Action The selected functionality.
 ---
 function _P.Parameter:set_action(action)
     self._action_type = action
 
     if action == constant.Action.store_false then
         action = function(data)
-            ---@cast data cmdparse.ActionData
+            ---@cast data mega.cmdparse.ActionData
             data.namespace[data.name] = false
         end
     elseif action == constant.Action.store_true then
         action = function(data)
-            ---@cast data cmdparse.ActionData
+            ---@cast data mega.cmdparse.ActionData
             data.namespace[data.name] = true
         end
     elseif action == constant.Action.count then
         action = function(data)
-            ---@cast data cmdparse.ActionData
+            ---@cast data mega.cmdparse.ActionData
             local name = data.name
             local namespace = data.namespace
 
@@ -917,7 +917,7 @@ function _P.Parameter:set_action(action)
         end
     elseif action == "append" then
         action = function(data)
-            ---@cast data cmdparse.ActionData
+            ---@cast data mega.cmdparse.ActionData
             local name = data.name
             local namespace = data.namespace
 
@@ -931,7 +931,7 @@ function _P.Parameter:set_action(action)
         action = action
     else
         action = function(data)
-            ---@cast data cmdparse.ActionData
+            ---@cast data mega.cmdparse.ActionData
             data.namespace[data.name] = data.value
         end
     end
@@ -971,9 +971,9 @@ end
 --- If the parser is a child of a subparser then this instance must be given
 --- a name via `{name="foo"}` or this function will error.
 ---
----@param options cmdparse.ParameterParserInputOptions | cmdparse.ParameterParserOptions
+---@param options mega.cmdparse.ParameterParserInputOptions | mega.cmdparse.ParameterParserOptions
 ---    The options that we might pass to `cmdparse.ParameterParser.new`.
----@return cmdparse.ParameterParser
+---@return mega.cmdparse.ParameterParser
 ---    The created instance.
 ---
 function M.ParameterParser.new(options)
@@ -982,14 +982,14 @@ function M.ParameterParser.new(options)
     end
 
     if options.parent then
-        ---@cast options cmdparse.ParameterParserOptions
+        ---@cast options mega.cmdparse.ParameterParserOptions
         types_input.validate_name(options)
     end
 
     types_input.expand_choices_options(options)
-    --- @cast options cmdparse.ParameterParserOptions
+    --- @cast options mega.cmdparse.ParameterParserOptions
 
-    --- @class cmdparse.ParameterParser
+    --- @class mega.cmdparse.ParameterParser
     local self = setmetatable({}, M.ParameterParser)
 
     self.name = options.name
@@ -1011,12 +1011,12 @@ end
 ---
 ---@param data argparse.Results
 ---    User text that needs to be parsed.
----@param parser cmdparse.ParameterParser?
+---@param parser mega.cmdparse.ParameterParser?
 ---    The root parser to get a summary for. If no parser is given,
 ---    we auto-find it using `data`.
 ---@return string
 ---    The found "Usage: ..." line.
----@return cmdparse.ParameterParser
+---@return mega.cmdparse.ParameterParser
 ---    The lowest parser that was found during parsing.
 ---
 function M.ParameterParser:_get_argument_usage_summary(data, parser)
@@ -1085,7 +1085,7 @@ end
 ---    The user input.
 ---@param column number?
 ---    A 1-or-more value that represents the user's cursor.
----@param options cmdparse.ConfigurationCmdparseAutoComplete?
+---@param options mega.cmdparse.ConfigurationCmdparseAutoComplete?
 ---    The user settings to read from, if any. If no data is given, the user's
 ---    default configuration is used insteand.
 ---@return string[]
@@ -1154,17 +1154,17 @@ function M.ParameterParser:_get_completion(data, column, options)
     if is_allowed_to_match_partial_results then
         if _is_parser(recent_item) then
             local last_value = text_parse.get_argument_value_text(last)
-            ---@cast recent_item cmdparse.ParameterParser
+            ---@cast recent_item mega.cmdparse.ParameterParser
             vim.list_extend(
                 output,
                 matcher.get_parser_exact_or_partial_matches(recent_item, last_name, last_value, contexts)
             )
         elseif text_parse.is_incomplete_named_argument(last) then
-            ---@cast recent_item cmdparse.Parameter
+            ---@cast recent_item mega.cmdparse.Parameter
             local parameter = _get_next_parameter_if_needed(parser, recent_item, last)
             vim.list_extend(output, _get_named_argument_completion_choices(parameter, last, contexts))
         elseif _is_parameter(recent_item) then
-            ---@cast recent_item cmdparse.Parameter
+            ---@cast recent_item mega.cmdparse.Parameter
             local parameter = _get_next_parameter_if_needed(parser, recent_item, last)
 
             if not parameter then
@@ -1255,9 +1255,9 @@ function M.ParameterParser:_get_completion(data, column, options)
     return output
 end
 
----@return cmdparse.Namespace # All default values from all (direct) child parameters.
+---@return mega.cmdparse.Namespace # All default values from all (direct) child parameters.
 function M.ParameterParser:_get_default_namespace()
-    ---@type cmdparse.Namespace
+    ---@type mega.cmdparse.Namespace
     local output = {}
 
     for parameter in tabler.chain(self:get_position_parameters(), self:get_flag_parameters()) do
@@ -1280,11 +1280,11 @@ end
 --- Search recursively for the lowest possible `cmdparse.ParameterParser` from `data`.
 ---
 ---@param data argparse.Results All of the arguments to consider.
----@return cmdparse.ParameterParser # The found parser, if any.
+---@return mega.cmdparse.ParameterParser # The found parser, if any.
 ---
 function M.ParameterParser:_get_leaf_parser(data)
     local parser = self
-    --- @cast parser cmdparse.ParameterParser
+    --- @cast parser mega.cmdparse.ParameterParser
 
     for index, argument in ipairs(data.arguments) do
         if argument.argument_type == argparse.ArgumentType.position then
@@ -1330,15 +1330,15 @@ end
 --- Raises:
 ---     If a flag is found and a value is expected but we fail to get a value for it.
 ---
----@param flags cmdparse.Parameter[]
+---@param flags mega.cmdparse.Parameter[]
 ---    All `-f`, `--foo`, `-f=ttt`, and `--foo=ttt`, parameters to check.
 ---@param arguments argparse.Argument[]
 ---    The arguments to match against `flags`. If the first element in
 ---    `arguments` matches one of `flags`, the **remainder** of the arguments
 ---    are treated as **values** for the found parameter.
----@param namespace cmdparse.Namespace
+---@param namespace mega.cmdparse.Namespace
 ---    A container for the found match(es).
----@param contexts cmdparse.ChoiceContext[]?
+---@param contexts mega.cmdparse.ChoiceContext[]?
 ---    A description of how / when this function is called. It gets passed to
 ---    `cmdparse.Parameter.choices()`.
 ---@return boolean
@@ -1351,7 +1351,7 @@ function M.ParameterParser:_handle_exact_flag_parameters(flags, arguments, names
 
     --- Check if `parameter` is the type that requires a value (or, if not, it is a flag).
     ---
-    ---@param parameter cmdparse.Parameter The option to check.
+    ---@param parameter mega.cmdparse.Parameter The option to check.
     ---@return boolean # If `parameter` requires 1-or-more value, return `true`.
     ---
     local function _needs_a_value(parameter)
@@ -1395,7 +1395,7 @@ function M.ParameterParser:_handle_exact_flag_parameters(flags, arguments, names
     --- Raises:
     ---     If `value_arguments` does not satisfy `flag`.
     ---
-    ---@param flag cmdparse.Parameter
+    ---@param flag mega.cmdparse.Parameter
     ---    The option to get values for, if needed.
     ---@param value_arguments argparse.Argument[]
     ---    All of the values that we think could be related to `flag`.
@@ -1499,7 +1499,7 @@ function M.ParameterParser:_handle_exact_flag_parameters(flags, arguments, names
     --- Raises:
     ---     If `values` doesn't match the expected choices.
     ---
-    ---@param flag cmdparse.Parameter
+    ---@param flag mega.cmdparse.Parameter
     ---    A flag to check. e.g. `--foo`.
     ---@param values any
     ---    The starting value(s) to check from. For example a flag might have
@@ -1671,26 +1671,26 @@ end
 
 --- Add `positions` to `namespace` if they match `argument`.
 ---
----@param positions cmdparse.Parameter[]
+---@param positions mega.cmdparse.Parameter[]
 ---    All `foo`, `bar`, etc parameters to check.
 ---@param arguments argparse.Argument[]
 ---    The arguments to match against `positions`. If a match is found, the
 ---    remainder of the arguments are treated as **values** for the found
 ---    parameter.
----@param namespace cmdparse.Namespace
+---@param namespace mega.cmdparse.Namespace
 ---    A container for the found match(es).
----@param contexts cmdparse.ChoiceContext[]?
+---@param contexts mega.cmdparse.ChoiceContext[]?
 ---    A description of how / when this function is called. It gets passed to
 ---    `cmdparse.Parameter.choices()`.
 ---@return boolean
 ---    If a match was found, return `true`.
 ---@return number
 ---    The number of arguments used by the found flag, if any.
----@return cmdparse.Parameter?
+---@return mega.cmdparse.Parameter?
 ---    The matching parameter, if any.
 ---
 function M.ParameterParser:_handle_exact_position_parameters(positions, arguments, namespace, contexts)
-    ---@param parameter cmdparse.Parameter
+    ---@param parameter mega.cmdparse.Parameter
     ---@param arguments_ argparse.Argument[]
     ---@param count number
     ---@return string[] | string
@@ -1769,9 +1769,9 @@ end
 ---
 ---@param data argparse.Results The parsed arguments + any remainder text.
 ---@param argument_name string A raw argument name. e.g. `foo`.
----@param namespace cmdparse.Namespace An existing namespace to set/append/etc to the subparser.
+---@param namespace mega.cmdparse.Namespace An existing namespace to set/append/etc to the subparser.
 ---@return boolean # If a match was found, return `true`.
----@return cmdparse.ParameterParser? # The found subparser, if any.
+---@return mega.cmdparse.ParameterParser? # The found subparser, if any.
 ---
 function M.ParameterParser:_handle_subparsers(data, argument_name, namespace)
     --- (Before we allow running a subparser), Make sure that there are no issues.
@@ -1803,16 +1803,16 @@ end
 ---
 ---@param data argparse.Results
 ---    User text that needs to be parsed.
----@return cmdparse.ParameterParser
+---@return mega.cmdparse.ParameterParser
 ---    The parser that was found in a current or previous iteration.
----@return cmdparse.ParameterParser | cmdparse.Parameter
+---@return mega.cmdparse.ParameterParser | mega.cmdparse.Parameter
 ---    The most recently parsed thing. Basically wherever we left off in the
 ---    parsing of `data`.
 ---@return number
 ---    A 1-or-more index value of the argument that we stopped parsing on.
 ---
 function M.ParameterParser:_compute_matching_parsers(data, contexts)
-    ---@return cmdparse.Parameter?
+    ---@return mega.cmdparse.Parameter?
     ---@return number
     local function _seek_next_argument_from_flag(flag_parameters, arguments)
         local flag_argument = arguments[1]
@@ -1904,7 +1904,7 @@ function M.ParameterParser:_compute_matching_parsers(data, contexts)
     --
     local index = 1
     local found = false
-    ---@type cmdparse.ParameterParser | cmdparse.Parameter
+    ---@type mega.cmdparse.ParameterParser | mega.cmdparse.Parameter
     local current_item = self
 
     while index < count do
@@ -1977,7 +1977,7 @@ function M.ParameterParser:_compute_matching_parsers(data, contexts)
                 return current_parser, current_item, index
             end
 
-            ---@cast current_item cmdparse.Parameter
+            ---@cast current_item mega.cmdparse.Parameter
             current_item:increment_used()
 
             index = index + 1
@@ -2019,12 +2019,12 @@ end
 ---
 ---@param data string | argparse.Results
 ---    User text that needs to be parsed. e.g. `hello "World!"`
----@param namespace cmdparse.Namespace
+---@param namespace mega.cmdparse.Namespace
 ---    All pre-existing, default parsed values. If this is the first
 ---    cmdparse.ParameterParser then this `namespace` will always be empty
 ---    but a nested parser will usually have the parsed arguments of the
 ---    parent subparsers that were before it.
----@return cmdparse.Namespace
+---@return mega.cmdparse.Namespace
 ---    All of the parsed data as one group.
 ---
 function M.ParameterParser:_parse_arguments(data, namespace)
@@ -2233,10 +2233,10 @@ end
 
 --- Get all registered or implicit child parameters of this instance.
 ---
----@return cmdparse.Parameter[] # All found parameters, if any.
+---@return mega.cmdparse.Parameter[] # All found parameters, if any.
 ---
 function M.ParameterParser:get_all_parameters()
-    ---@type cmdparse.Parameter[]
+    ---@type mega.cmdparse.Parameter[]
     local output = {}
 
     for _, parameter in tabler.chain(self:get_position_parameters(), self:get_flag_parameters()) do
@@ -2252,7 +2252,7 @@ end
 ---    The user input.
 ---@param column number?
 ---    A 1-or-more value that represents the user's cursor.
----@param options cmdparse.ConfigurationCmdparseAutoComplete?
+---@param options mega.cmdparse.ConfigurationCmdparseAutoComplete?
 ---    The user settings to read from, if any. If no data is given, the user's
 ---    default configuration is used insteand.
 ---@return string[]
@@ -2304,7 +2304,7 @@ end
 ---@param data string | argparse.Results
 ---    User text that needs to be parsed. e.g. `hello "World!"`
 ---    If `data` includes subparsers, that subparser's help message is returned instead.
----@param parser cmdparse.ParameterParser?
+---@param parser mega.cmdparse.ParameterParser?
 ---    The root parser to get a summary for. If no parser is given,
 ---    we auto-find it using `data`.
 ---@return string
@@ -2326,7 +2326,7 @@ end
 
 --- The flags that a user didn't add to the parser but are included anyway.
 ---
----@return cmdparse.Parameter[]
+---@return mega.cmdparse.Parameter[]
 ---
 function M.ParameterParser:get_implicit_flag_parameters()
     return self._implicit_flag_parameters
@@ -2338,7 +2338,7 @@ end
 ---    If `hide_implicits` is true, only the flag parameters that a user
 ---    explicitly added are returned. If `false` or not defined, all flags are
 ---    returned.
----@return cmdparse.Parameter[]
+---@return mega.cmdparse.Parameter[]
 ---    Get all arguments that can be placed in any order.
 ---
 function M.ParameterParser:get_flag_parameters(options)
@@ -2346,7 +2346,7 @@ function M.ParameterParser:get_flag_parameters(options)
         return self._flag_parameters
     end
 
-    ---@type cmdparse.Parameter[]
+    ---@type mega.cmdparse.Parameter[]
     local output = {}
 
     vim.list_extend(output, self._flag_parameters)
@@ -2364,7 +2364,7 @@ function M.ParameterParser:get_names()
     return { self.name }
 end
 
----@return cmdparse.ParameterParser? # Get the parser that owns this parser, if any.
+---@return mega.cmdparse.ParameterParser? # Get the parser that owns this parser, if any.
 function M.ParameterParser:get_parent_parser()
     if not self._parent then
         return nil
@@ -2374,21 +2374,21 @@ function M.ParameterParser:get_parent_parser()
     return self._parent._parent
 end
 
----@return cmdparse.Parameter[] # Get all arguments that must be put in a specific order.
+---@return mega.cmdparse.Parameter[] # Get all arguments that must be put in a specific order.
 function M.ParameterParser:get_position_parameters()
     return self._position_parameters
 end
 
----@return cmdparse.Subparsers # All immediate parser containers for this instance.
+---@return mega.cmdparse.Subparsers # All immediate parser containers for this instance.
 function M.ParameterParser:get_subparsers()
     return self._subparsers
 end
 
 --- Create a child parameter so we can use it to parse text later.
 ---
----@param options cmdparse.ParameterInputOptions
+---@param options mega.cmdparse.ParameterInputOptions
 ---    All of the settings to include in the new parameter.
----@return cmdparse.Parameter
+---@return mega.cmdparse.Parameter
 ---    The created `cmdparse.Parameter` instance.
 ---
 function M.ParameterParser:add_parameter(options)
@@ -2396,7 +2396,7 @@ function M.ParameterParser:add_parameter(options)
     local is_position = text_parse.is_position_name(options.names[1])
     types_input.expand_parameter_options(options, is_position)
 
-    --- @cast options cmdparse.ParameterOptions
+    --- @cast options mega.cmdparse.ParameterOptions
 
     types_input.validate_parameter_options(options)
 
@@ -2414,9 +2414,9 @@ end
 
 --- Create a group so we can add nested parsers underneath it later.
 ---
----@param options cmdparse.SubparsersInputOptions | cmdparse.SubparsersOptions
+---@param options mega.cmdparse.SubparsersInputOptions | mega.cmdparse.SubparsersOptions
 ---    Customization options for the new cmdparse.Subparsers.
----@return cmdparse.Subparsers
+---@return mega.cmdparse.Subparsers
 ---    A new group of parsers.
 ---
 function M.ParameterParser:add_subparsers(options)
@@ -2432,7 +2432,7 @@ end
 ---
 ---@param data string | argparse.Results
 ---    User text that needs to be parsed. e.g. `hello "World!"`
----@return cmdparse.Namespace
+---@return mega.cmdparse.Namespace
 ---    All of the parsed data as one group.
 ---
 function M.ParameterParser:parse_arguments(data)
@@ -2469,7 +2469,7 @@ end
 
 --- Re-parent this instance underneath `parser`.
 ---
----@param parser cmdparse.Subparsers The new parent to set.
+---@param parser mega.cmdparse.Subparsers The new parent to set.
 ---
 function M.ParameterParser:set_parent(parser)
     self._parent = parser

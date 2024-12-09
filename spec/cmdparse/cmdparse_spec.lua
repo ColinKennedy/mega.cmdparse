@@ -1,11 +1,11 @@
 --- Make sure that `cmdparse` parses and auto-completes as expected.
 ---
----@module 'cmdparse.cmdparse_spec'
+---@module 'mega.cmdparse.cmdparse_spec'
 ---
 
-local cmdparse = require("cmdparse._cli.cmdparse")
-local configuration = require("cmdparse._core.configuration")
-local constant = require("cmdparse._cli.cmdparse.constant")
+local cmdparse = require("mega.cmdparse._cli.cmdparse")
+local configuration = require("mega.cmdparse._core.configuration")
+local constant = require("mega.cmdparse._cli.cmdparse.constant")
 local top_cmdparse = require("cmdparse")
 
 local _COMMAND_NAME = "Test"
@@ -21,7 +21,7 @@ local function _restore_configuration()
     configuration.DATA = _DATA
 end
 
----@return cmdparse.ParameterParser # Create a tree of commands for unittests.
+---@return mega.cmdparse.ParameterParser # Create a tree of commands for unittests.
 local function _make_simple_parser()
     local choices = function(data)
         if vim.tbl_contains(data.contexts, constant.ChoiceContext.help_message) then

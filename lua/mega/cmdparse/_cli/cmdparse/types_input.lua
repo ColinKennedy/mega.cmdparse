@@ -1,11 +1,11 @@
 --- Functions that fill-in missing values, validate values, etc for cmdparse types.
 ---
----@module 'cmdparse._cli.cmdparse.types_input'
+---@module 'mega.cmdparse._cli.cmdparse.types_input'
 ---
 
-local constant = require("cmdparse._cli.cmdparse.constant")
-local text_parse = require("cmdparse._cli.cmdparse.text_parse")
-local texter = require("cmdparse._core.texter")
+local constant = require("mega.cmdparse._cli.cmdparse.constant")
+local text_parse = require("mega.cmdparse._cli.cmdparse.text_parse")
+local texter = require("mega.cmdparse._core.texter")
 
 local M = {}
 
@@ -30,7 +30,7 @@ end
 
 --- Find a proper type converter from `options`.
 ---
----@param options cmdparse.ParameterInputOptions | cmdparse.ParameterOptions The suggested type for an parameter.
+---@param options mega.cmdparse.ParameterInputOptions | mega.cmdparse.ParameterOptions The suggested type for an parameter.
 ---
 local function _expand_type_options(options)
     if not options.type then
@@ -59,10 +59,10 @@ end
 --- a `string` or `string[]`, handle that. If it's a function, assume the user
 --- knows what they're doing and include it.
 ---
----@param options cmdparse.ParameterInputOptions
----    | cmdparse.ParameterOptions
----    | cmdparse.ParameterParserOptions
----    | cmdparse.ParameterParserInputOptions
+---@param options mega.cmdparse.ParameterInputOptions
+---    | mega.cmdparse.ParameterOptions
+---    | mega.cmdparse.ParameterParserOptions
+---    | mega.cmdparse.ParameterParserInputOptions
 ---    The user-written options. (sparse or not).
 ---
 function M.expand_choices_options(options)
@@ -80,7 +80,7 @@ function M.expand_choices_options(options)
     elseif texter.is_string_list(input) then
         ---@cast input string[]
         choices = function(data)
-            ---@cast data cmdparse.ChoiceData
+            ---@cast data mega.cmdparse.ChoiceData
 
             if not data or not data.current_value then
                 return input
@@ -115,7 +115,7 @@ end
 ---
 --- If `names` is `{"foo", "-f"}` then this function will error.
 ---
----@param options cmdparse.ParameterInputOptions | cmdparse.ParameterOptions All data to check.
+---@param options mega.cmdparse.ParameterInputOptions | mega.cmdparse.ParameterOptions All data to check.
 ---
 function M.expand_parameter_names(options)
     local function _get_type(name)
@@ -162,7 +162,7 @@ end
 
 --- If `options` is sparsely written, "expand" all of its values. so we can use it.
 ---
----@param options cmdparse.ParameterInputOptions | cmdparse.ParameterOptions
+---@param options mega.cmdparse.ParameterInputOptions | mega.cmdparse.ParameterOptions
 ---    The user-written options. (sparse or not).
 ---@param is_position boolean
 ---    If `options` is meant to be a non-flag argument. e.g. `--foo` is `false`.
@@ -201,7 +201,7 @@ end
 --- Raises:
 ---     If an issue is found.
 ---
----@param options cmdparse.ParameterInputOptions | cmdparse.ParameterOptions
+---@param options mega.cmdparse.ParameterInputOptions | mega.cmdparse.ParameterOptions
 ---    All data to check.
 ---
 function M.validate_parameter_options(options)
@@ -248,7 +248,7 @@ end
 
 --- Make sure a name was provided from `options`.
 ---
----@param options cmdparse.ParameterParserOptions
+---@param options mega.cmdparse.ParameterParserOptions
 ---
 function M.validate_name(options)
     if not options.name or texter.is_whitespace(options.name) then

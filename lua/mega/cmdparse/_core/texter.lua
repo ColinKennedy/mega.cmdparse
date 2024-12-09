@@ -1,6 +1,6 @@
 --- Make manipulating Lua text easier.
 ---
----@module 'cmdparse._core.texter'
+---@module 'mega.cmdparse._core.texter'
 ---
 
 local M = {}

@@ -3,12 +3,12 @@
 --- At minimum, we validate that the user's configuration is correct. But other
 --- checks can happen here if needed.
 ---
----@module 'cmdparse.health'
+---@module 'mega.cmdparse.health'
 ---
 
-local configuration_ = require("cmdparse._core.configuration")
-local tabler = require("cmdparse._core.tabler")
-local vlog = require("cmdparse._vendors.vlog")
+local configuration_ = require("mega.cmdparse._core.configuration")
+local tabler = require("mega.cmdparse._core.tabler")
+local vlog = require("mega.cmdparse._vendors.vlog")
 
 local M = {}
 
@@ -95,7 +95,7 @@ end
 
 --- Check all "cmdparse" values for issues.
 ---
----@param data cmdparse.Configuration All of the user's fallback settings.
+---@param data mega.cmdparse.Configuration All of the user's fallback settings.
 ---@return string[] # All found issues, if any.
 ---
 local function _get_cmdparse_issues(data)
@@ -110,7 +110,7 @@ end
 
 --- Check if logging configuration `data` has any issues.
 ---
----@param data cmdparse.LoggingConfiguration The user's logger settings.
+---@param data mega.cmdparse.LoggingConfiguration The user's logger settings.
 ---@return string[] # All of the found issues, if any.
 ---
 local function _get_logging_issues(data)
@@ -161,7 +161,7 @@ end
 
 --- Check `data` for problems and return each of them.
 ---
----@param data cmdparse.Configuration? All extra customizations for this plugin.
+---@param data mega.cmdparse.Configuration? All extra customizations for this plugin.
 ---@return string[] # All found issues, if any.
 ---
 function M.get_issues(data)
@@ -183,7 +183,7 @@ end
 
 --- Make sure `data` will work for `cmdparse`.
 ---
----@param data cmdparse.Configuration? All extra customizations for this plugin.
+---@param data mega.cmdparse.Configuration? All extra customizations for this plugin.
 ---
 function M.check(data)
     vlog.debug("Running cmdparse health check.")

@@ -1,14 +1,14 @@
 --- Meaningful global variables to reuse across modules.
 ---
----@module 'cmdparse._cli.cmdparse.constant'
+---@module 'mega.cmdparse._cli.cmdparse.constant'
 ---
 
 local M = {}
 
----@enum cmdparse.ActionOption
+---@enum mega.cmdparse.ActionOption
 M.Action = { count = "count", store_false = "store_false", store_true = "store_true" }
 
----@enum cmdparse.ChoiceContext
+---@enum mega.cmdparse.ChoiceContext
 ---    Extra information provided to `cmdparse.Parameter.choices()` when
 ---    resolving for allowed values.
 ---
@@ -30,7 +30,7 @@ M.ChoiceContext = {
     value_matching = "value_matching",
 }
 
----@enum cmdparse.Counter
+---@enum mega.cmdparse.Counter
 M.Counter = {
     one_or_more = "+",
     zero_or_more = "*",

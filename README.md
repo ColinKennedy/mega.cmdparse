@@ -1,10 +1,4 @@
-# cmdparse.nvim
-
-| <!-- -->     | <!-- -->                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-|--------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Build Status | [![unittests](https://img.shields.io/github/actions/workflow/status/ColinKennedy/cmdparse.nvim/test.yml?branch=main&style=for-the-badge&label=Unittests)](https://github.com/ColinKennedy/cmdparse.nvim/actions/workflows/test.yml)  [![documentation](https://img.shields.io/github/actions/workflow/status/ColinKennedy/cmdparse.nvim/documentation.yml?branch=main&style=for-the-badge&label=Documentation)](https://github.com/ColinKennedy/cmdparse.nvim/actions/workflows/documentation.yml)  [![luacheck](https://img.shields.io/github/actions/workflow/status/ColinKennedy/cmdparse.nvim/luacheck.yml?branch=main&style=for-the-badge&label=Luacheck)](https://github.com/ColinKennedy/cmdparse.nvim/actions/workflows/luacheck.yml) [![llscheck](https://img.shields.io/github/actions/workflow/status/ColinKennedy/cmdparse.nvim/llscheck.yml?branch=main&style=for-the-badge&label=llscheck)](https://github.com/ColinKennedy/cmdparse.nvim/actions/workflows/llscheck.yml) [![stylua](https://img.shields.io/github/actions/workflow/status/ColinKennedy/cmdparse.nvim/stylua.yml?branch=main&style=for-the-badge&label=Stylua)](https://github.com/ColinKennedy/cmdparse.nvim/actions/workflows/stylua.yml)  [![urlchecker](https://img.shields.io/github/actions/workflow/status/ColinKennedy/cmdparse.nvim/urlchecker.yml?branch=main&style=for-the-badge&label=URLChecker)](https://github.com/ColinKennedy/cmdparse.nvim/actions/workflows/urlchecker.yml)  |
-| License      | [![License-MIT](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](https://github.com/ColinKennedy/cmdparse.nvim/blob/main/LICENSE)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| Social       | [![RSS](https://img.shields.io/badge/rss-F88900?style=for-the-badge&logo=rss&logoColor=white)](https://github.com/ColinKennedy/cmdparse.nvim/commits/main/doc/news.txt.atom)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+# mega.cmdparse
 
 A [Python argparse-inspired](https://docs.python.org/3/library/argparse.html)
 command mode parser for Neovim.
@@ -16,7 +10,14 @@ so no more needing to define `:FooToggle` `:FooOpen /path/to/file.txt`
 separate interfaces like `:Foo toggle`, `:Foo open /path/to/file.txt`, and
 `:Foo close --buffer=2`.
 
-There's a lot of features. Whatever you need, `cmdparse.nvim` has you covered!
+There's a lot of features. Whatever you need, `mega.cmdparse` has you covered!
+
+
+| <!-- -->     | <!-- -->                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+|--------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Build Status | [![unittests](https://img.shields.io/github/actions/workflow/status/ColinKennedy/mega.cmdparse/test.yml?branch=main&style=for-the-badge&label=Unittests)](https://github.com/ColinKennedy/mega.cmdparse/actions/workflows/test.yml)  [![documentation](https://img.shields.io/github/actions/workflow/status/ColinKennedy/mega.cmdparse/documentation.yml?branch=main&style=for-the-badge&label=Documentation)](https://github.com/ColinKennedy/mega.cmdparse/actions/workflows/documentation.yml)  [![luacheck](https://img.shields.io/github/actions/workflow/status/ColinKennedy/mega.cmdparse/luacheck.yml?branch=main&style=for-the-badge&label=Luacheck)](https://github.com/ColinKennedy/mega.cmdparse/actions/workflows/luacheck.yml) [![llscheck](https://img.shields.io/github/actions/workflow/status/ColinKennedy/mega.cmdparse/llscheck.yml?branch=main&style=for-the-badge&label=llscheck)](https://github.com/ColinKennedy/mega.cmdparse/actions/workflows/llscheck.yml) [![stylua](https://img.shields.io/github/actions/workflow/status/ColinKennedy/mega.cmdparse/stylua.yml?branch=main&style=for-the-badge&label=Stylua)](https://github.com/ColinKennedy/mega.cmdparse/actions/workflows/stylua.yml)  [![urlchecker](https://img.shields.io/github/actions/workflow/status/ColinKennedy/mega.cmdparse/urlchecker.yml?branch=main&style=for-the-badge&label=URLChecker)](https://github.com/ColinKennedy/mega.cmdparse/actions/workflows/urlchecker.yml)  |
+| License      | [![License-MIT](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](https://github.com/ColinKennedy/mega.cmdparse/blob/main/LICENSE)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| Social       | [![RSS](https://img.shields.io/badge/rss-F88900?style=for-the-badge&logo=rss&logoColor=white)](https://github.com/ColinKennedy/mega.cmdparse/commits/main/doc/news.txt.atom)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 
 
 # Features
@@ -72,7 +73,7 @@ Parameters know how many arguments they need and in what order.
 <summary>Hello, World! Parser</summary>
 
 ```lua
-local cmdparse = require("cmdparse")
+local cmdparse = require("mega.cmdparse")
 
 local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Hello, World!"})
 parser:set_execute(function(data) print("Hello, World!") end)
@@ -85,7 +86,7 @@ Run: `:Test`
 <summary>Automated value type conversions</summary>
 
 ```lua
-local cmdparse = require("cmdparse")
+local cmdparse = require("mega.cmdparse")
 
 local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Automated value type conversions" })
 parser:add_parameter({ name = "thing", type = tonumber, help = "Test." })
@@ -110,7 +111,7 @@ by `nargs=2`.
 - `nargs="+"` = 1-or-more
 
 ```lua
-local cmdparse = require("cmdparse")
+local cmdparse = require("mega.cmdparse")
 
 local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Multi-argument-per-parameter" })
 parser:add_parameter({ name = "thing", nargs=2, type=tonumber, help = "Test." })
@@ -132,7 +133,7 @@ Run: `:Test 123 54545.1231`
 <summary>Position, flag, and named arguments support. e.g. `foo bar --fizz=buzz -dbz`</summary>
 
 ```lua
-local cmdparse = require("cmdparse")
+local cmdparse = require("mega.cmdparse")
 
 local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Position, flag, and named arguments support." })
 parser:add_parameter({ name = "items", nargs="*", help="non-flag arguments." })
@@ -164,7 +165,7 @@ But you can explicitly make flag / named arguments required or position
 arguments optional, using `required=true` and `required=false`.
 
 ```lua
-local cmdparse = require("cmdparse")
+local cmdparse = require("mega.cmdparse")
 
 local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Unicode Parameters." })
 parser:add_parameter({ name = "required_thing", help = "Test." })
@@ -185,7 +186,7 @@ Run: `:Test foo bar --required-flag=aaa`
 <summary>Nested Subparsers</summary>
 
 ```lua
-local cmdparse = require("cmdparse")
+local cmdparse = require("mega.cmdparse")
 
 local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Nested Subparsers" })
 local top_subparsers = parser:add_subparsers({ destination = "commands" })
@@ -208,7 +209,7 @@ Run: `:Test view log /some/path.txt`
 <summary>Static Auto-Complete Values</summary>
 
 ```lua
-local cmdparse = require("cmdparse")
+local cmdparse = require("mega.cmdparse")
 
 local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Static Auto-Complete Values."})
 parser:add_parameter({ name = "thing", choices={ "aaa", "apple", "apply" }, help="Test word."})
@@ -222,7 +223,7 @@ Run: `:Test apply`
 <summary>Dynamic Auto-Complete Values</summary>
 
 ```lua
-local cmdparse = require("cmdparse")
+local cmdparse = require("mega.cmdparse")
 
 local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Dynamic Auto-Complete Values."})
 local choices = function(data)
@@ -248,12 +249,12 @@ Run: `:Test --thing=4`
 <summary>Dynamic Plug-ins</summary>
 
 Subparsers are not static, you can create dynamic subparsers with dynamic names
-and dynamic contents if you'd like. This makes `cmdparse.nvim` great for
+and dynamic contents if you'd like. This makes `mega.cmdparse` great for
 writing a plugin that supports CLI hooks, like how
 [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) behaves.
 
 ```lua
----@return cmdparse.ParameterParser # Some example parser.
+---@return mega.cmdparse.ParameterParser # Some example parser.
 local function make_example_plugin_a()
     local parser = cmdparse.ParameterParser.new({ name = "plugin-a", help = "Test plugin-a." })
     parser:add_parameter({ name = "--foo", action="store_true", help="A required value for plugin-a." })
@@ -265,7 +266,7 @@ local function make_example_plugin_a()
     return parser
 end
 
----@return cmdparse.ParameterParser # Another example parser.
+---@return mega.cmdparse.ParameterParser # Another example parser.
 local function make_example_plugin_b()
     local parser = cmdparse.ParameterParser.new({ name = "plugin-b", help = "Test plugin-b." })
     parser:add_parameter({ name = "foo", help="A required value for plugin-b." })
@@ -277,7 +278,7 @@ local function make_example_plugin_b()
     return parser
 end
 
----@return cmdparse.ParameterParser # A parser whose auto-complete and executer uses auto-found plugins.
+---@return mega.cmdparse.ParameterParser # A parser whose auto-complete and executer uses auto-found plugins.
 local function create_parser()
     local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Test." })
     local subparsers = parser:add_subparsers({ destination = "commands", help = "All main commands." })
@@ -307,7 +308,7 @@ a bit, using `value_hint`.
 
 For example this code below:
 ```lua
-local cmdparse = require("cmdparse")
+local cmdparse = require("mega.cmdparse")
 
 local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Position, flag, and named arguments support." })
 parser:add_parameter({ name = "items", nargs="*", help="non-flag arguments." })
@@ -356,7 +357,7 @@ this means that anything else can be a flag. e.g. `++foo` is a valid flag name
 and so is `--bar`. It's all allowed.
 
 ```lua
-local cmdparse = require("cmdparse")
+local cmdparse = require("mega.cmdparse")
 
 local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Position, flag, and named arguments support." })
 parser:add_parameter({ name = "--fizz", action="store_true", help="A word." })
@@ -377,7 +378,7 @@ Run: `:Test --fizz ++buzz "some text here"`
 
 You can use unicode for position / flag / named parameters if you want to.
 ```lua
-local cmdparse = require("cmdparse")
+local cmdparse = require("mega.cmdparse")
 
 local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Unicode Parameters." })
 parser:add_parameter({ name = "𝒻ⓡ𝓊𝒾🅃🆂", nargs="+", help = "Test." })
@@ -395,7 +396,7 @@ Run: `:Test apple 🄱🄰🄽🄰🄽🄰 --😊=ttt`
 
 
 ## API
-Most people will use `cmdparse.nvim` to create Neovim user commands but if you
+Most people will use `mega.cmdparse` to create Neovim user commands but if you
 want to use the Lua API directly, here are the most common cases.
 
 
@@ -406,7 +407,7 @@ You can query the available auto-complete values whenever you want.
 <summary>Expand to show more</summary>
 
 ```lua
-local cmdparse = require("cmdparse")
+local cmdparse = require("mega.cmdparse")
 
 local parser = cmdparse.ParameterParser.new(
     { name = "Test", help = "Unicode Parameters." }
@@ -448,7 +449,7 @@ You can compute the final values with `parse_arguments`.
 <summary>Expand to show more</summary>
 
 ```lua
-local cmdparse = require("cmdparse")
+local cmdparse = require("mega.cmdparse")
 
 local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Unicode Parameters." })
 parser:add_parameter({ name = "--foo", choices = {"apple", "apply", "banana"}, help = "Test." })
@@ -462,7 +463,7 @@ print(vim.inspect(parser:parse_arguments("--foo=apple")))
 - [lazy.nvim](https://github.com/folke/lazy.nvim)
 ```lua
 {
-    "ColinKennedy/cmdparse.nvim",
+    "ColinKennedy/mega.cmdparse",
     version = "v1.*",
 }
 ```
@@ -474,7 +475,7 @@ print(vim.inspect(parser:parse_arguments("--foo=apple")))
 - [lazy.nvim](https://github.com/folke/lazy.nvim)
 ```lua
 {
-    "ColinKennedy/cmdparse.nvim",
+    "ColinKennedy/mega.cmdparse",
     config = function()
         vim.g.cmdparse_configuration = {
             cmdparse = {
@@ -521,7 +522,7 @@ See [doc/news.txt](doc/news.txt) for updates.
 
 You can watch this plugin for changes by adding this URL to your RSS feed:
 ```
-https://github.com/ColinKennedy/cmdparse.nvim/commits/main/doc/news.txt.atom
+https://github.com/ColinKennedy/mega.cmdparse/commits/main/doc/news.txt.atom
 ```
 
 
@@ -529,4 +530,4 @@ https://github.com/ColinKennedy/cmdparse.nvim/commits/main/doc/news.txt.atom
 This template is full of various features. But if your plugin is only meant to
 be a simple plugin and you don't want the bells and whistles that this template
 provides, consider instead using
-[nvim-cmdparse](https://github.com/ellisonleao/nvim-plugin-template)
+[nvim-plugin-template](https://github.com/ellisonleao/nvim-plugin-template)

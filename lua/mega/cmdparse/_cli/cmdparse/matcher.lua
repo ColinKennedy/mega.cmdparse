@@ -1,14 +1,14 @@
 --- Match exact / partial text of cmdparse parameters and argparse arguments.
 ---
----@module 'cmdparse._cli.cmdparse.matcher'
+---@module 'mega.cmdparse._cli.cmdparse.matcher'
 ---
 
-local argparse = require("cmdparse._cli.argparse")
-local constant = require("cmdparse._cli.cmdparse.constant")
-local iterator_helper = require("cmdparse._cli.cmdparse.iterator_helper")
-local text_parse = require("cmdparse._cli.cmdparse.text_parse")
-local texter = require("cmdparse._core.texter")
-local vlog = require("cmdparse._vendors.vlog")
+local argparse = require("mega.cmdparse._cli.argparse")
+local constant = require("mega.cmdparse._cli.cmdparse.constant")
+local iterator_helper = require("mega.cmdparse._cli.cmdparse.iterator_helper")
+local text_parse = require("mega.cmdparse._cli.cmdparse.text_parse")
+local texter = require("mega.cmdparse._core.texter")
+local vlog = require("mega.cmdparse._vendors.vlog")
 
 local M = {}
 
@@ -25,9 +25,9 @@ end
 ---
 --- All exhausted child parameters are excluded from the output.
 ---
----@param parser cmdparse.ParameterParser
+---@param parser mega.cmdparse.ParameterParser
 ---    A parser to query.
----@param options cmdparse._core.DisplayOptions?
+---@param options mega.cmdparse._core.DisplayOptions?
 ---    Control minor behaviors of this function. e.g. What data to show.
 ---@return string[]
 ---    The found auto-completion results, if any.
@@ -59,18 +59,18 @@ end
 
 --- Find all Argments starting with `prefix`.
 ---
----@param parameter cmdparse.Parameter
+---@param parameter mega.cmdparse.Parameter
 ---    The position, flag, or named parameter to consider nargs / choices / etc.
 ---@param argument argparse.Argument
 ---    A user's actual CLI input. It must either match `parameter` or be
 ---    a valid input to `parameter`. Or be the next valid parameter that would
 ---    normally follow `parameter`.
----@param parser cmdparse.ParameterParser
+---@param parser mega.cmdparse.ParameterParser
 ---    The starting point to search within.
----@param contexts cmdparse.ChoiceContext[]
+---@param contexts mega.cmdparse.ChoiceContext[]
 ---    A description of how / when this function is called. It gets passed to
 ---    `cmdparse.Parameter.choices()`.
----@param options cmdparse._core.DisplayOptions
+---@param options mega.cmdparse._core.DisplayOptions
 ---    Control minor behaviors of this function. e.g. What data to show.
 ---@return string[] # The matching names, if any.
 ---
@@ -122,15 +122,15 @@ end
 
 --- Create auto-complete text for `parameter`, given some `value`.
 ---
----@param parameter cmdparse.Parameter
+---@param parameter mega.cmdparse.Parameter
 ---    A parameter that (we assume) takes exactly one value that we need
 ---    auto-completion options for.
 ---@param value string
 ---    The user-provided (exact or partial) value for the flag / named argument
 ---    value, if any. e.g. the `"bar"` part of `"--foo=bar"`.
----@param contexts cmdparse.ChoiceContext[]?
+---@param contexts mega.cmdparse.ChoiceContext[]?
 ---    A description of how / when this function is called. It gets passed to
----    `cmdparse.Parameter.choices()`.
+---    `mega.cmdparse.Parameter.choices()`.
 ---@return string[]
 ---    All auto-complete values, if any.
 ---
@@ -159,8 +159,8 @@ end
 --- Find the child parser that matches `name`.
 ---
 ---@param name string The name of a child parser within `parser`.
----@param parser cmdparse.ParameterParser The parent parser to search within.
----@return cmdparse.ParameterParser? # The matching child parser, if any.
+---@param parser mega.cmdparse.ParameterParser The parent parser to search within.
+---@return mega.cmdparse.ParameterParser? # The matching child parser, if any.
 ---
 function M.get_exact_subparser_child(name, parser)
     for child_parser in iterator_helper.iter_parsers(parser) do
@@ -176,15 +176,15 @@ end
 ---
 ---@param prefix string
 ---    The name of the flag that must match, exactly or partially.
----@param flags cmdparse.Parameter[]
+---@param flags mega.cmdparse.Parameter[]
 ---    All position / flag / named parameters.
 ---@param value string?
 ---    The user-provided (exact or partial) value for the flag / named argument
 ---    value, if any. e.g. the `"bar"` part of `"--foo=bar"`.
----@param contexts cmdparse.ChoiceContext[]?
+---@param contexts mega.cmdparse.ChoiceContext[]?
 ---    A description of how / when this function is called. It gets passed to
 ---    `cmdparse.Parameter.choices()`.
----@param options cmdparse._core.DisplayOptions?
+---@param options mega.cmdparse._core.DisplayOptions?
 ---    Control minor behaviors of this function. e.g. What data to show.
 ---@return string[]
 ---    The matched parameters, if any.
@@ -242,12 +242,12 @@ end
 ---
 ---@param name string
 ---    The user's input text to try to match.
----@param parameters cmdparse.Parameter[]
+---@param parameters mega.cmdparse.Parameter[]
 ---    All position parameters to check.
----@param contexts cmdparse.ChoiceContext[]?
+---@param contexts mega.cmdparse.ChoiceContext[]?
 ---    A description of how / when this function is called. It gets passed to
----    `cmdparse.Parameter.choices()`.
----@return cmdparse.Parameter[] # The found matches, if any.
+---    `mega.cmdparse.Parameter.choices()`.
+---@return mega.cmdparse.Parameter[] # The found matches, if any.
 ---
 function M.get_matching_position_parameters(name, parameters, contexts)
     contexts = contexts or {}
@@ -284,7 +284,7 @@ end
 --- This function is **exclusive** - `parser` cannot be returned from this function.
 ---
 ---@param prefix string Some text to search for.
----@param parser cmdparse.ParameterParser The starting point to search within.
+---@param parser mega.cmdparse.ParameterParser The starting point to search within.
 ---@return string[] # The names of all matching child parsers.
 ---
 function M.get_matching_subparser_names(prefix, parser)
@@ -302,17 +302,17 @@ end
 
 --- Get the next auto-complete options for `parser`.
 ---
----@param parser cmdparse.ParameterParser
+---@param parser mega.cmdparse.ParameterParser
 ---    The starting point to search within.
 ---@param prefix string
 ---    The name of the flag that must match, exactly or partially.
 ---@param value string
 ---    If the user provided a (exact or partial) value for the flag / named
 ---    position, the text is given here.
----@param contexts cmdparse.ChoiceContext[]
+---@param contexts mega.cmdparse.ChoiceContext[]
 ---    A description of how / when this function is called. It gets passed to
----    `cmdparse.Parameter.choices()`.
----@param options cmdparse._core.DisplayOptions?
+---    `mega.cmdparse.Parameter.choices()`.
+---@param options mega.cmdparse._core.DisplayOptions?
 ---    Control minor behaviors of this function. e.g. What data to show.
 ---@return string[]
 ---    All auto-completion results found, if any.

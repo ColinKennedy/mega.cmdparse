@@ -1,0 +1,62 @@
+==============================================================================
+------------------------------------------------------------------------------
+A collection of types to be included / used in other Lua files.
+
+These types are either required by the Lua API or required for the normal
+operation of this Lua plugin.
+
+------------------------------------------------------------------------------
+*mega.cmdparse.Configuration*
+   The user's customizations for this plugin.
+
+Fields ~
+    {cmdparse} mega.cmdparse.ConfigurationCmdparse?
+       All settings that control the command mode tools (parsing, auto-complete, etc).
+    {logging} mega.cmdparse.LoggingConfiguration?
+       Control how and which logs print to file / Neovim.
+
+------------------------------------------------------------------------------
+*mega.cmdparse.ConfigurationCmdparse*
+   All settings that control the command mode tools (parsing, auto-complete, etc).
+
+Fields ~
+    {auto_complete} mega.cmdparse.ConfigurationCmdparseAutoComplete
+       The settings that control what happens during auto-completion.
+
+------------------------------------------------------------------------------
+*mega.cmdparse.ConfigurationCmdparseAutoComplete*
+   The settings that control what happens during auto-completion.
+
+Fields ~
+    {display} {help_flag: `(boolean})`
+       help_flag = Show / Hide the --help flag during auto-completion.
+
+------------------------------------------------------------------------------
+*mega.cmdparse.LoggingConfiguration*
+   Control whether or not logging is printed to the console or to disk.
+
+Fields ~
+    {level} (
+       | "trace"
+       | "debug"
+       | "info"
+       | "warn" | "error"
+       | "fatal"
+       | vim.log.levels.DEBUG
+       | vim.log.levels.ERROR
+       | vim.log.levels.INFO
+       | vim.log.levels.TRACE
+       | vim.log.levels.WARN)?
+       Any messages above this level will be logged.
+    {use_console} `(boolean?)`
+       Should print the output to neovim while running. Warning: This is very
+       spammy. You probably don't want to enable this unless you have to.
+    {use_file} `(boolean?)`
+       Should write to a file.
+    {output_path} `(string?)`
+       The default path on-disk where log files will be written to.
+       Defaults to "/home/selecaoone/.local/share/nvim/plugin_name.log".
+
+WARNING: This file is auto-generated. Do not edit it!
+
+ vim:tw=78:ts=8:noet:ft=help:norl:

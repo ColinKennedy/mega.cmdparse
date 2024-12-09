@@ -1,6 +1,6 @@
 --- Connect Neovim's COMMAND mode to our Lua functions.
 ---
----@module 'cmdparse._cli.cli_subcommand'
+---@module 'mega.cmdparse._cli.cli_subcommand'
 ---
 
 local M = {}
@@ -12,46 +12,46 @@ local M = {}
 ---@field fargs string[]
 ---    The parsed user input text. e.g. `{"some_subcommand", "arg1", "--flag" "--foo=bar"}`.
 
----@class cmdparse.NamespaceExecuteArguments
+---@class mega.cmdparse.NamespaceExecuteArguments
 ---    The expected data that's passed to any `set_execute` call in cmdparse.
 ---@field input argparse.Results
 ---    The user's raw input, split into tokens.
----@field namespace cmdparse.Namespace
+---@field namespace mega.cmdparse.Namespace
 ---    The collected results from comparing `input` to our cmdparse tree.
 
----@class cmdparse.CompleteData
+---@class mega.cmdparse.CompleteData
 ---    The data that gets passed when `cmdparse.Subcommand.complete` is called.
 ---@field input argparse.Results
 ---    All information that was found from parsing some user's input.
 
----@class cmdparse.RunData
+---@class mega.cmdparse.RunData
 ---    The data that gets passed when `cmdparse.Subcommand.run` is called.
 ---@field input argparse.Results
 ---    All information that was found from parsing some user's input.
 
----@class cmdparse.Subcommand
+---@class mega.cmdparse.Subcommand
 ---    A subparser's definition. At minimum you need to define `parser` or
 ---    `run` or code will error when you try to run commands. If you define
 ---    `parser`, you don't need to define `complete` or `run` (`parser` is the
 ---    preferred way to make parsers).
----@field complete (fun(data: cmdparse.CompleteData): string[])?
+---@field complete (fun(data: mega.cmdparse.CompleteData): string[])?
 ---    Command completions callback, the `data` are  the lead of the subcommand's arguments
----@field parser (fun(): cmdparse.ParameterParser)?
+---@field parser (fun(): mega.cmdparse.ParameterParser)?
 ---    The primary parser used for subcommands. It handles auto-complete,
 ---    expression-evaluation, and running a user's code.
----@field run (fun(data: cmdparse.SubcommandRun): nil)?
+---@field run (fun(data: mega.cmdparse.SubcommandRun): nil)?
 ---    The function to run when the subcommand is called.
 
----@class cmdparse.SubcommandRun
+---@class mega.cmdparse.SubcommandRun
 ---    The data that gets passed to the `run` function. Most of the time,
 ---    a user never needs or touches this data. It's only for people who need
 ---    absolute control over the CLI or some unsupported behavior.
 ---@field input argparse.Results
 ---    The parsed arguments (that the user is now trying to execute some function with).
 
----@alias cmdparse.ParserCreator fun(): cmdparse.ParameterParser | cmdparse.ParameterParser
+---@alias mega.cmdparse.ParserCreator fun(): mega.cmdparse.ParameterParser | mega.cmdparse.ParameterParser
 
----@alias cmdparse.Subcommands table<string, cmdparse.Subcommand | fun(): cmdparse.ParameterParser>
+---@alias mega.cmdparse.Subcommands table<string, mega.cmdparse.Subcommand | fun(): mega.cmdparse.ParameterParser>
 
 --- Check if `full` contains `prefix` + whitespace.
 ---
@@ -69,10 +69,10 @@ end
 ---
 ---@param text string Some full text like `"Cmdparse blah"`.
 ---@param prefix string The expected starting text. e.g. `"Cmdparse"`.
----@param subcommands cmdparse.Subcommands All allowed commands.
+---@param subcommands mega.cmdparse.Subcommands All allowed commands.
 ---
 local function _get_subcommand_completion(text, prefix, subcommands)
-    local argparse = require("cmdparse._cli.argparse")
+    local argparse = require("mega.cmdparse._cli.argparse")
 
     local expression = "^" .. prefix .. "*%s(%S+)%s(.*)$"
     local subcommand_key, arguments = text:match(expression)
@@ -109,7 +109,7 @@ local function _get_subcommand_completion(text, prefix, subcommands)
         return parser:get_completion(arguments, column)
     end
 
-    ---@cast subcommand cmdparse.Subcommand
+    ---@cast subcommand mega.cmdparse.Subcommand
 
     if subcommand.parser then
         local parser = subcommand.parser()
@@ -155,15 +155,15 @@ end
 
 --- Run `parser` and pass it the user's raw input `text`.
 ---
----@param parser cmdparse.ParameterParser The decision tree that parses and runs `text`.
+---@param parser mega.cmdparse.ParameterParser The decision tree that parses and runs `text`.
 ---@param text string The (unparsed) text that user provides from COMMAND mode.
 ---
 local function _run_subcommand(parser, text)
-    local argparse = require("cmdparse._cli.argparse")
+    local argparse = require("mega.cmdparse._cli.argparse")
 
     local arguments = argparse.parse_arguments(text)
     local namespace = parser:parse_arguments(arguments)
-    ---@type fun(data: cmdparse.NamespaceExecuteArguments): nil
+    ---@type fun(data: mega.cmdparse.NamespaceExecuteArguments): nil
     local execute = namespace.execute
 
     if execute then
@@ -197,7 +197,7 @@ end
 
 --- If anything in `subcommands` is missing data, define default value(s) for it.
 ---
----@param subcommands cmdparse.Subcommands
+---@param subcommands mega.cmdparse.Subcommands
 ---    All registered commands for `cmdparse` to possibly modify.
 ---
 function M.initialize_missing_values(subcommands)
@@ -214,7 +214,7 @@ end
 
 --- Make a function that can auto-complete based on the parser of `parser_creator`.
 ---
----@param parser_creator cmdparse.ParserCreator
+---@param parser_creator mega.cmdparse.ParserCreator
 ---    A function that creates the decision tree that parses text.
 ---@return fun(_: any, all_text: string, _: any): string[]?
 ---    A deferred function that creates the COMMAND mode parser, runs it, and
@@ -228,7 +228,7 @@ function M.make_parser_completer(parser_creator)
     end
 
     local function runner(_, all_text, _)
-        local configuration = require("cmdparse._core.configuration")
+        local configuration = require("mega.cmdparse._core.configuration")
         configuration.initialize_data_if_needed()
 
         local remainder = _remove_first_word(all_text)
@@ -249,7 +249,7 @@ end
 
 --- Create a deferred function that can parse and execute a user's arguments.
 ---
----@param parser_creator cmdparse.ParserCreator
+---@param parser_creator mega.cmdparse.ParserCreator
 ---    A function that creates the decision tree that parses text.
 ---@return fun(opts: table): nil
 ---    A function that will parse the user's arguments.
@@ -262,7 +262,7 @@ function M.make_parser_triager(parser_creator)
     end
 
     local function runner(opts)
-        local argparse = require("cmdparse._cli.argparse")
+        local argparse = require("mega.cmdparse._cli.argparse")
 
         local text = opts.args
         local arguments = argparse.parse_arguments(text)
@@ -281,7 +281,7 @@ function M.make_parser_triager(parser_creator)
             return
         end
 
-        ---@type fun(data: cmdparse.NamespaceExecuteArguments): nil
+        ---@type fun(data: mega.cmdparse.NamespaceExecuteArguments): nil
         local execute = result.execute
 
         if execute then
@@ -299,12 +299,12 @@ end
 --- Use `subcommands` to make a COMMAND mode auto-completer.
 ---
 ---@param prefix string The command to exclude from auto-complete. e.g. `"Cmdparse"`.
----@param subcommands cmdparse.Subcommands All allowed commands.
+---@param subcommands mega.cmdparse.Subcommands All allowed commands.
 ---@return fun(latest_text: string, all_text: string): string[]? # The generated auto-complete function.
 ---
 function M.make_subcommand_completer(prefix, subcommands)
     local function runner(latest_text, all_text, _)
-        local configuration = require("cmdparse._core.configuration")
+        local configuration = require("mega.cmdparse._core.configuration")
         configuration.initialize_data_if_needed()
 
         local completion = _get_subcommand_completion(all_text, prefix, subcommands)
@@ -335,7 +335,7 @@ end
 
 --- Create a deferred function that creates separate parsers for each subcommand.
 ---
----@param subcommands cmdparse.Subcommands
+---@param subcommands mega.cmdparse.Subcommands
 ---    Each subcommand to register.
 ---@return fun(opts: argparse.SubcommandRunnerOptions): nil
 ---    A function that will parse the user's arguments.
@@ -347,8 +347,8 @@ function M.make_subcommand_triager(subcommands)
     ---@param opts argparse.SubcommandRunnerOptions The parsed user inputs.
     ---
     local function _runner(opts)
-        local configuration = require("cmdparse._core.configuration")
-        local argparse = require("cmdparse._cli.argparse")
+        local configuration = require("mega.cmdparse._core.configuration")
+        local argparse = require("mega.cmdparse._cli.argparse")
         configuration.initialize_data_if_needed()
 
         local subcommand_key = opts.fargs[1]
@@ -401,10 +401,10 @@ function M.make_subcommand_triager(subcommands)
     ---@param opts argparse.SubcommandRunnerOptions The parsed user options.
     ---
     local function runner(opts)
-        local configuration = require("cmdparse._core.configuration")
+        local configuration = require("mega.cmdparse._core.configuration")
         configuration.initialize_data_if_needed()
 
-        local help_message = require("cmdparse._cli.cmdparse.help_message")
+        local help_message = require("mega.cmdparse._cli.cmdparse.help_message")
 
         local success, result = pcall(function()
             _runner(opts)

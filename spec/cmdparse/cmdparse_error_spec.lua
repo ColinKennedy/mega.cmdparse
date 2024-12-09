@@ -1,9 +1,9 @@
 --- Make sure that `cmdparse` errors when it should.
 ---
----@module 'cmdparse.cmdparse_error_spec'
+---@module 'mega.cmdparse.cmdparse_error_spec'
 ---
 
-local cmdparse = require("cmdparse._cli.cmdparse")
+local cmdparse = require("mega.cmdparse._cli.cmdparse")
 local mock_vim = require("test_utilities.mock_vim")
 local top_cmdparse = require("cmdparse")
 
@@ -694,7 +694,7 @@ describe("README.md examples", function()
     end)
 
     it('works with the "Dynamic Plug-ins" example', function()
-        ---@return cmdparse.ParameterParser # Some example parser.
+        ---@return mega.cmdparse.ParameterParser # Some example parser.
         local function make_example_plugin_a()
             local parser = cmdparse.ParameterParser.new({ name = "plugin-a", help = "Test plugin-a." })
             parser:add_parameter({ name = "--foo", action = "store_true", help = "A required value for plugin-a." })
@@ -706,7 +706,7 @@ describe("README.md examples", function()
             return parser
         end
 
-        ---@return cmdparse.ParameterParser # Another example parser.
+        ---@return mega.cmdparse.ParameterParser # Another example parser.
         local function make_example_plugin_b()
             local parser = cmdparse.ParameterParser.new({ name = "plugin-b", help = "Test plugin-b." })
             parser:add_parameter({ name = "foo", help = "A required value for plugin-b." })
@@ -718,7 +718,7 @@ describe("README.md examples", function()
             return parser
         end
 
-        ---@return cmdparse.ParameterParser # A parser whose auto-complete and executer uses auto-found plugins.
+        ---@return mega.cmdparse.ParameterParser # A parser whose auto-complete and executer uses auto-found plugins.
         local function create_parser()
             local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Test." })
             local subparsers = parser:add_subparsers({ destination = "commands", help = "All main commands." })

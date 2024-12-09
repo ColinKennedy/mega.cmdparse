@@ -1,16 +1,16 @@
 --- All functions and data to help customize `cmdparse` for this user.
 ---
----@module 'cmdparse._core.configuration'
+---@module 'mega.cmdparse._core.configuration'
 ---
 
-local vlog = require("cmdparse._vendors.vlog")
+local vlog = require("mega.cmdparse._vendors.vlog")
 
 local M = {}
 
 -- NOTE: Don't remove this line. It makes the Lua module much easier to reload
 vim.g.loaded_cmdparse = false
 
----@type cmdparse.Configuration
+---@type mega.cmdparse.Configuration
 M.DATA = {
     cmdparse = { auto_complete = { display = { help_flag = true } } },
     logging = { level = "info", use_console = false, use_file = false },
@@ -33,8 +33,8 @@ end
 
 --- Merge `data` with the user's current configuration.
 ---
----@param data cmdparse.Configuration? All extra customizations for this plugin.
----@return cmdparse.Configuration # The configuration with 100% filled out values.
+---@param data mega.cmdparse.Configuration? All extra customizations for this plugin.
+---@return mega.cmdparse.Configuration # The configuration with 100% filled out values.
 ---
 function M.resolve_data(data)
     M.initialize_data_if_needed()

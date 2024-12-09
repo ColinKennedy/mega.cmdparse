@@ -1,16 +1,16 @@
 --- Make sure configuration health checks succeed or fail where they should.
 ---
----@module 'cmdparse.configuration_spec'
+---@module 'mega.cmdparse.configuration_spec'
 ---
 
-local configuration_ = require("cmdparse._core.configuration")
-local health = require("cmdparse.health")
+local configuration_ = require("mega.cmdparse._core.configuration")
+local health = require("mega.cmdparse.health")
 
 local mock_vim = require("test_utilities.mock_vim")
 
 --- Make sure `data`, whether undefined, defined, or partially defined, is broken.
 ---
----@param data cmdparse.Configuration? The user customizations, if any.
+---@param data mega.cmdparse.Configuration? The user customizations, if any.
 ---@param messages string[] All found, expected error messages.
 ---
 local function _assert_bad(data, messages)
@@ -28,7 +28,7 @@ end
 
 --- Make sure `data`, whether undefined, defined, or partially defined, works.
 ---
----@param data cmdparse.Configuration? The user customizations, if any.
+---@param data mega.cmdparse.Configuration? The user customizations, if any.
 ---
 local function _assert_good(data)
     data = configuration_.resolve_data(data)

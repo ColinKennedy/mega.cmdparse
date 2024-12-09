@@ -1,9 +1,9 @@
 --- Parse text into positional / named arguments.
 ---
----@module 'cmdparse._cli.argparse'
+---@module 'mega.cmdparse._cli.argparse'
 ---
 
-local vlog = require("cmdparse._vendors.vlog")
+local vlog = require("mega.cmdparse._vendors.vlog")
 
 local M = {}
 

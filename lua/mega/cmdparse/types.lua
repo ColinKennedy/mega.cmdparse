@@ -3,7 +3,7 @@
 --- These types are either required by the Lua API or required for the normal
 --- operation of this Lua plugin.
 ---
----@module 'cmdparse.types'
+---@module 'mega.cmdparse.types'
 ---
 
 ---@alias vim.log.levels.DEBUG number Messages to show to plugin maintainers.
@@ -12,24 +12,24 @@
 ---@alias vim.log.levels.TRACE number Low-level or spammy messages.
 ---@alias vim.log.levels.WARN number An error that was recovered but could be an issue.
 
----@class cmdparse.Configuration
+---@class mega.cmdparse.Configuration
 ---    The user's customizations for this plugin.
----@field cmdparse cmdparse.ConfigurationCmdparse?
+---@field cmdparse mega.cmdparse.ConfigurationCmdparse?
 ---    All settings that control the command mode tools (parsing, auto-complete, etc).
----@field logging cmdparse.LoggingConfiguration?
+---@field logging mega.cmdparse.LoggingConfiguration?
 ---    Control how and which logs print to file / Neovim.
 
----@class cmdparse.ConfigurationCmdparse
+---@class mega.cmdparse.ConfigurationCmdparse
 ---    All settings that control the command mode tools (parsing, auto-complete, etc).
----@field auto_complete cmdparse.ConfigurationCmdparseAutoComplete
+---@field auto_complete mega.cmdparse.ConfigurationCmdparseAutoComplete
 ---    The settings that control what happens during auto-completion.
 
----@class cmdparse.ConfigurationCmdparseAutoComplete
+---@class mega.cmdparse.ConfigurationCmdparseAutoComplete
 ---    The settings that control what happens during auto-completion.
 ---@field display {help_flag: boolean}
 ---    help_flag = Show / Hide the --help flag during auto-completion.
 
----@class cmdparse.LoggingConfiguration
+---@class mega.cmdparse.LoggingConfiguration
 ---    Control whether or not logging is printed to the console or to disk.
 ---@field level (
 ---    | "trace"

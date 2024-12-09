@@ -1,3 +1,11 @@
+mega.cmdparse.Configuration	mega_cmdparse_types.txt	/*mega.cmdparse.Configuration*
+mega.cmdparse.ConfigurationCmdparse	mega_cmdparse_types.txt	/*mega.cmdparse.ConfigurationCmdparse*
+mega.cmdparse.ConfigurationCmdparseAutoComplete	mega_cmdparse_types.txt	/*mega.cmdparse.ConfigurationCmdparseAutoComplete*
+mega.cmdparse.LoggingConfiguration	mega_cmdparse_types.txt	/*mega.cmdparse.LoggingConfiguration*
+mega.cmdparse.ParameterParser.new()	mega_cmdparse_api.txt	/*mega.cmdparse.ParameterParser.new()*
+mega.cmdparse.create_user_command()	mega_cmdparse_api.txt	/*mega.cmdparse.create_user_command()*
+mega.cmdparse.make_parser_completer()	mega_cmdparse_api.txt	/*mega.cmdparse.make_parser_completer()*
+mega.cmdparse.make_parser_triager()	mega_cmdparse_api.txt	/*mega.cmdparse.make_parser_triager()*
 cmdparse-a-neovim-plugin-template	cmdparse.txt	/*cmdparse-a-neovim-plugin-template*
 cmdparse-commands	cmdparse.txt	/*cmdparse-commands*
 cmdparse-configuration	cmdparse.txt	/*cmdparse-configuration*

@@ -1,12 +1,12 @@
 --- Functions that make writing / reading / changing help messages.
 ---
----@module 'cmdparse._cli.cmdparse.help_message'
+---@module 'mega.cmdparse._cli.cmdparse.help_message'
 ---
 
-local constant = require("cmdparse._cli.cmdparse.constant")
-local iterator_helper = require("cmdparse._cli.cmdparse.iterator_helper")
-local text_parse = require("cmdparse._cli.cmdparse.text_parse")
-local texter = require("cmdparse._core.texter")
+local constant = require("mega.cmdparse._cli.cmdparse.constant")
+local iterator_helper = require("mega.cmdparse._cli.cmdparse.iterator_helper")
+local text_parse = require("mega.cmdparse._cli.cmdparse.text_parse")
+local texter = require("mega.cmdparse._core.texter")
 
 local M = {}
 local _Private = {}
@@ -58,7 +58,7 @@ end
 
 --- Create the help message for a parameter.
 ---
----@param parameter cmdparse.Parameter
+---@param parameter mega.cmdparse.Parameter
 ---    Any position, flag, or named parameter to get a help message for.
 ---@return string
 ---    The help created message.
@@ -104,7 +104,7 @@ end
 
 --- Get all subcomands (child parsers) from `parser`.
 ---
----@param parser cmdparse.ParameterParser Some runnable command to get parameters from.
+---@param parser mega.cmdparse.ParameterParser Some runnable command to get parameters from.
 ---@return string[] # The labels of all of the flags.
 ---
 function _Private.get_parser_child_parser_help_text(parser)
@@ -137,7 +137,7 @@ end
 
 --- Get all option flag / named parameter --help text from `parser`.
 ---
----@param parser cmdparse.ParameterParser Some runnable command to get parameters from.
+---@param parser mega.cmdparse.ParameterParser Some runnable command to get parameters from.
 ---@return string[] # The labels of all of the flags.
 ---
 function _Private.get_parser_flag_help_text(parser)
@@ -171,7 +171,7 @@ end
 --- Convert a position parameter
 --- Create the help message for a position parameter or subparser.
 ---
----@param position cmdparse.Parameter
+---@param position mega.cmdparse.Parameter
 ---    Any position, flag, or named parameter to get a help message for.
 ---@return string
 ---    The help created message.
@@ -188,7 +188,7 @@ end
 
 --- Get all position argument --help text from `parser`.
 ---
----@param parser cmdparse.ParameterParser Some runnable command to get arguments from.
+---@param parser mega.cmdparse.ParameterParser Some runnable command to get arguments from.
 ---@return string[] # The labels of all of the flags.
 ---
 function _Private.get_parser_position_help_text(parser)
@@ -236,7 +236,7 @@ end
 
 --- Get the help message for a `flag` parameter.
 ---
----@param flag cmdparse.Parameter A `--foo` or `--foo=bar` parameter to convert.
+---@param flag mega.cmdparse.Parameter A `--foo` or `--foo=bar` parameter to convert.
 ---@return string # The generated help message.
 ---
 function M.get_flag_help_text(flag)
@@ -260,7 +260,7 @@ end
 
 --- Get the help message for all parameters and subparsers of `parser`.
 ---
----@param parser cmdparse.ParameterParser
+---@param parser mega.cmdparse.ParameterParser
 ---    The root to get a help message for.
 ---@return string[]
 ---    The generated help message lines.
@@ -282,7 +282,7 @@ end
 
 --- Get the help message for a typical position parameter.
 ---
----@param position cmdparse.Parameter A regular parameter. Not the `"--foo"` kinds.
+---@param position mega.cmdparse.Parameter A regular parameter. Not the `"--foo"` kinds.
 ---@return string # The created help message.
 ---
 function M.get_position_usage_help_text(position)

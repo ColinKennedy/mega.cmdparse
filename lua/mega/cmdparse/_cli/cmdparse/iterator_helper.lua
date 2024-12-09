@@ -1,6 +1,6 @@
 --- Generic functions used in other files.
 ---
----@module 'cmdparse._cli.cmdparse.iterator_helper'
+---@module 'mega.mega.cmdparse._cli.cmdparse.iterator_helper'
 ---
 
 local M = {}
@@ -13,9 +13,9 @@ local _SHORT_HELP_FLAG = "-h"
 --- Note:
 ---    This is not recursive. It just gets the direct children.
 ---
----@param parser cmdparse.ParameterParser
+---@param parser mega.cmdparse.ParameterParser
 ---    The starting point ot saerch for child parsers.
----@return fun(): cmdparse.ParameterParser?
+---@return fun(): mega.cmdparse.ParameterParser?
 ---    An iterator that find all child parsers.
 ---
 function M.iter_parsers(parser)
@@ -24,7 +24,7 @@ function M.iter_parsers(parser)
     local current_subparsers = all_subparsers[subparsers_index]
 
     local parser_index = 1
-    ---@type cmdparse.ParameterParser[]
+    ---@type mega.cmdparse.ParameterParser[]
     local parsers = {}
 
     if current_subparsers then
@@ -58,8 +58,8 @@ end
 
 --- Re-order `parameters` alphabetically but put the `--help` flag at the end.
 ---
----@param parameters cmdparse.Parameter[] All position / flag / named parameters.
----@return cmdparse.Parameter[] # The sorted entries.
+---@param parameters mega.cmdparse.Parameter[] All position / flag / named parameters.
+---@return mega.cmdparse.Parameter[] # The sorted entries.
 ---
 function M.sort_parameters(parameters)
     local output = vim.deepcopy(parameters)

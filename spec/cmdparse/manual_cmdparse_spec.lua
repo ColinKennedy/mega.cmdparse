@@ -1,9 +1,9 @@
 --- Make sure that the old, manual way of setting up cmdparse also works.
 ---
----@module 'cmdparse.manual_cmdparse_spec'
+---@module 'mega.cmdparse.manual_cmdparse_spec'
 ---
 
-local cli_subcommand = require("cmdparse._cli.cli_subcommand")
+local cli_subcommand = require("mega.cmdparse._cli.cli_subcommand")
 
 describe("complete", function()
     it("completes with a basic parser", function()

@@ -1,10 +1,10 @@
 --- Parse and evaluate parameters, using CLI arguments.
 ---
----@module 'cmdparse._cli.cmdparse.evaluator'
+---@module 'mega.cmdparse._cli.cmdparse.evaluator'
 ---
 
-local argparse = require("cmdparse._cli.argparse")
-local constant = require("cmdparse._cli.cmdparse.constant")
+local argparse = require("mega.cmdparse._cli.argparse")
+local constant = require("mega.cmdparse._cli.cmdparse.constant")
 
 local M = {}
 local _Private = {}
@@ -13,7 +13,7 @@ local _Private = {}
 ---
 ---@param name string
 ---    The written user text. e.g. `"foo"`.
----@param parameter cmdparse.Parameter
+---@param parameter mega.cmdparse.Parameter
 ---    Some position parameter to check. e.g. `{choices={"foo", "bar"}}`.
 ---@return boolean
 ---    If `parameter` has defined `parameter.choices` and `name` matches one of
@@ -42,7 +42,7 @@ end
 
 --- Check if `arguments` is valid data for `parameter`.
 ---
----@param parameter cmdparse.Parameter
+---@param parameter mega.cmdparse.Parameter
 ---    A parser parameter that may expect 0-or-more values.
 ---@param arguments argparse.Argument
 ---    User inputs to check to check against `parameter`.
@@ -82,7 +82,7 @@ end
 
 --- Check if `parameter` is expected to have exactly one value.
 ---
----@param parameter cmdparse.Parameter
+---@param parameter mega.cmdparse.Parameter
 ---    A parser parameter that may expect 0-or-more values.
 ---@param arguments argparse.Argument
 ---    User inputs to check.
@@ -109,7 +109,7 @@ end
 
 --- Find + increment all flag parameters of `parser` that match the other inputs.
 ---
----@param parser cmdparse.ParameterParser
+---@param parser mega.cmdparse.ParameterParser
 ---    A parser whose parameters may be modified.
 ---@param argument_name string
 ---    The expected flag argument name.
@@ -137,7 +137,7 @@ end
 
 --- Find + increment all position parameters of `parser` that match the other inputs.
 ---
----@param parser cmdparse.ParameterParser
+---@param parser mega.cmdparse.ParameterParser
 ---    A parser whose parameters may be modified.
 ---@param argument_name string
 ---    The expected position argument name. Most of the time position arguments
@@ -163,7 +163,7 @@ end
 
 --- Find + increment the parameter(s) of `parser` that match the other inputs.
 ---
----@param parser cmdparse.ParameterParser
+---@param parser mega.cmdparse.ParameterParser
 ---    A parser whose parameters may be modified.
 ---@param argument_name string
 ---    The expected flag argument name.

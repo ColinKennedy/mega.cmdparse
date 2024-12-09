@@ -4,4 +4,4 @@ vim.opt.rtp:append(".")
 
 vim.cmd("runtime plugin/cmdparse.lua")
 
-require("cmdparse._core.configuration").initialize_data_if_needed()
+require("mega.cmdparse._core.configuration").initialize_data_if_needed()

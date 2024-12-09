@@ -1,6 +1,6 @@
 --- Make dealing with Lua tables a bit easier.
 ---
----@module 'cmdparse._core.tabler'
+---@module 'mega.cmdparse._core.tabler'
 ---
 
 local M = {}

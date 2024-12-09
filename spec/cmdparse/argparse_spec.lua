@@ -1,9 +1,9 @@
 --- Make sure the argument parser works as expected.
 ---
----@module 'cmdparse.argparse_spec'
+---@module 'mega.cmdparse.argparse_spec'
 ---
 
-local argparse = require("cmdparse._cli.argparse")
+local argparse = require("mega.cmdparse._cli.argparse")
 
 describe("default", function()
     it("works even if #empty #simple", function()

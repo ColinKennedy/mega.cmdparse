@@ -1,9 +1,9 @@
 --- Make sure auto-complete works as expected.
 ---
----@module 'cmdparse.autocomplete_spec'
+---@module 'mega.cmdparse.autocomplete_spec'
 ---
 
-local cmdparse = require("cmdparse._cli.cmdparse")
+local cmdparse = require("mega.cmdparse._cli.cmdparse")
 local mock_vim = require("test_utilities.mock_vim")
 local top_cmdparse = require("cmdparse")
 
@@ -11,13 +11,13 @@ local _COMMAND_NAME = "Test"
 
 --- Add `--repeat=` to `parser`.
 ---
----@param parser cmdparse.ParameterParser Some tree to add a new parameter.
+---@param parser mega.cmdparse.ParameterParser Some tree to add a new parameter.
 ---@param short string? The parameter name. e.g. `"-r"`.
 ---@param long string? The parameter name. e.g. `"--repeat"`.
 ---
 local function _add_repeat_parameter(parser, short, long)
     local choices = function(data)
-        --- @cast data cmdparse.ChoiceData?
+        --- @cast data mega.cmdparse.ChoiceData?
 
         local output = {}
 
@@ -56,7 +56,7 @@ end
 
 --- Add `--style=` to `parser`.
 ---
----@param parser cmdparse.ParameterParser Some tree to add a new parameter.
+---@param parser mega.cmdparse.ParameterParser Some tree to add a new parameter.
 ---@param short string? The parameter name. e.g. `"-s"`.
 ---@param long string? The parameter name. e.g. `"--style"`.
 ---
@@ -74,7 +74,7 @@ end
 --- Create multi-parameter for unittests.
 ---
 ---@param pluses boolean? If ``true``, the created parameters will use + / ++.
----@return cmdparse.ParameterParser # Create a `say {phrase,word} [--repeat --style]`.
+---@return mega.cmdparse.ParameterParser # Create a `say {phrase,word} [--repeat --style]`.
 ---
 local function _make_simple_parser(pluses)
     local parser = cmdparse.ParameterParser.new({ name = "top_test", help = "Test." })
@@ -107,7 +107,7 @@ end
 --- Create a --style= parameter.
 ---
 ---@param prefix string? The text used as a start for the parameter. e.g. `"--"`.
----@return cmdparse.ParameterParser # Create a tree of commands for unittests.
+---@return mega.cmdparse.ParameterParser # Create a tree of commands for unittests.
 ---
 local function _make_style_parser(prefix)
     local parser = cmdparse.ParameterParser.new({ name = "test", help = "Test" })
@@ -145,7 +145,7 @@ describe("plugin", function()
         ---    The name of the parser to register.
         ---@field help string
         ---    A description of what this plugin does. Keep it brief! < 80 characters.
-        ---@field add_parameters (fun(parser: cmdparse.ParameterParser): nil)?
+        ---@field add_parameters (fun(parser: mega.cmdparse.ParameterParser): nil)?
         ---    The callback used to add extra
 
         ---@return TeleskopePluginData[] # All of the Teleskope-registered plugin.
