@@ -250,6 +250,38 @@ Options:
         assert.same({ "--repeat=", "--style=", "--help" }, parser:get_completion("say phrase "))
     end)
 
+    it("auto-completes all ending flags as needed", function()
+        local parser = cmdparse.ParameterParser.new({ help = "Test parser." })
+        parser:add_parameter({
+            names = { "--style" },
+            choices = { "lowercase", "uppercase" },
+            help = "Test --style.",
+        })
+        parser:add_parameter({
+            names = { "--stylizer" },
+            action = "store_true",
+            help = "Test --stylizer.",
+        })
+
+        assert.same({ "--style=", "--stylizer" }, parser:get_completion("--styl"))
+    end)
+
+    it("auto-completes the value when a flag needs a value", function()
+        local parser = cmdparse.ParameterParser.new({ help = "Test parser." })
+        parser:add_parameter({
+            names = { "--style" },
+            choices = { "lowercase", "uppercase" },
+            help = "Test --style.",
+        })
+        parser:add_parameter({
+            names = { "--repeat" },
+            choices = { "1", "2", "3" },
+            help = "Test --repeat.",
+        })
+
+        assert.same({ "lowercase", "uppercase" }, parser:get_completion("--style "))
+    end)
+
     it("works when two positions start with the same text", function()
         local parser = cmdparse.ParameterParser.new({ name = "top_test", help = "Test." })
         local subparsers = parser:add_subparsers({ destination = "commands", help = "Test." })
