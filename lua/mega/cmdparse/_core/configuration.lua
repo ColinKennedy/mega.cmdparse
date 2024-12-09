@@ -28,6 +28,8 @@ function M.initialize_data_if_needed()
 
     vim.g.loaded_cmdparse = true
 
+    logging.set_configuration("mega.cmdparse", M.DATA.logging or {})
+
     _LOGGER:debug("Initialized cmdparse's configuration.")
 end
 
