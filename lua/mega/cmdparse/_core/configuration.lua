@@ -28,7 +28,7 @@ function M.initialize_data_if_needed()
 
     vlog.new(M.DATA.logging or {}, true)
 
-    vlog.fmt_debug("Initialized cmdparse's configuration.")
+    _LOGGER:debug("Initialized cmdparse's configuration.")
 end
 
 --- Merge `data` with the user's current configuration.

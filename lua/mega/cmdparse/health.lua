@@ -8,8 +8,9 @@
 
 local configuration_ = require("mega.cmdparse._core.configuration")
 local tabler = require("mega.cmdparse._core.tabler")
-local vlog = require("mega.cmdparse._vendors.vlog")
+local logging = require("mega.logging")
 
+local _LOGGER = logging.get_logger("mega.cmdparse.health")
 local M = {}
 
 -- NOTE: This file is defer-loaded so it's okay to run this in the global scope
@@ -186,7 +187,7 @@ end
 ---@param data mega.cmdparse.Configuration? All extra customizations for this plugin.
 ---
 function M.check(data)
-    vlog.debug("Running cmdparse health check.")
+    _LOGGER:debug("Running cmdparse health check.")
 
     vim.health.start("Configuration")
 
