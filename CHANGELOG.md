@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/ColinKennedy/mega.cmdparse/compare/v1.0.0...v1.0.1) (2024-12-10)
+
+
+### Bug Fixes
+
+* **rockspec:** added missing mega.logging dependency ([f7c4184](https://github.com/ColinKennedy/mega.cmdparse/commit/f7c418419a4df66b4c63dc9e889ad47a2ca53eb2))
+
 ## 1.0.0 (2024-12-09)
 
 
