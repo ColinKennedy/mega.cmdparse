@@ -11,6 +11,8 @@ description = {
     summary = 'A Neovim command-mode parser. Similar to Python\'s argparse module',
 }
 
+dependencies = { "mega.logging >= 1.1.1, < 2.0" }
+
 test_dependencies = {
     "busted >= 2.0, < 3.0",
     "lua >= 5.1, < 6.0",
