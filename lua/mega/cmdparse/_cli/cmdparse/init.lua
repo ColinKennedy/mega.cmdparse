@@ -288,6 +288,21 @@ local function _is_parameter(object)
     return object._parent and not _is_parser(object)
 end
 
+--- Check if `parameter` is the type that requires a value (or, if not, it is a flag).
+---
+---@param parameter mega.cmdparse.Parameter The option to check.
+---@return boolean # If `parameter` requires 1-or-more value, return `true`.
+---
+local function _needs_a_value(parameter)
+    local nargs = parameter._nargs
+
+    if type(nargs) == "number" then
+        return nargs ~= 0
+    end
+
+    return nargs == constant.Counter.one_or_more
+end
+
 --- Find all child parsers, recursively.
 ---
 --- Note:
@@ -345,6 +360,41 @@ local function _get_child_parser_names(parser)
 
     for parser_ in iterator_helper.iter_parsers(parser) do
         vim.list_extend(output, parser_:get_names())
+    end
+
+    return output
+end
+
+--- Find all flag / named parameters that match `text` in `parser`.
+---
+---@param text string Some flag or named parameter. e.g. `"--foo"`.
+---@param parser mega.cmdparse.ParameterParser The parent to search within for parameters.
+---@param block_exhausted boolean? If `true`, don't consider a used parameter.
+---@return mega.cmdparse.Parameter[] # All found matches. Usually 1 or 0. Rarely 2-or-more.
+---
+local function _get_exact_matching_parameters_by_name(text, parser, block_exhausted)
+    ---@type mega.cmdparse.Parameter[]
+    local output = {}
+
+    local parameters = parser:get_flag_parameters()
+
+    if block_exhausted then
+        parameters = vim:iter(parameters)
+            :filter(function(parameter)
+                -- NOTE: Iter:filter({f}) hides elements when they return `false`.
+                return not parameter:is_exhausted()
+            end)
+            :totable()
+    end
+
+    for _, parameter in ipairs(parameters) do
+        for _, name in ipairs(parameter.names) do
+            if name == text then
+                table.insert(output, parameter)
+
+                break
+            end
+        end
     end
 
     return output
@@ -1243,6 +1293,29 @@ function M.ParameterParser:_get_completion(data, column, options)
     end
 
     local last_name = text_parse.get_argument_name(last)
+
+    if last.argument_type == argparse.ArgumentType.flag then
+        local parameters = _get_exact_matching_parameters_by_name(last_name, parser)
+
+        if #parameters == 1 then
+            local parameter = parameters[1]
+
+            if _needs_a_value(parameter) then
+                if not parameter:is_exhausted() and parameter.choices then
+                    vim.list_extend(output, parameter.choices({ contexts = contexts }))
+                end
+
+                if parser:is_satisfied() then
+                    for parser_ in iterator_helper.iter_parsers(parser) do
+                        vim.list_extend(output, texter.get_array_startswith(parser_:get_names(), last_name))
+                    end
+                end
+
+                return output
+            end
+        end
+    end
+
     local child_parser = matcher.get_exact_subparser_child(last_name, parser)
 
     if child_parser then
@@ -1403,21 +1476,6 @@ end
 ---
 function M.ParameterParser:_handle_exact_flag_parameters(flags, arguments, namespace, contexts)
     contexts = contexts or {}
-
-    --- Check if `parameter` is the type that requires a value (or, if not, it is a flag).
-    ---
-    ---@param parameter mega.cmdparse.Parameter The option to check.
-    ---@return boolean # If `parameter` requires 1-or-more value, return `true`.
-    ---
-    local function _needs_a_value(parameter)
-        local nargs = parameter._nargs
-
-        if type(nargs) == "number" then
-            return nargs ~= 0
-        end
-
-        return nargs == constant.Counter.one_or_more
-    end
 
     --- Get all of the next arguments that could be values of some position parameter.
     ---
