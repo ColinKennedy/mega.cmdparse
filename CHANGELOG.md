@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/ColinKennedy/mega.cmdparse/compare/v1.0.1...v1.0.2) (2024-12-10)
+
+
+### Bug Fixes
+
+* **completion:** trailing flag / named parameters now work ([5f862bb](https://github.com/ColinKennedy/mega.cmdparse/commit/5f862bb6257ba31c439a324a79c5788b603321b2))
+
 ## [1.0.1](https://github.com/ColinKennedy/mega.cmdparse/compare/v1.0.0...v1.0.1) (2024-12-10)
 
 
