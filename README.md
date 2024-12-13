@@ -1,8 +1,3 @@
-# 🚧 Under Construction 🚧
-
-Please check back later. 🔧✨
-
-
 # mega.cmdparse
 
 A [Python argparse-inspired](https://docs.python.org/3/library/argparse.html)
