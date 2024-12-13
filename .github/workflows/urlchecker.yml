@@ -30,12 +30,6 @@ jobs:
         subfolder: lua
         file_types: .json,.lua,.md,.txt,.vim,.yml
 
-    - name: urlcheck - plugin directory
-      uses: urlstechie/urlchecker-action@master
-      with:
-        subfolder: plugin
-        file_types: .json,.lua,.md,.txt,.vim,.yml
-
     - name: urlcheck - scripts directory
       uses: urlstechie/urlchecker-action@master
       with:
