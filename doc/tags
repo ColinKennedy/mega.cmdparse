@@ -14,7 +14,6 @@ mega.cmdparse-tests	mega.cmdparse.txt	/*mega.cmdparse-tests*
 mega.cmdparse-tests-initialization	mega.cmdparse.txt	/*mega.cmdparse-tests-initialization*
 mega.cmdparse-tests-running	mega.cmdparse.txt	/*mega.cmdparse-tests-running*
 mega.cmdparse-tracking-updates	mega.cmdparse.txt	/*mega.cmdparse-tracking-updates*
-mega.cmdparse-under-construction-	mega.cmdparse.txt	/*mega.cmdparse-under-construction-*
 mega.cmdparse.Configuration	mega_cmdparse_types.txt	/*mega.cmdparse.Configuration*
 mega.cmdparse.ConfigurationCmdparse	mega_cmdparse_types.txt	/*mega.cmdparse.ConfigurationCmdparse*
 mega.cmdparse.ConfigurationCmdparseAutoComplete	mega_cmdparse_types.txt	/*mega.cmdparse.ConfigurationCmdparseAutoComplete*

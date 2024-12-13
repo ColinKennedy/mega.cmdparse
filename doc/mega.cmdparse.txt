@@ -1,32 +1,25 @@
-*mega.cmdparse.txt*      For Neovim >= 0.8.0     Last change: 2024 December 10
+*mega.cmdparse.txt*      For Neovim >= 0.8.0     Last change: 2024 December 13
 
 ==============================================================================
 Table of Contents                            *mega.cmdparse-table-of-contents*
 
-1. Under Construction                      |mega.cmdparse-under-construction-|
-2. mega.cmdparse                                 |mega.cmdparse-mega.cmdparse|
-3. Features                                           |mega.cmdparse-features|
+1. mega.cmdparse                                 |mega.cmdparse-mega.cmdparse|
+2. Features                                           |mega.cmdparse-features|
   - Demos                                       |mega.cmdparse-features-demos|
   - Examples                                 |mega.cmdparse-features-examples|
   - API                                           |mega.cmdparse-features-api|
-4. Installation                                   |mega.cmdparse-installation|
-5. Configuration                                 |mega.cmdparse-configuration|
-6. Tests                                                 |mega.cmdparse-tests|
+3. Installation                                   |mega.cmdparse-installation|
+4. Configuration                                 |mega.cmdparse-configuration|
+5. Tests                                                 |mega.cmdparse-tests|
   - Initialization                        |mega.cmdparse-tests-initialization|
   - Running                                      |mega.cmdparse-tests-running|
-7. Tracking Updates                           |mega.cmdparse-tracking-updates|
-8. Other Plugins                                 |mega.cmdparse-other-plugins|
+6. Tracking Updates                           |mega.cmdparse-tracking-updates|
+7. Other Plugins                                 |mega.cmdparse-other-plugins|
 
 ==============================================================================
-1. Under Construction                      *mega.cmdparse-under-construction-*
+1. mega.cmdparse                                 *mega.cmdparse-mega.cmdparse*
 
-Pleasecheck back later.
-
-
-==============================================================================
-2. mega.cmdparse                                 *mega.cmdparse-mega.cmdparse*
-
-APython argparse-inspired <https://docs.python.org/3/library/argparse.html>
+A Python argparse-inspired <https://docs.python.org/3/library/argparse.html>
 command mode parser for Neovim.
 
 This library is for people who have to define a command like `:Foo` and it
@@ -51,7 +44,7 @@ covered!
   --------------------------------------------------------------------------------
 
 ==============================================================================
-3. Features                                           *mega.cmdparse-features*
+2. Features                                           *mega.cmdparse-features*
 
 - Position, flag, and named arguments support. e.g. `foo bar --fizz=buzz -z`
 - Parser / Parameter paradigm
@@ -468,7 +461,7 @@ Expand to show more ~
 
 
 ==============================================================================
-4. Installation                                   *mega.cmdparse-installation*
+3. Installation                                   *mega.cmdparse-installation*
 
 - lazy.nvim <https://github.com/folke/lazy.nvim>
 
@@ -482,7 +475,7 @@ Expand to show more ~
 
 
 ==============================================================================
-5. Configuration                                 *mega.cmdparse-configuration*
+4. Configuration                                 *mega.cmdparse-configuration*
 
 (These are default values)
 
@@ -508,7 +501,7 @@ Expand to show more ~
 
 
 ==============================================================================
-6. Tests                                                 *mega.cmdparse-tests*
+5. Tests                                                 *mega.cmdparse-tests*
 
 
 INITIALIZATION                            *mega.cmdparse-tests-initialization*
@@ -540,7 +533,7 @@ Run test based on tags
 
 
 ==============================================================================
-7. Tracking Updates                           *mega.cmdparse-tracking-updates*
+6. Tracking Updates                           *mega.cmdparse-tracking-updates*
 
 See doc/news.txt <doc/news.txt> for updates.
 
@@ -552,7 +545,7 @@ You can watch this plugin for changes by adding this URL to your RSS feed:
 
 
 ==============================================================================
-8. Other Plugins                                 *mega.cmdparse-other-plugins*
+7. Other Plugins                                 *mega.cmdparse-other-plugins*
 
 This template is full of various features. But if your plugin is only meant to
 be a simple plugin and you don’t want the bells and whistles that this
