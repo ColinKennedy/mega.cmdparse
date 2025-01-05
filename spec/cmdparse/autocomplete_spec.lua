@@ -282,6 +282,16 @@ Options:
         assert.same({ "lowercase", "uppercase" }, parser:get_completion("--style "))
     end)
 
+    it("auto-completes the value if a = is not used for an argument that requires a value - 001", function()
+        local parser = _make_style_parser()
+        assert.same({ "lowercase", "uppercase" }, parser:get_completion("--style "))
+    end)
+
+    it("auto-completes the value if a = is not used for an argument that requires a value - 002", function()
+        local parser = _make_simple_parser()
+        assert.same({ "lowercase", "uppercase" }, parser:get_completion("say word --style "))
+    end)
+
     it("works when two positions start with the same text", function()
         local parser = cmdparse.ParameterParser.new({ name = "top_test", help = "Test." })
         local subparsers = parser:add_subparsers({ destination = "commands", help = "Test." })
