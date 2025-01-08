@@ -508,14 +508,14 @@ Run all tests
 ```sh
 luarocks test --test-type busted
 # Or manually
-busted --helper spec/minimal_init.lua .
+busted .
 # Or with Make
 make test
 ```
 
 Run test based on tags
 ```sh
-busted --helper spec/minimal_init.lua . --tags=simple
+busted . --tags=simple
 ```
 
 

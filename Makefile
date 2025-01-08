@@ -27,4 +27,4 @@ stylua:
 	stylua lua scripts spec
 
 test:
-	busted --helper spec/minimal_init.lua .
+	busted .
