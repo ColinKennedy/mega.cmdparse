@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/ColinKennedy/mega.cmdparse/compare/v1.0.2...v1.0.3) (2025-01-08)
+
+
+### Bug Fixes
+
+* **busted:** removed hard-coded minimal_init.lua ([41ffb96](https://github.com/ColinKennedy/mega.cmdparse/commit/41ffb96a4cf1b1e18dcb23daca3948471f6861cf))
+
 ## [1.0.2](https://github.com/ColinKennedy/mega.cmdparse/compare/v1.0.1...v1.0.2) (2024-12-10)
 
 
