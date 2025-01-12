@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.4](https://github.com/ColinKennedy/mega.cmdparse/compare/v1.0.3...v1.0.4) (2025-01-12)
+
+
+### Bug Fixes
+
+* **rockspec:** added corrected template .rockspec ([88f559c](https://github.com/ColinKennedy/mega.cmdparse/commit/88f559c04f37e86cca49b3a42f22476a3ece2626))
+
 ## [1.0.3](https://github.com/ColinKennedy/mega.cmdparse/compare/v1.0.2...v1.0.3) (2025-01-08)
 
 
