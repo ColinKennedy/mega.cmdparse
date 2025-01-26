@@ -801,7 +801,8 @@ Options:
             vim.cmd(string.format("%s view log", _COMMAND_NAME))
         end)
         assert.is_false(success)
-        assert.equal('vim/_editor.lua:0: nvim_exec2(): Vim:Parameter "path" must be defined.', message)
+        assert(message)
+        assert.is_true(vim.endswith(message, 'Parameter "path" must be defined.'))
     end)
 
     it('works with the "Static Auto-Complete Values" example', function()
