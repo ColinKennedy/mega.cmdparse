@@ -20,33 +20,34 @@ There's a lot of features. Whatever you need, `mega.cmdparse` has you covered!
 | Social       | [![RSS](https://img.shields.io/badge/rss-F88900?style=for-the-badge&logo=rss&logoColor=white)](https://github.com/ColinKennedy/mega.cmdparse/commits/main/doc/news.txt.atom)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 
 
-# Features
-- Position, flag, and named arguments support. e.g. `foo bar --fizz=buzz -z`
+# ⚡️ Features
+- [Position, flag, and named arguments. e.g. `foo bar --fizz=buzz -z`](#position-flag-and-named-arguments)
 - Parser / Parameter paradigm
-- Builtin auto-complete
-- Auto-generated `--help` parameter support.
+- [Builtin auto-complete](#builtin-auto-complete)
+- [Auto-generated `--help` parameter](#auto-generated---help-parameter)
 - Auto-complete any argument in any cursor position
 - Auto-complete a flag argument's values
-- Non-standard arguments support. e.g. `--foo`, `++bar`, `-f`, etc
-- Automated value type conversions.
-- Multi-argument-per-parameter support
-- Multi-parameter support
-- Basic unicode parameter / value support
+- [Non-standard arguments. e.g. `--foo`, `++bar`, `-f`, etc](#non-standard-arguments)
+- [Automated value type conversions](#automated-value-type-conversions)
+- [Multi-argument-per-parameter](#multi-argument-per-parameter)
+- Multi-parameters
+- [Nested subparsers](#nested-subparsers)
 - Merged flag support. e.g. `-fbt` flags parse as `{f=true, b=true, t=true}`.
-- Automated parameter validation. e.g. "foo parameter requires 2 arguments, got 1", etc.
-- Supports required / optional arguments
-- 2 flag formats support. `--foo bar` and `--foo=bar`
-- Dynamic parsers (supports plugin-like interfaces like Telescope and more)
+- [Automated parameter validation. e.g. "foo parameter requires 2 arguments, got 1", etc.](#automated-parameter-validation)
+- [Unicode support](#unicode-parameters)
+- [Supports required / optional arguments](#supports-required--optional-arguments)
+- [2 supported flag formats. `--foo bar` and `--foo=bar`](#2-supported-flag-formats)
+- [Dynamic parsers (supports plugin-like interfaces like Telescope and more)](#dynamic-parsers)
 - This plugin is defer-evaluated (<1 ms plugin start-up time)
 
 
-## Demos
-### Builtin auto-complete
+## ⭐ Demos
+### Builtin Auto-Complete
 
 https://github.com/user-attachments/assets/49cb410c-b49d-435a-ac8b-5cb46999f7f7
 
 
-### Auto-generated `--help` parameter support
+### Auto-Generated `--help` Parameter
 If you want details on what to type, add `-h` or `--help` to any command and
 the automated help message will show.
 
@@ -57,19 +58,20 @@ A summarized version may also show if you make a mistake in your input.
 https://github.com/user-attachments/assets/9be524e3-fccd-4cd0-8626-a2dc6c096518
 
 
-### Automated parameter validation
+### Automated Parameter Validation
 Parameters know how many arguments they need and in what order.
 
 https://github.com/user-attachments/assets/29f57c5c-c977-47a0-82c8-423250e26688
 
 
-### 2 flag formats support
+### 2 Supported Flag Formats
 `--foo bar` and `--foo=bar` are both supported styles.
 
 https://github.com/user-attachments/assets/a4467230-c1c6-49a0-8405-5c4be40dcba2
 
 
-## Examples
+## 🌟 Examples
+### Simple Hello, World!
 <details>
 <summary>Hello, World! Parser</summary>
 
@@ -83,6 +85,7 @@ cmdparse.create_user_command(parser)
 Run: `:Test`
 </details>
 
+### Automated Value Type Conversions
 <details>
 <summary>Automated value type conversions</summary>
 
@@ -102,6 +105,7 @@ cmdparse.create_user_command(parser)
 Run: `:Test 10 -123`
 </details>
 
+### Multi-Argument-Per-Parameter
 <details>
 <summary>Multi-argument-per-parameter</summary>
 
@@ -130,8 +134,9 @@ cmdparse.create_user_command(parser)
 Run: `:Test 123 54545.1231`
 </details>
 
+### Position, Flag, And Named Arguments
 <details>
-<summary>Position, flag, and named arguments support. e.g. `foo bar --fizz=buzz -dbz`</summary>
+<summary>Position, flag, and named arguments. e.g. `foo bar --fizz=buzz -dbz`</summary>
 
 ```lua
 local cmdparse = require("mega.cmdparse")
@@ -156,6 +161,7 @@ cmdparse.create_user_command(parser)
 Run: `:Test foo bar --fizz=buzz -dbz`
 </details>
 
+### Supports Required / Optional Arguments
 <details>
 <summary>Supports Required / Optional Arguments</summary>
 
@@ -183,6 +189,7 @@ cmdparse.create_user_command(parser)
 Run: `:Test foo bar --required-flag=aaa`
 </details>
 
+### Nested Subparsers
 <details>
 <summary>Nested Subparsers</summary>
 
@@ -206,6 +213,7 @@ cmdparse.create_user_command(parser)
 Run: `:Test view log /some/path.txt`
 </details>
 
+### Static Auto-Complete Values
 <details>
 <summary>Static Auto-Complete Values</summary>
 
@@ -220,6 +228,7 @@ cmdparse.create_user_command(parser)
 Run: `:Test apply`
 </details>
 
+### Dynamic Parsers
 <details>
 <summary>Dynamic Auto-Complete Values</summary>
 
@@ -246,6 +255,7 @@ cmdparse.create_user_command(parser)
 Run: `:Test --thing=4`
 </details>
 
+### Dynamic Plug-ins
 <details>
 <summary>Dynamic Plug-ins</summary>
 
@@ -301,6 +311,7 @@ Run: `Test plugin-a --foo`
 Run: `Test plugin-b 12345`
 </details>
 
+### Customizable / Automated --help Flag
 <details>
 <summary>Customizable / Automated `--help` flag</summary>
 
@@ -349,8 +360,9 @@ And the help message becomes
 </details>
 
 
+### Non-Standard Arguments
 <details>
-<summary>Non-standard arguments support. e.g. `--foo`, `++bar`, `-f`, etc</summary>
+<summary>Non-standard arguments. e.g. `--foo`, `++bar`, `-f`, etc</summary>
 
 The difference between a position parameter and a flag / named parameter is
 just the prefix. Position parameters must start with alphanumeric text. But
@@ -374,6 +386,7 @@ cmdparse.create_user_command(parser)
 Run: `:Test --fizz ++buzz "some text here"`
 </details>
 
+### Unicode Parameters
 <details>
 <summary>Unicode Parameters</summary>
 
@@ -396,7 +409,7 @@ Run: `:Test apple 🄱🄰🄽🄰🄽🄰 --😊=ttt`
 </details>
 
 
-## API
+## 🧰 API
 Most people will use `mega.cmdparse` to create Neovim user commands but if you
 want to use the Lua API directly, here are the most common cases.
 
@@ -460,7 +473,7 @@ print(vim.inspect(parser:parse_arguments("--foo=apple")))
 </details>
 
 
-# Installation
+# 📋 Installation
 - [lazy.nvim](https://github.com/folke/lazy.nvim)
 ```lua
 {
@@ -471,7 +484,7 @@ print(vim.inspect(parser:parse_arguments("--foo=apple")))
 ```
 
 
-# Configuration
+# ⚙ Configuration
 (These are default values)
 
 - [lazy.nvim](https://github.com/folke/lazy.nvim)
@@ -494,7 +507,7 @@ print(vim.inspect(parser:parse_arguments("--foo=apple")))
 ```
 
 
-# Tests
+# ✅ Tests
 ## Initialization
 Run this line once before calling any `busted` command
 
@@ -519,17 +532,10 @@ busted . --tags=simple
 ```
 
 
-# Tracking Updates
+# 👂 Tracking Updates
 See [doc/news.txt](doc/news.txt) for updates.
 
 You can watch this plugin for changes by adding this URL to your RSS feed:
 ```
 https://github.com/ColinKennedy/mega.cmdparse/commits/main/doc/news.txt.atom
 ```
-
-
-# Other Plugins
-This template is full of various features. But if your plugin is only meant to
-be a simple plugin and you don't want the bells and whistles that this template
-provides, consider instead using
-[nvim-plugin-template](https://github.com/ellisonleao/nvim-plugin-template)
