@@ -8,7 +8,6 @@ mega.cmdparse-mega.cmdparse	mega.cmdparse.txt	/*mega.cmdparse-mega.cmdparse*
 mega.cmdparse-new-breaking	news.txt	/*mega.cmdparse-new-breaking*
 mega.cmdparse-new-features	news.txt	/*mega.cmdparse-new-features*
 mega.cmdparse-news.txt	news.txt	/*mega.cmdparse-news.txt*
-mega.cmdparse-other-plugins	mega.cmdparse.txt	/*mega.cmdparse-other-plugins*
 mega.cmdparse-table-of-contents	mega.cmdparse.txt	/*mega.cmdparse-table-of-contents*
 mega.cmdparse-tests	mega.cmdparse.txt	/*mega.cmdparse-tests*
 mega.cmdparse-tests-initialization	mega.cmdparse.txt	/*mega.cmdparse-tests-initialization*

@@ -42,11 +42,11 @@ Fields ~
        | "info"
        | "warn" | "error"
        | "fatal"
-       | vim.log.levels.DEBUG
-       | vim.log.levels.ERROR
-       | vim.log.levels.INFO
-       | vim.log.levels.TRACE
-       | vim.log.levels.WARN)?
+       | number Messages to show to plugin maintainers.
+       | number Unrecovered issues to show to the plugin users.
+       | number Informative messages to show to the plugin users.
+       | number Low-level or spammy messages.
+       | number An error that was recovered but could be an issue.)?
        Any messages above this level will be logged.
     {use_console} `(boolean?)`
        Should print the output to neovim while running. Warning: This is very
