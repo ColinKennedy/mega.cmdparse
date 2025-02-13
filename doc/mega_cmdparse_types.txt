@@ -10,9 +10,9 @@ operation of this Lua plugin.
    The user's customizations for this plugin.
 
 Fields ~
-    {cmdparse} mega.cmdparse.ConfigurationCmdparse?
+    {cmdparse} |mega.cmdparse.ConfigurationCmdparse|?
        All settings that control the command mode tools (parsing, auto-complete, etc).
-    {logging} mega.cmdparse.LoggingConfiguration?
+    {logging} |mega.cmdparse.LoggingConfiguration|?
        Control how and which logs print to file / Neovim.
 
 ------------------------------------------------------------------------------
@@ -20,7 +20,7 @@ Fields ~
    All settings that control the command mode tools (parsing, auto-complete, etc).
 
 Fields ~
-    {auto_complete} mega.cmdparse.ConfigurationCmdparseAutoComplete
+    {auto_complete} |mega.cmdparse.ConfigurationCmdparseAutoComplete|
        The settings that control what happens during auto-completion.
 
 ------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ Fields ~
    The settings that control what happens during auto-completion.
 
 Fields ~
-    {display} {help_flag: `(boolean})`
+    {display} {help_flag: `(boolean)`}
        help_flag = Show / Hide the --help flag during auto-completion.
 
 ------------------------------------------------------------------------------
@@ -48,12 +48,12 @@ Fields ~
        | number Low-level or spammy messages.
        | number An error that was recovered but could be an issue.)?
        Any messages above this level will be logged.
-    {use_console} `(boolean?)`
+    {use_console} `(boolean)`?
        Should print the output to neovim while running. Warning: This is very
        spammy. You probably don't want to enable this unless you have to.
-    {use_file} `(boolean?)`
+    {use_file} `(boolean)`?
        Should write to a file.
-    {output_path} `(string?)`
+    {output_path} `(string)`?
        The default path on-disk where log files will be written to.
        Defaults to "/home/selecaoone/.local/share/nvim/plugin_name.log".
 

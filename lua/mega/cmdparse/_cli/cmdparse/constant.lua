@@ -1,7 +1,4 @@
 --- Meaningful global variables to reuse across modules.
----
----@module 'mega.cmdparse._cli.cmdparse.constant'
----
 
 local M = {}
 

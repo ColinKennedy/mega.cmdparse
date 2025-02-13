@@ -1,7 +1,4 @@
 --- Make sure that the old, manual way of setting up cmdparse also works.
----
----@module 'mega.cmdparse.manual_cmdparse_spec'
----
 
 local cli_subcommand = require("mega.cmdparse._cli.cli_subcommand")
 

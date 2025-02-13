@@ -1,7 +1,4 @@
 --- Make sure the argument parser works as expected.
----
----@module 'mega.cmdparse.argparse_spec'
----
 
 local argparse = require("mega.cmdparse._cli.argparse")
 

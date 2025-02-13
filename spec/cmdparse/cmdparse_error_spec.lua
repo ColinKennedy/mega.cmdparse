@@ -1,7 +1,4 @@
 --- Make sure that `cmdparse` errors when it should.
----
----@module 'mega.cmdparse.cmdparse_error_spec'
----
 
 local cmdparse = require("mega.cmdparse._cli.cmdparse")
 local mock_vim = require("test_utilities.mock_vim")

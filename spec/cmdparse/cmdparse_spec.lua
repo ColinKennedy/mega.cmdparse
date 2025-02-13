@@ -1,7 +1,4 @@
 --- Make sure that `cmdparse` parses and auto-completes as expected.
----
----@module 'mega.cmdparse.cmdparse_spec'
----
 
 local cmdparse = require("mega.cmdparse._cli.cmdparse")
 local configuration = require("mega.cmdparse._core.configuration")

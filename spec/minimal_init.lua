@@ -1,7 +1,5 @@
 --- Run the is file before you run unittests to download any extra dependencies.
 
---- Run the is file before you run unittests to download any extra dependencies.
-
 local _PLUGINS = {
     ["https://github.com/ColinKennedy/mega.logging"] = os.getenv("MEGA_LOGGING_DIR") or "/tmp/mega.logging",
 }

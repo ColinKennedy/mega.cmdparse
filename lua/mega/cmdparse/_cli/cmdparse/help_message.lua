@@ -1,7 +1,4 @@
 --- Functions that make writing / reading / changing help messages.
----
----@module 'mega.cmdparse._cli.cmdparse.help_message'
----
 
 local constant = require("mega.cmdparse._cli.cmdparse.constant")
 local iterator_helper = require("mega.cmdparse._cli.cmdparse.iterator_helper")

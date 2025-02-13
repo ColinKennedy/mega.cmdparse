@@ -1,7 +1,4 @@
 --- Generic functions used in other files.
----
----@module 'mega.mega.cmdparse._cli.cmdparse.iterator_helper'
----
 
 local M = {}
 

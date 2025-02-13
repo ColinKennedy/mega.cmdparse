@@ -1,7 +1,4 @@
 --- Make dealing with COMMAND mode parsed arguments a bit easier.
----
----@module 'mega.cmdparse._cli.argparse_helper'
----
 
 local argparse = require("mega.cmdparse._cli.argparse")
 local tabler = require("mega.cmdparse._core.tabler")

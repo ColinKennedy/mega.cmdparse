@@ -1,7 +1,4 @@
 --- Parse text into positional / named arguments.
----
----@module 'mega.cmdparse._cli.cmdparse'
----
 
 local argparse = require("mega.cmdparse._cli.argparse")
 local argparse_helper = require("mega.cmdparse._cli.argparse_helper")

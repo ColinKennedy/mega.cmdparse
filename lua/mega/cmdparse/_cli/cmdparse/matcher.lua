@@ -1,7 +1,4 @@
 --- Match exact / partial text of cmdparse parameters and argparse arguments.
----
----@module 'mega.cmdparse._cli.cmdparse.matcher'
----
 
 local argparse = require("mega.cmdparse._cli.argparse")
 local constant = require("mega.cmdparse._cli.cmdparse.constant")

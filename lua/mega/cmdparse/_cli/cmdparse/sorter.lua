@@ -1,7 +1,4 @@
 --- Make sorting arguments easier.
----
----@module 'mega.cmdparse._cli.cmdparse.sorter'
----
 
 local argparse = require("mega.cmdparse._cli.argparse")
 local help_message = require("mega.cmdparse._cli.cmdparse.help_message")

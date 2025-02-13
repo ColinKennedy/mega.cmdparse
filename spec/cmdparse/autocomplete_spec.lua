@@ -1,7 +1,4 @@
 --- Make sure auto-complete works as expected.
----
----@module 'mega.cmdparse.autocomplete_spec'
----
 
 local cmdparse = require("mega.cmdparse._cli.cmdparse")
 local mock_vim = require("test_utilities.mock_vim")

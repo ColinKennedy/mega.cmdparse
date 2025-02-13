@@ -1,7 +1,4 @@
 --- Connect Neovim's COMMAND mode to our Lua functions.
----
----@module 'mega.cmdparse._cli.cli_subcommand'
----
 
 local M = {}
 

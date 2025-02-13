@@ -1,3 +1,5 @@
+--- Download dependencies needed to run `make_api_documentation/main.lua`.
+
 for url, directory in pairs({
     ["https://github.com/echasnovski/mini.doc"] = os.getenv("MINI_DOC_DIRECTORY") or "/tmp/mini.doc",
     ["https://github.com/ColinKennedy/mega.vimdoc"] = os.getenv("AGGRO_VIMDOC_DIRECTORY") or "/tmp/mega.vimdoc",
