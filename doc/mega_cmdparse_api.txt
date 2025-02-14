@@ -6,9 +6,9 @@ If a function's signature here changes in some incompatible way, this
 package must get a new **major** version.
 
 ------------------------------------------------------------------------------
-                                           *mega.cmdparse.create_user_command()*
+                                                       *M.create_user_command()*
 
-`mega.cmdparse.create_user_command`({parser}, {name})
+`create_user_command`({parser}, {name})
 
 Create a Neovim command according to `parser`.
 
@@ -21,9 +21,9 @@ Parameters ~
         The top-level command to define.
 
 ------------------------------------------------------------------------------
-                                         *mega.cmdparse.make_parser_completer()*
+                                                     *M.make_parser_completer()*
 
-`mega.cmdparse.make_parser_completer`({parser_creator})
+`make_parser_completer`({parser_creator})
 
 Make a function that can auto-complete based on the parser of `parser_creator`.
 
@@ -37,9 +37,9 @@ Return ~
        gets all auto-complete values back if any were found.
 
 ------------------------------------------------------------------------------
-                                           *mega.cmdparse.make_parser_triager()*
+                                                       *M.make_parser_triager()*
 
-`mega.cmdparse.make_parser_triager`({parser_creator})
+`make_parser_triager`({parser_creator})
 
 Create a deferred function that can parse and execute a user's arguments.
 
@@ -52,9 +52,9 @@ Return ~
        A function that will parse the user's arguments.
 
 ------------------------------------------------------------------------------
-                                           *mega.cmdparse.ParameterParser.new()*
+                                                       *M.ParameterParser.new()*
 
-`mega.cmdparse.ParameterParser.new`({options})
+`ParameterParser.new`({options})
 
 Create a new `cmdparse.ParameterParser`.
 
