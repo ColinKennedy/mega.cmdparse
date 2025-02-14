@@ -3,8 +3,6 @@
 --- At minimum, we validate that the user's configuration is correct. But other
 --- checks can happen here if needed.
 ---
----@module 'mega.cmdparse.health'
----
 
 local configuration_ = require("mega.cmdparse._core.configuration")
 local tabler = require("mega.cmdparse._core.tabler")

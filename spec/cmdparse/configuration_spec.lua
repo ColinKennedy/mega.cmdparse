@@ -1,7 +1,4 @@
 --- Make sure configuration health checks succeed or fail where they should.
----
----@module 'mega.cmdparse.configuration_spec'
----
 
 local configuration_ = require("mega.cmdparse._core.configuration")
 local health = require("mega.cmdparse.health")

@@ -1,7 +1,4 @@
 --- All functions and data to help customize `cmdparse` for this user.
----
----@module 'mega.cmdparse._core.configuration'
----
 
 local logging = require("mega.logging")
 

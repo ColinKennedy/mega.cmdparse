@@ -3,8 +3,6 @@
 --- If a function's signature here changes in some incompatible way, this
 --- package must get a new **major** version.
 ---
----@module 'mega.cmdparse'
----
 
 local M = {}
 

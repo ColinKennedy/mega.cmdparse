@@ -1,7 +1,4 @@
 --- Parse and evaluate parameters, using CLI arguments.
----
----@module 'mega.cmdparse._cli.cmdparse.evaluator'
----
 
 local argparse = require("mega.cmdparse._cli.argparse")
 local constant = require("mega.cmdparse._cli.cmdparse.constant")

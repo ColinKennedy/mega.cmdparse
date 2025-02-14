@@ -3,8 +3,6 @@
 --- These types are either required by the Lua API or required for the normal
 --- operation of this Lua plugin.
 ---
----@module 'mega.cmdparse.types'
----
 
 ---@alias vim.log.levels.DEBUG number Messages to show to plugin maintainers.
 ---@alias vim.log.levels.ERROR number Unrecovered issues to show to the plugin users.

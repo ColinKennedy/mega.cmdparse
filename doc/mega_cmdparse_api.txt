@@ -17,7 +17,7 @@ Raises:
     a parser to have a name but here, specifically, it must have a name.
 
 Parameters ~
-    {parser} mega.cmdparse.ParserCreator
+    {parser} |mega.cmdparse.ParserCreator|
         The top-level command to define.
 
 ------------------------------------------------------------------------------
@@ -28,11 +28,11 @@ Parameters ~
 Make a function that can auto-complete based on the parser of `parser_creator`.
 
 Parameters ~
-    {parser_creator} mega.cmdparse.ParserCreator
+    {parser_creator} |mega.cmdparse.ParserCreator|
        A function that creates the decision tree that parses text.
 
 Return ~
-    `(fun(_: any, all_text: string, _: any): string[]?)`
+    fun(_: `(any)`, all_text: `(string)`, _: `(any)`): `(string)`[]?
        A deferred function that creates the COMMAND mode parser, runs it, and
        gets all auto-complete values back if any were found.
 
@@ -44,11 +44,11 @@ Return ~
 Create a deferred function that can parse and execute a user's arguments.
 
 Parameters ~
-    {parser_creator} mega.cmdparse.ParserCreator
+    {parser_creator} |mega.cmdparse.ParserCreator|
        A function that creates the decision tree that parses text.
 
 Return ~
-    `(fun(opts: table): nil)`
+    fun(opts: `(table)`): `(nil)`
        A function that will parse the user's arguments.
 
 ------------------------------------------------------------------------------
@@ -62,11 +62,11 @@ If the parser is a child of a subparser then this instance must be given
 a name via `{name="foo"}` or this function will error.
 
 Parameters ~
-    {options} mega.cmdparse.ParameterParserInputOptions | mega.cmdparse.ParameterParserOptions
+    {options} |mega.cmdparse.ParameterParserInputOptions| | |mega.cmdparse.ParameterParserOptions|
        The options that we might pass to `cmdparse.ParameterParser.new`.
 
 Return ~
-    mega.cmdparse.ParameterParser
+    |mega.cmdparse.ParameterParser|
        The created instance.
 
 

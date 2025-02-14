@@ -1,7 +1,4 @@
 --- Make dealing with raw text from cmdparse types easier to handle.
----
----@module 'mega.cmdparse._cli.cmdparse.text_parse'
----
 
 local argparse = require("mega.cmdparse._cli.argparse")
 local texter = require("mega.cmdparse._core.texter")

@@ -1,7 +1,4 @@
 --- Functions that fill-in missing values, validate values, etc for cmdparse types.
----
----@module 'mega.cmdparse._cli.cmdparse.types_input'
----
 
 local constant = require("mega.cmdparse._cli.cmdparse.constant")
 local text_parse = require("mega.cmdparse._cli.cmdparse.text_parse")

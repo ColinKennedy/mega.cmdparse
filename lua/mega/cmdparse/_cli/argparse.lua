@@ -1,7 +1,4 @@
 --- Parse text into positional / named arguments.
----
----@module 'mega.cmdparse._cli.argparse'
----
 
 local logging = require("mega.logging")
 
