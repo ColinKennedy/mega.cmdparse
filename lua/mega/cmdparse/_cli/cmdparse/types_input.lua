@@ -215,6 +215,16 @@ function M.validate_parameter_options(options)
         end
     end
 
+    if options.default ~= nil and options.required then
+        error(
+            string.format(
+                'Options "%s" cannot have a default and required=true at the same time. Please fix!',
+                vim.inspect(options)
+            ),
+            0
+        )
+    end
+
     if type(options.nargs) == "number" and options.nargs < 0 then
         error(string.format('Nargs "%s" cannot be less than zero.', options.nargs), 0)
     end

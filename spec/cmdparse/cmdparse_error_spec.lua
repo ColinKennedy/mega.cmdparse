@@ -665,6 +665,30 @@ describe("bugs", function()
     end)
 end)
 
+describe("defaults", function()
+    it("fails if you have a default + required=true", function()
+        local cmdparse = require("mega.cmdparse")
+
+        local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Nested Subparsers" })
+        local success, message = pcall(function()
+            parser:add_parameter({ name = "bad", default = 8, required = true })
+        end)
+
+        assert.is_false(success)
+        assert.is_true(vim.endswith(message, "cannot have a default and required=true at the same time. Please fix!"))
+
+        success, message = pcall(function()
+            parser:add_parameter({ name = "bad", default = 8, required = false })
+        end)
+        assert.is_true(success)
+
+        success, message = pcall(function()
+            parser:add_parameter({ name = "bad", required = true })
+        end)
+        assert.is_true(success)
+    end)
+end)
+
 describe("README.md examples", function()
     before_each(function()
         pcall(function()
