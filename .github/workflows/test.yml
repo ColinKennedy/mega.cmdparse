@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        neovim: [v0.10.0, stable, nightly]
+        neovim: [v0.10.0, v0.11.0, stable, nightly]
         luaVersion: ["luajit-openresty"]
         include:
         - os: "windows-latest"
@@ -50,12 +50,17 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1
 
     - name: Install Lua
-      uses: luarocks/gh-actions-lua@master
+      uses: luarocks/gh-actions-lua@v11
       with:
         luaVersion: "${{ matrix.luaVersion }}"
 
     - name: Install LuaRocks
-      uses: luarocks/gh-actions-luarocks@v5
+      # TODO: Replace with https://github.com/luarocks/gh-actions-luarocks after v6+
+      uses: ColinKennedy/gh-actions-luarocks@v1.0.0
+
+    - name: Print Versions
+      run: |
+        luarocks --version
 
     # We need this hack until a better solution is available.
     #
