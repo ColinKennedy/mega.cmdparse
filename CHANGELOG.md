@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.5](https://github.com/ColinKennedy/mega.cmdparse/compare/v1.0.4...v1.0.5) (2025-08-17)
+
+
+### Bug Fixes
+
+* **validation:** check if default and required=true are defined ([#20](https://github.com/ColinKennedy/mega.cmdparse/issues/20)) ([f09ffef](https://github.com/ColinKennedy/mega.cmdparse/commit/f09ffef56ea0fb86618bdabe3c41562ff7fdbd0e))
+
 ## [1.0.4](https://github.com/ColinKennedy/mega.cmdparse/compare/v1.0.3...v1.0.4) (2025-01-12)
 
 
