@@ -803,7 +803,7 @@ Options:
     end)
 
     it('works with the "Nested Subparsers" example', function()
-        local parser = top_cmdparse.ParameterParser.new({ name = _COMMAND_NAME, help = "Nested Subparsers" })
+        local parser = cmdparse.ParameterParser.new({ name = _COMMAND_NAME, help = "Nested Subparsers" })
         local top_subparsers = parser:add_subparsers({ destination = "commands" })
         local view = top_subparsers:add_parser({ name = "view", help = "View some data." })
         local view_subparsers = view:add_subparsers({ destination = "view_commands" })
