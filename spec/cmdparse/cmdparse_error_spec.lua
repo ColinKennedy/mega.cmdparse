@@ -838,6 +838,21 @@ Options:
         assert.same({ "apple" }, mock_vim.get_prints())
     end)
 
+    it('works with the "Stop parsing on when a REMAINDER token is found" example', function()
+        local parser = top_cmdparse.ParameterParser.new({ help = "Test" })
+        parser:add_parameter({ name = "paths", nargs = "*", help = "Some paths on-disk or something." })
+        parser:add_parameter({ name = "remainder", nargs = top_cmdparse.REMAINDER, help = "Etc." })
+
+        assert.same(
+            { paths = { "something", "blah", "here" }, remainder = "" },
+            parser:parse_arguments("something blah here")
+        )
+        assert.same(
+            { paths = { "something", "blah", "here" }, remainder = "more stuff" },
+            parser:parse_arguments("something blah here -- more stuff")
+        )
+    end)
+
     it('works with the "Supports Required / Optional Arguments" example', function()
         local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Unicode Parameters." })
         parser:add_parameter({ name = "required_thing", help = "Test." })

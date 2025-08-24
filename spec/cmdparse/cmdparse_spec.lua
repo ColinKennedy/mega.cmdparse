@@ -1,5 +1,6 @@
 --- Make sure that `cmdparse` parses and auto-completes as expected.
 
+local argparse = require("mega.cmdparse._cli.argparse")
 local cmdparse = require("mega.cmdparse._cli.cmdparse")
 local configuration = require("mega.cmdparse._core.configuration")
 local constant = require("mega.cmdparse._cli.cmdparse.constant")
@@ -380,7 +381,7 @@ Options:
             )
         end)
 
-        it("shows even if there parsing errors", function()
+        it("shows even if there are parsing errors", function()
             local function _assert(parser, command, expected)
                 local success, result = pcall(function()
                     parser:parse_arguments(command)
@@ -1016,6 +1017,96 @@ describe("nargs", function()
 
         local namespace = parser:parse_arguments("foo bar fizz buzz")
         assert.same({ items = { { "foo", "bar", "fizz", "buzz" } } }, namespace)
+    end)
+end)
+
+describe("remainder", function()
+    describe("exceptions", function()
+        it("errors if you define 2+ remainder parameters", function()
+            local parser = cmdparse.ParameterParser.new({ help = "Test" })
+            parser:add_parameter({ name = "remainder1", nargs = argparse.REMAINDER, help = "Etc." })
+
+            local success, message = pcall(function()
+                parser:add_parameter({ name = "remainder2", nargs = argparse.REMAINDER, help = "Etc." })
+            end)
+
+            assert.is_false(success)
+            assert.equal('Remainder parameter "remainder1" is already defined.', message)
+        end)
+    end)
+
+    describe("parse", function()
+        it("works as a required parameter", function()
+            local parser = cmdparse.ParameterParser.new({ help = "Test" })
+            parser:add_parameter({ name = "foo", help = "Some position." })
+            parser:add_parameter({ name = "--bar", help = "Some named-value flag." })
+            parser:add_parameter({ name = "remainder", nargs = argparse.REMAINDER, required = true, help = "Etc." })
+
+            local success, message = pcall(function()
+                parser:parse_arguments("something --bar here")
+            end)
+
+            assert.is_false(success)
+            assert.equal('Parameter "remainder" must be defined.', message)
+
+            local namespace = parser:parse_arguments("something --bar here -- stuff")
+            assert.equal("stuff", namespace.remainder)
+        end)
+
+        it("works with a custom remainder", function()
+            local original = argparse.REMAINDER
+            argparse.REMAINDER = "z|z"
+
+            local parser = cmdparse.ParameterParser.new({ help = "Test" })
+            parser:add_parameter({ name = "foo", help = "Some position." })
+            parser:add_parameter({ name = "--bar", help = "Some named-value flag." })
+            parser:add_parameter({ name = "remainder", nargs = argparse.REMAINDER, help = "Etc." })
+
+            local namespace = parser:parse_arguments("something --bar here z|z")
+            assert.equal("", namespace.remainder)
+            namespace = parser:parse_arguments("something --bar here z|z ")
+            assert.equal("", namespace.remainder)
+
+            argparse.REMAINDER = original
+        end)
+
+        it("works with a nargs=* arguments", function()
+            local parser = cmdparse.ParameterParser.new({ help = "Test" })
+            parser:add_parameter({ name = "foo", nargs = "*", help = "Some position." })
+            parser:add_parameter({ name = "remainder", nargs = argparse.REMAINDER, help = "Etc." })
+
+            local namespace = parser:parse_arguments("something blah here")
+            assert.same({ "something", "blah", "here" }, namespace.foo)
+            assert.equal("", namespace.remainder)
+            namespace = parser:parse_arguments("something blah here -- more stuff")
+            assert.same({ "something", "blah", "here" }, namespace.foo)
+            assert.equal("more stuff", namespace.remainder)
+        end)
+
+        it("works with a non-empty --", function()
+            local parser = cmdparse.ParameterParser.new({ help = "Test" })
+            parser:add_parameter({ name = "foo", help = "Some position." })
+            parser:add_parameter({ name = "--bar", help = "Some named-value flag." })
+            parser:add_parameter({ name = "remainder", nargs = argparse.REMAINDER, help = "Etc." })
+
+            local namespace =
+                parser:parse_arguments("something --bar here -- this is not parsed --even --if --it looks --like args")
+            assert.equal("this is not parsed --even --if --it looks --like args", namespace.remainder)
+        end)
+    end)
+
+    describe("get_completion", function()
+        it("works with a empty and non-empty", function()
+            local parser = _make_simple_parser()
+            parser:add_parameter({ name = "remainder", nargs = argparse.REMAINDER, help = "Last arguments" })
+
+            assert.same({ "lowercase" }, parser:get_completion("say phrase --style low"))
+            assert.same({ "--repeat=" }, parser:get_completion("say phrase --style lowercase --r"))
+            assert.same({}, parser:get_completion("say phrase --style lowercase --"))
+            assert.same({}, parser:get_completion("say phrase --style lowercase -- "))
+            assert.same({}, parser:get_completion("say phrase --style lowercase -- blah"))
+            assert.same({}, parser:get_completion("say phrase --style lowercase -- --repea"))
+        end)
     end)
 end)
 

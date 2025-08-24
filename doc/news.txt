@@ -1,12 +1,12 @@
 *mega.cmdparse-news.txt*
 
-Notable changes since mega.cmdparse 1.0
+Notable changes since mega.cmdparse 1.1
 
 
 ===============================================================================
 NEW FEATURES                                     *mega.cmdparse-new-features*
 
-- Added support for visual mode!
+- Added "remainder" support. Search "REMAINDER" in the README.md for details
 
 
 ===============================================================================
