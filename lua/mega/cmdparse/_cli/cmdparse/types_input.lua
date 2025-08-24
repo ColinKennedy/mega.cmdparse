@@ -1,5 +1,6 @@
 --- Functions that fill-in missing values, validate values, etc for cmdparse types.
 
+local argparse = require("mega.cmdparse._cli.argparse")
 local constant = require("mega.cmdparse._cli.cmdparse.constant")
 local text_parse = require("mega.cmdparse._cli.cmdparse.text_parse")
 local texter = require("mega.cmdparse._core.texter")
@@ -169,6 +170,10 @@ function M.expand_parameter_options(options, is_position)
     _expand_type_options(options)
     M.expand_choices_options(options)
 
+    if options.nargs == argparse.REMAINDER and options.required == nil then
+        options.required = false
+    end
+
     if options.required == nil then
         if is_position then
             options.required = options.count ~= constant.Counter.zero_or_more
@@ -186,11 +191,7 @@ function M.expand_parameter_options(options, is_position)
     end
 
     if options.required == nil then
-        if is_position then
-            options.required = true
-        else
-            options.required = false
-        end
+        options.required = is_position
     end
 end
 

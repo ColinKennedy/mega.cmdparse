@@ -15,6 +15,8 @@ M.ArgumentType = {
     position = "__position",
 }
 
+M.REMAINDER = "--"
+
 ---@class argparse.BaseArgument
 ---    A base class to inherit from.
 ---@field argument_type argparse.ArgumentType

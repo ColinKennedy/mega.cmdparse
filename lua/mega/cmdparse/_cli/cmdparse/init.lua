@@ -2324,6 +2324,18 @@ function M.ParameterParser:_reset_used()
     end
 end
 
+--- Check if `nargs=argparse.REMAINDER` is already defined.
+function M.ParameterParser:_validate_no_remainder_parameter()
+    for parameter in tabler.chain(self:get_flag_parameters(), self:get_position_parameters()) do
+        if parameter:get_nargs() == argparse.REMAINDER then
+            error(string.format('Remainder parameter "%s" is already defined.', parameter.names[1]), 0)
+
+            return false
+        end
+    end
+end
+
+
 ---@return boolean # If all required parameters of this instance have values.
 function M.ParameterParser:is_satisfied()
     for parameter in tabler.chain(self:get_flag_parameters(), self:get_position_parameters()) do
@@ -2496,6 +2508,10 @@ end
 ---    The created `cmdparse.Parameter` instance.
 ---
 function M.ParameterParser:add_parameter(options)
+    if options.nargs == argparse.REMAINDER then
+        self:_validate_no_remainder_parameter()
+    end
+
     types_input.expand_parameter_names(options)
     local is_position = text_parse.is_position_name(options.names[1])
     types_input.expand_parameter_options(options, is_position)
@@ -2550,7 +2566,7 @@ function M.ParameterParser:parse_arguments(data)
         return result
     end
 
-    error(result, 0)
+    error(string.format('Failed to parse arguments. Error: "%s".', result), 0)
 end
 
 --- Whenever this parser is visited add all of these values to the resulting namespace.
