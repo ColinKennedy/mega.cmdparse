@@ -2246,6 +2246,8 @@ function M.ParameterParser:_parse_arguments(data, namespace)
         end
     end
 
+    namespace = vim.tbl_deep_extend("force", namespace, self:_parse_remainder(data.remainder.value) or {})
+
     if not namespace.execute then
         -- IMPORTANT: This is a bit of a hack to get --help to work when a user
         -- forgets to include all arguments. It's not technically correct for
@@ -2256,6 +2258,19 @@ function M.ParameterParser:_parse_arguments(data, namespace)
     end
 
     return namespace
+end
+
+--- Assign the remainder `text` if a parameter matches.
+---
+---@param text string Some non-empty remainder text.
+---@return table<string, string>? # The parameter to assign the remainder to + the `text`.
+---
+function M.ParameterParser:_parse_remainder(text)
+    for _, parameter in ipairs(self:get_position_parameters()) do
+        if parameter:get_nargs() == argparse.REMAINDER then
+            return { [parameter:get_nice_name()] = text }
+        end
+    end
 end
 
 --- Tell the user how to solve the unparseable `argument`
@@ -2326,7 +2341,7 @@ end
 
 --- Check if `nargs=argparse.REMAINDER` is already defined.
 function M.ParameterParser:_validate_no_remainder_parameter()
-    for parameter in tabler.chain(self:get_flag_parameters(), self:get_position_parameters()) do
+    for _, parameter in ipairs(self:get_position_parameters()) do
         if parameter:get_nargs() == argparse.REMAINDER then
             error(string.format('Remainder parameter "%s" is already defined.', parameter.names[1]), 0)
 

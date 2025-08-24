@@ -1036,6 +1036,24 @@ describe("remainder", function()
     end)
 
     describe("parse", function()
+        it("works as a required parameter", function()
+            local parser = cmdparse.ParameterParser.new({ help = "Test" })
+            parser:add_parameter({name = "foo", help = "Some position."})
+            parser:add_parameter({name = "--bar", help = "Some named-value flag."})
+            parser:add_parameter({name = "remainder", nargs=argparse.REMAINDER, required=true, help="Etc."})
+
+            local namespace = parser:parse_arguments("something --bar here --")
+            assert.equal("", namespace.remainder)
+            local namespace = parser:parse_arguments("something --bar here -- ")
+            assert.equal("", namespace.remainder)
+            local success, message = pcall(function()
+                parser:parse_arguments("something --bar here -- ")
+            end)
+
+            assert.is_false(success)
+            assert.equal("ASDASDADS", message)
+        end)
+
         it("works with a custom remainder", function()
             local original = argparse.REMAINDER
             argparse.REMAINDER = "z|z"
@@ -1059,6 +1077,8 @@ describe("remainder", function()
             parser:add_parameter({name = "--bar", help = "Some named-value flag."})
             parser:add_parameter({name = "remainder", nargs=argparse.REMAINDER, help="Etc."})
 
+            local namespace = parser:parse_arguments("something --bar here")
+            assert.equal("", namespace.remainder)
             local namespace = parser:parse_arguments("something --bar here --")
             assert.equal("", namespace.remainder)
             local namespace = parser:parse_arguments("something --bar here -- ")

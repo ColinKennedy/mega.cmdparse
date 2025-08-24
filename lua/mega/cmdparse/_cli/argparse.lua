@@ -204,6 +204,23 @@ function M.parse_arguments(text)
         state = _State.argument_start
     end
 
+    local function _is_remainder(index)
+        for logical_index=1,#M.REMAINDER do
+            local found = text:sub(index, index)
+            local expected = M.REMAINDER:sub(logical_index, logical_index)
+
+            if expected ~= found then
+                return false
+            end
+
+            index = index + 1
+        end
+
+        local suffix = text:sub(index, index)
+
+        return _is_whitespace(suffix) or suffix == ""
+    end
+
     while physical_index <= #text do
         local character = text:sub(physical_index, physical_index)
         remainder.value = remainder.value .. character
@@ -220,10 +237,14 @@ function M.parse_arguments(text)
             start_index = logical_index
 
             if is_alpha_numeric(character) then
-                -- NOTE: We know we've encounted some -f` or `--foo` or
-                -- `--foo=bar` but we aren't sure which it is yet.
-                --
-                if _is_prefix(character) then
+                if _is_remainder(physical_index) then
+                    remainder.value = text:sub(physical_index + #M.REMAINDER + 1, #text)
+
+                    break
+                elseif _is_prefix(character) then
+                    -- NOTE: We know we've encounted some -f` or `--foo` or
+                    -- `--foo=bar` but we aren't sure which it is yet.
+                    --
                     local next_character = peek(physical_index)
 
                     if _is_prefix(next_character) and next_character == character then
