@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0](https://github.com/ColinKennedy/mega.cmdparse/compare/v1.0.4...v1.1.0) (2025-08-29)
+
+
+### Features
+
+* **command:** added visual mode support ([#23](https://github.com/ColinKennedy/mega.cmdparse/issues/23)) ([ea0a029](https://github.com/ColinKennedy/mega.cmdparse/commit/ea0a029a6e8ef7fcc4fffd8b19899d624d9a6e32))
+
+
+### Bug Fixes
+
+* **validation:** check if default and required=true are defined ([#20](https://github.com/ColinKennedy/mega.cmdparse/issues/20)) ([f09ffef](https://github.com/ColinKennedy/mega.cmdparse/commit/f09ffef56ea0fb86618bdabe3c41562ff7fdbd0e))
+
 ## [1.0.4](https://github.com/ColinKennedy/mega.cmdparse/compare/v1.0.3...v1.0.4) (2025-01-12)
 
 
