@@ -28,6 +28,7 @@ describe("run", function()
             },
         })
 
+        ---@diagnostic disable-next-line: missing-fields
         triager({ fargs = { "some_subcommand" }, args = "some_subcommand more stuff" })
 
         assert.same({

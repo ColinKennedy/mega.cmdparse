@@ -16,19 +16,23 @@ M.ParameterParser = {}
 ---
 ---@param parser mega.cmdparse.ParserCreator
 ---     The top-level command to define.
+---@param name string?
+---     The name of the Vim command to define. Important: Always start with
+---     a capital letter (this is a Vim convention). e.g. `"MyCommand"`.
+---@param options vim.api.keyset.user_command?
+---     Extra customizations to pass to your command.
+---     See `:help nvim_create_user_command()` for details.
 ---
-function M.create_user_command(parser, name)
+function M.create_user_command(parser, name, options)
+    ---@type mega.cmdparse.ParserCreator
+    local caller
+
     if type(parser) == "function" then
         if not name then
             error(string.format("A parser function was given but no parser name was given."), 0)
         end
 
-        local caller = parser
-
-        vim.api.nvim_create_user_command(name, M.make_parser_triager(caller), {
-            nargs = "*",
-            complete = M.make_parser_completer(caller),
-        })
+        caller = parser
     else
         name = name or parser.name
 
@@ -36,15 +40,17 @@ function M.create_user_command(parser, name)
             error(string.format('Parser "%s" must have a name.', vim.inspect(parser, { depth = 1 })), 0)
         end
 
-        local caller = function()
+        caller = function()
             return parser
         end
-
-        vim.api.nvim_create_user_command(name, M.make_parser_triager(caller), {
-            nargs = "*",
-            complete = M.make_parser_completer(caller),
-        })
     end
+
+    options = vim.tbl_deep_extend("force", {
+        nargs = "*",
+        complete = M.make_parser_completer(caller),
+    }, options or {})
+
+    vim.api.nvim_create_user_command(name, M.make_parser_triager(caller), options)
 end
 
 --- Make a function that can auto-complete based on the parser of `parser_creator`.
@@ -65,7 +71,7 @@ end
 ---
 ---@param parser_creator mega.cmdparse.ParserCreator
 ---    A function that creates the decision tree that parses text.
----@return fun(opts: table): nil
+---@return fun(options: vim.api.keyset.user_command): nil
 ---    A function that will parse the user's arguments.
 ---
 function M.make_parser_triager(parser_creator)

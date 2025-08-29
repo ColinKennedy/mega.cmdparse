@@ -15,6 +15,8 @@ local M = {}
 ---    The user's raw input, split into tokens.
 ---@field namespace mega.cmdparse.Namespace
 ---    The collected results from comparing `input` to our cmdparse tree.
+---@field options vim.api.keyset.create_user_command.command_args
+---    Raw Vim-provided data. See `:help nvim_create_user_command()` for details.
 
 ---@class mega.cmdparse.CompleteData
 ---    The data that gets passed when `cmdparse.Subcommand.complete` is called.
@@ -152,10 +154,14 @@ end
 
 --- Run `parser` and pass it the user's raw input `text`.
 ---
----@param parser mega.cmdparse.ParameterParser The decision tree that parses and runs `text`.
----@param text string The (unparsed) text that user provides from COMMAND mode.
+---@param parser mega.cmdparse.ParameterParser
+---    The decision tree that parses and runs `text`.
+---@param text string
+---    The (unparsed) text that user provides from COMMAND mode.
+---@param options vim.api.keyset.create_user_command.command_args
+---    Raw Vim-provided data. See `:help nvim_create_user_command()` for details.
 ---
-local function _run_subcommand(parser, text)
+local function _run_subcommand(parser, text, options)
     local argparse = require("mega.cmdparse._cli.argparse")
 
     local arguments = argparse.parse_arguments(text)
@@ -164,7 +170,7 @@ local function _run_subcommand(parser, text)
     local execute = namespace.execute
 
     if execute then
-        execute({ input = arguments, namespace = namespace })
+        execute({ input = arguments, namespace = namespace, options = options })
 
         return
     end
@@ -248,7 +254,7 @@ end
 ---
 ---@param parser_creator mega.cmdparse.ParserCreator
 ---    A function that creates the decision tree that parses text.
----@return fun(opts: table): nil
+---@return fun(options: vim.api.keyset.user_command): nil
 ---    A function that will parse the user's arguments.
 ---
 function M.make_parser_triager(parser_creator)
@@ -258,10 +264,10 @@ function M.make_parser_triager(parser_creator)
         end
     end
 
-    local function runner(opts)
+    local function runner(options)
         local argparse = require("mega.cmdparse._cli.argparse")
 
-        local text = opts.args
+        local text = options.args
         local arguments = argparse.parse_arguments(text)
         local parser = parser_creator()
         local success
@@ -282,7 +288,7 @@ function M.make_parser_triager(parser_creator)
         local execute = result.execute
 
         if execute then
-            execute({ input = arguments, namespace = result })
+            execute({ input = arguments, namespace = result, options = options })
 
             return
         end
@@ -334,21 +340,21 @@ end
 ---
 ---@param subcommands mega.cmdparse.Subcommands
 ---    Each subcommand to register.
----@return fun(opts: argparse.SubcommandRunnerOptions): nil
+---@return fun(options: vim.api.keyset.create_user_command.command_args): nil
 ---    A function that will parse the user's arguments.
 ---
 function M.make_subcommand_triager(subcommands)
     --- Check for a subcommand and, if found, call its `run` caller field.
     ---
     ---
-    ---@param opts argparse.SubcommandRunnerOptions The parsed user inputs.
+    ---@param options vim.api.keyset.create_user_command.command_args The parsed user inputs.
     ---
-    local function _runner(opts)
+    local function _runner(options)
         local configuration = require("mega.cmdparse._core.configuration")
         local argparse = require("mega.cmdparse._cli.argparse")
         configuration.initialize_data_if_needed()
 
-        local subcommand_key = opts.fargs[1]
+        local subcommand_key = options.fargs[1]
         local subcommand = subcommands[subcommand_key]
 
         if not subcommand then
@@ -357,7 +363,7 @@ function M.make_subcommand_triager(subcommands)
             return
         end
 
-        local stripped_text = _strip_prefix(subcommand_key, opts.args)
+        local stripped_text = _strip_prefix(subcommand_key, options.args)
 
         if type(subcommand) == "function" then
             local parser = subcommand()
@@ -371,20 +377,20 @@ function M.make_subcommand_triager(subcommands)
                 return
             end
 
-            _run_subcommand(parser, stripped_text)
+            _run_subcommand(parser, stripped_text, options)
 
             return
         end
 
         if subcommand.parser then
             local parser = subcommand.parser()
-            _run_subcommand(parser, stripped_text)
+            _run_subcommand(parser, stripped_text, options)
 
             return
         end
 
         if subcommand.run then
-            subcommand.run(vim.tbl_deep_extend("keep", { input = argparse.parse_arguments(stripped_text) }, opts))
+            subcommand.run(vim.tbl_deep_extend("keep", { input = argparse.parse_arguments(stripped_text) }, options))
 
             return
         end
@@ -395,16 +401,16 @@ function M.make_subcommand_triager(subcommands)
     --- Check for a subcommand and, if found, call its `run` caller field.
     ---
     ---
-    ---@param opts argparse.SubcommandRunnerOptions The parsed user options.
+    ---@param options vim.api.keyset.create_user_command.command_args The parsed user options.
     ---
-    local function runner(opts)
+    local function runner(options)
         local configuration = require("mega.cmdparse._core.configuration")
         configuration.initialize_data_if_needed()
 
         local help_message = require("mega.cmdparse._cli.cmdparse.help_message")
 
         local success, result = pcall(function()
-            _runner(opts)
+            _runner(options)
         end)
 
         if not success then

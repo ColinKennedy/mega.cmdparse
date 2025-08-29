@@ -85,6 +85,26 @@ cmdparse.create_user_command(parser)
 Run: `:Test`
 </details>
 
+### Vim Visual Mode
+<details>
+<summary>Print the selected lines</summary>
+
+```lua
+local cmdparse = require("mega.cmdparse")
+
+local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Test visual selection." })
+parser:set_execute(
+    function(data)
+        print(string.format('Start: "%s"', data.options.line1))
+        print(string.format('End: "%s"', data.options.line2))
+    end
+)
+cmdparse.create_user_command(parser)
+```
+
+- Run: `'<,'>Test`
+</details>
+
 ### Automated Value Type Conversions
 <details>
 <summary>Automated value type conversions</summary>
