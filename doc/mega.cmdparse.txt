@@ -1,4 +1,4 @@
-*mega.cmdparse.txt*       For Neovim >= 0.8.0      Last change: 2025 August 17
+*mega.cmdparse.txt*       For Neovim >= 0.8.0      Last change: 2025 August 29
 
 ==============================================================================
 Table of Contents                            *mega.cmdparse-table-of-contents*
@@ -120,6 +120,26 @@ Hello, World! Parser ~
 <
 
 Run: `:Test`
+VIM VISUAL MODE ~
+
+Print the selected lines ~
+
+>lua
+    local cmdparse = require("mega.cmdparse")
+    
+    local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Test visual selection." })
+    parser:set_execute(
+        function(data)
+            print(string.format('Start: "%s"', data.options.line1))
+            print(string.format('End: "%s"', data.options.line2))
+        end
+    )
+    cmdparse.create_user_command(parser)
+<
+
+- Run: `'<,'>Test`
+
+
 AUTOMATED VALUE TYPE CONVERSIONS ~
 
 Automated value type conversions ~
