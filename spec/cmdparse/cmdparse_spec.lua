@@ -2,12 +2,15 @@
 
 local argparse = require("mega.cmdparse._cli.argparse")
 local cmdparse = require("mega.cmdparse._cli.cmdparse")
+local completion = require("mega.cmdparse.completion")
 local configuration = require("mega.cmdparse._core.configuration")
 local constant = require("mega.cmdparse._cli.cmdparse.constant")
+local pather = require("test_utilities.pather")
 local top_cmdparse = require("mega.cmdparse")
 
 local _COMMAND_NAME = "Test"
 local _DATA
+local _PATH_SEPARATOR = package.config:sub(1, 1) -- NOTE: "\" on Windows, "/" on Unix
 
 --- Save the user's current configuration (so we can modify & restore it later).
 local function _keep_configuration()
@@ -136,61 +139,167 @@ describe("action", function()
     end)
 end)
 
--- -- TODO: Add this later
--- describe("choices", function()
---     it("ensures there are no duplicate choices during a parse", function()
---         local function remove_value(array, value)
---             print("removing value from array")
---             print(value)
---             print(vim.inspect(array))
---
---             for index = #array, 1, -1 do
---                 if array[index] == value then
---                     table.remove(array, index)
---                 end
---             end
---         end
---
---         local parser = cmdparse.ParameterParser.new({ help = "Test" })
---         local values = { "1", "2", "3", "4", "5" }
---         parser:add_parameter({
---             "--items",
---             choices = function(data)
---                 print('DEBUGPRINT[5]: cmdparse_spec.lua:129: data=' .. vim.inspect(data))
---                 return values
---             end,
---             type = function(value)
---                 remove_value(values, value)
---             end,
---             count = "*",
---             help = "Test.",
---         })
---
---         assert.same({
---             "--items=1",
---             "--items=2",
---             "--items=3",
---             "--items=4",
---             "--items=5",
---         }, parser:get_completion("--items="))
---         assert.same({
---             "--items=2",
---             "--items=3",
---             "--items=4",
---             "--items=5",
---         }, parser:get_completion("--items=1 --items="))
---         assert.same({
---             "--items=2",
---             "--items=4",
---             "--items=5",
---         }, parser:get_completion("--items=1 --items=3 --items="))
---         assert.same({
---             "--items=2",
---             "--items=5",
---         }, parser:get_completion("--items=1 --items=3 --items=4 --items="))
---         assert.same({ "--items=5" }, parser:get_completion("--items=1 --items=3 --items=4 --items=2 --items="))
---     end)
--- end)
+describe("choices", function()
+    describe("path-related", function()
+        after_each(pather.delete_all_temporary_paths)
+
+        it("works with all paths", function()
+            local parser = cmdparse.ParameterParser.new({ help = "Match paths on-disk." })
+            parser:add_parameter({ name = "paths", choices = completion.path, nargs = "*", help = "Test." })
+
+            local directory = pather.make_temporary_directory()
+
+            local _join = function(name)
+                return vim.fs.joinpath(directory, name)
+            end
+
+            for _, name in ipairs({ "football", "foot", "foo", "ball", "ballot", "ballroom" }) do
+                vim.fn.writefile({}, _join(name))
+            end
+
+            vim.fn.mkdir(_join("footi"), "p")
+            vim.fn.mkdir(_join("balli"), "p")
+
+            assert.same(
+                { _join("ball"), _join("balli"), _join("ballot"), _join("ballroom") },
+                parser:get_completion(vim.fs.joinpath(directory, "bal"))
+            )
+
+            assert.same(
+                { _join("foo"), _join("foot"), _join("football"), _join("footi") },
+                parser:get_completion(vim.fs.joinpath(directory, "foo"))
+            )
+        end)
+
+        it("works with value ending with a slash", function()
+            local parser = cmdparse.ParameterParser.new({ help = "Match paths on-disk." })
+            parser:add_parameter({ name = "paths", choices = completion.directory, nargs = "*", help = "Test." })
+
+            local directory = pather.make_temporary_directory()
+
+            local _join = function(name)
+                return vim.fs.joinpath(directory, name) .. _PATH_SEPARATOR
+            end
+
+            for _, name in ipairs({ "football", "foot" }) do
+                vim.fn.mkdir(_join(name), "p")
+            end
+
+            assert.same({ _join("foot"), _join("football") }, parser:get_completion(directory .. _PATH_SEPARATOR))
+        end)
+
+        it("works with directory paths", function()
+            local parser = cmdparse.ParameterParser.new({ help = "Match paths on-disk." })
+            parser:add_parameter({ name = "paths", choices = completion.directory, nargs = "*", help = "Test." })
+
+            local directory = pather.make_temporary_directory()
+
+            local _join = function(name)
+                return vim.fs.joinpath(directory, name) .. _PATH_SEPARATOR
+            end
+
+            for _, name in ipairs({ "football", "foot", "foo", "ball", "ballot", "ballroom" }) do
+                vim.fn.mkdir(_join(name), "p")
+            end
+
+            vim.fn.writefile({}, vim.fs.joinpath(directory, "footi"))
+            vim.fn.writefile({}, vim.fs.joinpath(directory, "balli"))
+
+            assert.same(
+                { _join("ball"), _join("ballot"), _join("ballroom") },
+                parser:get_completion(vim.fs.joinpath(directory, "bal"))
+            )
+
+            assert.same(
+                { _join("foo"), _join("foot"), _join("football") },
+                parser:get_completion(vim.fs.joinpath(directory, "foo"))
+            )
+        end)
+
+        it("works with file paths", function()
+            local parser = cmdparse.ParameterParser.new({ help = "Match paths on-disk." })
+            parser:add_parameter({ name = "paths", choices = completion.file, nargs = "*", help = "Test." })
+
+            local directory = pather.make_temporary_directory()
+
+            local _join = function(name)
+                return vim.fs.joinpath(directory, name)
+            end
+
+            for _, name in ipairs({ "football", "foot", "foo", "ball", "ballot", "ballroom" }) do
+                vim.fn.writefile({}, _join(name))
+            end
+
+            vim.fn.mkdir(_join("footi"), "p")
+            vim.fn.mkdir(_join("balli"), "p")
+
+            assert.same(
+                { _join("ball"), _join("ballot"), _join("ballroom") },
+                parser:get_completion(vim.fs.joinpath(directory, "bal"))
+            )
+
+            assert.same(
+                { _join("foo"), _join("foot"), _join("football") },
+                parser:get_completion(vim.fs.joinpath(directory, "foo"))
+            )
+        end)
+    end)
+
+    -- TODO: Add this later
+    --     it("ensures there are no duplicate choices during a parse", function()
+    --         local function remove_value(array, value)
+    --             print("removing value from array")
+    --             print(value)
+    --             print(vim.inspect(array))
+    --
+    --             for index = #array, 1, -1 do
+    --                 if array[index] == value then
+    --                     table.remove(array, index)
+    --                 end
+    --             end
+    --         end
+    --
+    --         local parser = cmdparse.ParameterParser.new({ help = "Test" })
+    --         local values = { "1", "2", "3", "4", "5" }
+    --         parser:add_parameter({
+    --             "--items",
+    --             choices = function(data)
+    --                 print('DEBUGPRINT[5]: cmdparse_spec.lua:129: data=' .. vim.inspect(data))
+    --                 return values
+    --             end,
+    --             type = function(value)
+    --                 remove_value(values, value)
+    --             end,
+    --             count = "*",
+    --             help = "Test.",
+    --         })
+    --
+    --         assert.same({
+    --             "--items=1",
+    --             "--items=2",
+    --             "--items=3",
+    --             "--items=4",
+    --             "--items=5",
+    --         }, parser:get_completion("--items="))
+    --         assert.same({
+    --             "--items=2",
+    --             "--items=3",
+    --             "--items=4",
+    --             "--items=5",
+    --         }, parser:get_completion("--items=1 --items="))
+    --         assert.same({
+    --             "--items=2",
+    --             "--items=4",
+    --             "--items=5",
+    --         }, parser:get_completion("--items=1 --items=3 --items="))
+    --         assert.same({
+    --             "--items=2",
+    --             "--items=5",
+    --         }, parser:get_completion("--items=1 --items=3 --items=4 --items="))
+    --         assert.same({ "--items=5" }, parser:get_completion("--items=1 --items=3 --items=4 --items=2 --items="))
+    --     end)
+    -- end)
+end)
 
 describe("configuration", function()
     before_each(_keep_configuration)

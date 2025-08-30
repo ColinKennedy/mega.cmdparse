@@ -31,6 +31,7 @@ There's a lot of features. Whatever you need, `mega.cmdparse` has you covered!
 - [Automated value type conversions](#automated-value-type-conversions)
 - [Multi-argument-per-parameter](#multi-argument-per-parameter)
 - Multi-parameters
+- Includes file and directory auto-completion, out of the box
 - [Nested subparsers](#nested-subparsers)
 - Merged flag support. e.g. `-fbt` flags parse as `{f=true, b=true, t=true}`.
 - [Automated parameter validation. e.g. "foo parameter requires 2 arguments, got 1", etc.](#automated-parameter-validation)
@@ -246,6 +247,35 @@ parser:set_execute(function(data) print(data.namespace.thing) end)
 cmdparse.create_user_command(parser)
 ```
 Run: `:Test apply`
+</details>
+
+### File And Directory Auto-Complete
+<details>
+<summary>Path Auto-Complete</summary>
+
+```lua
+local cmdparse = require("mega.cmdparse")
+local completion = require("mega.cmdparse.completion")
+
+local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Auto-complete paths on-disk."})
+parser:add_parameter({"--directory", choices = completion.directories, help = "Find directories on-disk."})
+parser:add_parameter({"--file", choices = completion.files, help = "Find files on-disk."})
+parser:add_parameter({"--path", choices = completion.paths, help = "Find paths on-disk."})
+
+print(vim.inspect(parser:get_completion("--directory /some/prefix/foo_")))
+-- Result: { "/some/prefix/foo_directory1", "/some/prefix/foo_directory2" }
+print(vim.inspect(parser:get_completion("--file /some/prefix/foo_")))
+-- Result: { "/some/prefix/foo_file1", "/some/prefix/foo_file2", "/some/prefix/foo_file3" }
+print(vim.inspect(parser:get_completion("--path /some/prefix/foo_")))
+-- Result: {
+--     "/some/prefix/foo_directory1",
+--     "/some/prefix/foo_directory2",
+--     "/some/prefix/foo_file1",
+--     "/some/prefix/foo_file2",
+--     "/some/prefix/foo_file3"
+-- }
+```
+
 </details>
 
 ### Dynamic Parsers
