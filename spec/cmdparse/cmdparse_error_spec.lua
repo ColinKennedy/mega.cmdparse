@@ -798,6 +798,13 @@ Options:
         vim.fn.writefile({}, file_2)
         vim.fn.writefile({}, file_3)
 
+        assert.same({ directory_1, directory_2 }, parser:get_completion(string.format("--directory=%s/foo_", directory)))
+        assert.same({ file_1, file_2, file_3 }, parser:get_completion(string.format("--file=%s/foo_", directory)))
+        assert.same(
+            { directory_1, directory_2, file_1, file_2, file_3 },
+            parser:get_completion(string.format("--path=%s/foo_", directory))
+        )
+
         assert.same({ directory_1, directory_2 }, parser:get_completion(string.format("--directory %s/foo_", directory)))
         assert.same({ file_1, file_2, file_3 }, parser:get_completion(string.format("--file %s/foo_", directory)))
         assert.same(
