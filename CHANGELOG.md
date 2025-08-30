@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/ColinKennedy/mega.cmdparse/compare/v1.1.0...v1.2.0) (2025-08-30)
+
+
+### Features
+
+* **parser:** added cmdparse.REMAINDER support ([0128be3](https://github.com/ColinKennedy/mega.cmdparse/commit/0128be35044e56570e1658ff49b93f21f1b3af3d))
+
 ## [1.1.0](https://github.com/ColinKennedy/mega.cmdparse/compare/v1.0.4...v1.1.0) (2025-08-29)
 
 
