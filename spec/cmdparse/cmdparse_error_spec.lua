@@ -780,22 +780,30 @@ Options:
     end)
 
     it('works with the "File And Directory Auto-Complete" example', function()
-        local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Auto-complete paths on-disk."})
-        parser:add_parameter({"--directory", choices = completion.directories, help = "Find directories on-disk."})
-        parser:add_parameter({"--file", choices = completion.files, help = "Find files on-disk."})
-        parser:add_parameter({"--path", choices = completion.paths, help = "Find paths on-disk."})
+        local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Auto-complete paths on-disk." })
+        parser:add_parameter({ "--directory", choices = completion.directories, help = "Find directories on-disk." })
+        parser:add_parameter({ "--file", choices = completion.files, help = "Find files on-disk." })
+        parser:add_parameter({ "--path", choices = completion.paths, help = "Find paths on-disk." })
 
         local directory = pather.make_temporary_directory()
 
-        vim.fn.mkdir(vim.fs.joinpath(directory, "foo_directory1"), "p")
-        vim.fn.mkdir(vim.fs.joinpath(directory, "foo_directory2"), "p")
-        vim.fn.writefile({}, vim.fs.joinpath(directory, "foo_file1"))
-        vim.fn.writefile({}, vim.fs.joinpath(directory, "foo_file2"))
-        vim.fn.writefile({}, vim.fs.joinpath(directory, "foo_file3"))
+        local directory_1 = vim.fs.joinpath(directory, "foo_directory1")
+        local directory_2 = vim.fs.joinpath(directory, "foo_directory2")
+        local file_1 = vim.fs.joinpath(directory, "foo_file1")
+        local file_2 = vim.fs.joinpath(directory, "foo_file2")
+        local file_3 = vim.fs.joinpath(directory, "foo_file3")
+        vim.fn.mkdir(directory_1, "p")
+        vim.fn.mkdir(directory_2, "p")
+        vim.fn.writefile({}, file_1)
+        vim.fn.writefile({}, file_2)
+        vim.fn.writefile({}, file_3)
 
-        assert.same({directory_1, directory_2}, parser:get_completion("--directory /some/prefix/foo_"))
-        assert.same({file_1, file_2, file_3}, parser:get_completion("--file /some/prefix/foo_"))
-        assert.same({directory_1, directory_2, file_1, file_2, file_3}, parser:get_completion("--path /some/prefix/foo_"))
+        assert.same({ directory_1, directory_2 }, parser:get_completion(string.format("--directory %s/foo_", directory)))
+        assert.same({ file_1, file_2, file_3 }, parser:get_completion(string.format("--file %s/foo_", directory)))
+        assert.same(
+            { directory_1, directory_2, file_1, file_2, file_3 },
+            parser:get_completion(string.format("--path %s/foo_", directory))
+        )
 
         pather.delete_all_temporary_paths()
     end)
