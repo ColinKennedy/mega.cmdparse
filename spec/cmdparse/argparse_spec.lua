@@ -288,6 +288,39 @@ describe("quotes", function()
             remainder = { value = "" },
         }, argparse.parse_arguments("foo\\\\ -zzz"))
     end)
+
+    it("#escaped #windows path - 001 no spaces", function()
+        local path = "C:\\Users\\foo\\test.py"
+        assert.same({
+            arguments = { {
+                argument_type = "__position",
+                range = {
+                  end_column = 20,
+                  start_column = 1
+                },
+                value = path
+              } },
+            text = path,
+            remainder = { value = "" },
+        }, argparse.parse_arguments(path))
+    end)
+
+    it("#escaped #windows path - 002 with spaces", function()
+        local path = "C:\\Users\\foo\\test\\\\ with\\ spaces.py"
+        assert.same({
+            arguments = { {
+                argument_type = "__position",
+                range = {
+                  end_column = 35,
+                  start_column = 1
+                },
+                value = path,
+              },
+            },
+            text = path,
+            remainder = { value = "" },
+        }, argparse.parse_arguments(path))
+    end)
 end)
 
 describe("double-dash flags", function()
