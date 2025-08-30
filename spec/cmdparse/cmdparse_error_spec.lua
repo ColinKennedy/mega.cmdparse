@@ -1,10 +1,13 @@
 --- Make sure that `cmdparse` errors when it should.
 
 local cmdparse = require("mega.cmdparse._cli.cmdparse")
+local completion = require("mega.cmdparse.completion")
 local mock_vim = require("test_utilities.mock_vim")
+local pather = require("test_utilities.pather")
 local top_cmdparse = require("mega.cmdparse")
 
 local _COMMAND_NAME = "Test"
+local _PATH_SEPARATOR = package.config:sub(1, 1) -- NOTE: "\" on Windows, "/" on Unix
 
 describe("bad auto-complete input", function()
     it("errors if an incorrect flag is given", function()
@@ -775,6 +778,54 @@ Options:
     --help -h    Show this help message and exit.
 ]],
         }, mock_vim.get_vim_notify_messages())
+    end)
+
+    it('works with the "File And Directory Auto-Complete" example', function()
+        local parser = cmdparse.ParameterParser.new({ name = "Test", help = "Auto-complete paths on-disk." })
+        parser:add_parameter({ "--directory", choices = completion.directory(), help = "Find directories on-disk." })
+        parser:add_parameter({ "--file", choices = completion.file(), help = "Find files on-disk." })
+        parser:add_parameter({ "--path", choices = completion.path(), help = "Find paths on-disk." })
+
+        local directory = pather.make_temporary_directory()
+
+        local directory_1 = vim.fs.joinpath(directory, "foo_directory1")
+        local directory_2 = vim.fs.joinpath(directory, "foo_directory2")
+        local file_1 = vim.fs.joinpath(directory, "foo_file1")
+        local file_2 = vim.fs.joinpath(directory, "foo_file2")
+        local file_3 = vim.fs.joinpath(directory, "foo_file3")
+        vim.fn.mkdir(directory_1, "p")
+        vim.fn.mkdir(directory_2, "p")
+        vim.fn.writefile({}, file_1)
+        vim.fn.writefile({}, file_2)
+        vim.fn.writefile({}, file_3)
+
+        assert.same({
+            "--directory=" .. directory_1 .. _PATH_SEPARATOR,
+            "--directory=" .. directory_2 .. _PATH_SEPARATOR,
+        }, parser:get_completion(string.format("--directory=%s/foo_", directory)))
+        assert.same(
+            { "--file=" .. file_1, "--file=" .. file_2, "--file=" .. file_3 },
+            parser:get_completion(string.format("--file=%s/foo_", directory))
+        )
+        assert.same({
+            "--path=" .. directory_1,
+            "--path=" .. directory_2,
+            "--path=" .. file_1,
+            "--path=" .. file_2,
+            "--path=" .. file_3,
+        }, parser:get_completion(string.format("--path=%s/foo_", directory)))
+
+        assert.same(
+            { directory_1 .. _PATH_SEPARATOR, directory_2 .. _PATH_SEPARATOR },
+            parser:get_completion(string.format("--directory %s/foo_", directory))
+        )
+        assert.same({ file_1, file_2, file_3 }, parser:get_completion(string.format("--file %s/foo_", directory)))
+        assert.same(
+            { directory_1, directory_2, file_1, file_2, file_3 },
+            parser:get_completion(string.format("--path %s/foo_", directory))
+        )
+
+        pather.delete_all_temporary_paths()
     end)
 
     it('works with the "Position, flag, and named arguments support" example', function()
