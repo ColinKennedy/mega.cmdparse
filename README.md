@@ -275,6 +275,31 @@ cmdparse.create_user_command(parser)
 Run: `:Test --thing=4`
 </details>
 
+### Remainder Values
+<details>
+<summary>Stop parsing on when a REMAINDER token is found</summary>
+
+Sometimes you may need a parser to stop parsing text mid-way, this can be done using
+`nargs=cmdparse.REMAINDER`. This inspired by Python argparse's functionality.
+
+```lua
+local cmdparse = require("mega.cmdparse")
+
+local parser = cmdparse.ParameterParser.new({ help = "Test" })
+parser:add_parameter({ name = "paths", nargs="*", help = "Some paths on-disk or something." })
+parser:add_parameter({ name = "remainder", nargs = cmdparse.REMAINDER, help = "Etc." })
+
+print(vim.inspect(parser:parse_arguments("something blah here")))
+-- Result: { paths = {"something", "blah", "here"}, remainder = "" }
+print(vim.inspect(parser:parse_arguments("something blah here -- more stuff")))
+-- Result: { paths = {"something", "blah", "here"}, remainder = "more stuff" }
+```
+
+This is most useful when your arguments need to go to 2+ separate parsers or some other
+special situation.
+
+</details>
+
 ### Dynamic Plug-ins
 <details>
 <summary>Dynamic Plug-ins</summary>

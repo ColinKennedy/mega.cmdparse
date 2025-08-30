@@ -25,7 +25,7 @@ local types_input = require("mega.cmdparse._cli.cmdparse.types_input")
 
 ---@alias mega.cmdparse.Namespace table<string, any> All parsed values.
 
----@alias mega.cmdparse.MultiNumber number | "*" | "+"
+---@alias mega.cmdparse.MultiNumber number | "*" | "+" | string
 ---    The number of elements needed to satisfy a parameter. * == 0-or-more.
 ---    + == 1-or-more. A number means "we need exactly this number of
 ---    elements".
@@ -2190,6 +2190,7 @@ function M.ParameterParser:_parse_arguments(data, namespace)
 
     namespace = namespace or {}
     _merge_namespaces(namespace, self._defaults, self:_get_default_namespace())
+    self:_handle_remainder(data, namespace)
 
     local flag_parameters = self:get_flag_parameters()
     local found = false
@@ -2235,7 +2236,17 @@ function M.ParameterParser:_parse_arguments(data, namespace)
             found, used_arguments = self:_handle_exact_flag_parameters(flag_parameters, arguments, namespace, contexts)
 
             if not found then
-                error(vim.fn.join(self:_get_issues(), "\n"), 0)
+                local issues = self:_get_issues()
+                ---@type string
+                local text
+
+                if vim.tbl_isempty(issues) then
+                    text = "<No issues could be automatically found>"
+                else
+                    text = vim.fn.join(issues, "\n")
+                end
+
+                error(text, 0)
             end
 
             index = index + used_arguments
@@ -2256,6 +2267,49 @@ function M.ParameterParser:_parse_arguments(data, namespace)
     end
 
     return namespace
+end
+
+--- Crop arguments and remainder text depending on various conditions.
+---
+---@param data argparse.Results Some arguments + (we assume) non-empty remainder text that may be modified.
+---@param namespace mega.cmdparse.Namespace The starting namespace that will be modified.
+---
+function M.ParameterParser:_handle_remainder(data, namespace)
+    ---@type mega.cmdparse.Parameter?
+    local remainder_parameter
+
+    for _, parameter in ipairs(self:get_position_parameters()) do
+        if parameter:get_nargs() == argparse.REMAINDER then
+            remainder_parameter = parameter
+
+            break
+        end
+    end
+
+    if not remainder_parameter then
+        -- NOTE: If the user didn't define a remainder parameter then there's nothing to do.
+        return
+    end
+
+    local text = data.remainder.value
+
+    if not remainder_parameter.required or text ~= "" then
+        remainder_parameter:increment_used()
+        text = text:gsub("%s*" .. argparse.REMAINDER .. "$", "")
+        text = text:gsub("^%s*$", "")
+        namespace[remainder_parameter:get_nice_name()] = text
+    end
+
+    for index, argument in ipairs(data.arguments) do
+        -- NOTE: Strip off all remaining arguments so we don't parse them
+        if argument.name == argparse.REMAINDER or argument.value == argparse.REMAINDER then
+            for index_to_remove = index, #data.arguments do
+                data.arguments[index_to_remove] = nil
+            end
+
+            break
+        end
+    end
 end
 
 --- Tell the user how to solve the unparseable `argument`
@@ -2320,6 +2374,17 @@ function M.ParameterParser:_reset_used()
 
         for _, subparser in ipairs(self._subparsers) do
             subparser.visited = false
+        end
+    end
+end
+
+--- Check if `nargs=argparse.REMAINDER` is already defined.
+function M.ParameterParser:_validate_no_remainder_parameter()
+    for _, parameter in ipairs(self:get_position_parameters()) do
+        if parameter:get_nargs() == argparse.REMAINDER then
+            error(string.format('Remainder parameter "%s" is already defined.', parameter.names[1]), 0)
+
+            return false
         end
     end
 end
@@ -2496,6 +2561,10 @@ end
 ---    The created `cmdparse.Parameter` instance.
 ---
 function M.ParameterParser:add_parameter(options)
+    if options.nargs == argparse.REMAINDER then
+        self:_validate_no_remainder_parameter()
+    end
+
     types_input.expand_parameter_names(options)
     local is_position = text_parse.is_position_name(options.names[1])
     types_input.expand_parameter_options(options, is_position)

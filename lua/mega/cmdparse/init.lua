@@ -4,8 +4,11 @@
 --- package must get a new **major** version.
 ---
 
+local argparse = require("mega.cmdparse._cli.argparse")
+
 local M = {}
 
+M.REMAINDER = argparse.REMAINDER
 M.ParameterParser = {}
 
 --- Create a Neovim command according to `parser`.
