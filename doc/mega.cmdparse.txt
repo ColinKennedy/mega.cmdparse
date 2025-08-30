@@ -1,4 +1,4 @@
-*mega.cmdparse.txt*       For Neovim >= 0.8.0      Last change: 2025 August 29
+*mega.cmdparse.txt*       For Neovim >= 0.8.0      Last change: 2025 August 30
 
 ==============================================================================
 Table of Contents                            *mega.cmdparse-table-of-contents*
@@ -303,6 +303,31 @@ Dynamic Auto-Complete Values ~
 <
 
 Run: `:Test --thing=4`
+REMAINDER VALUES ~
+
+Stop parsing on when a REMAINDER token is found ~
+
+Sometimes you may need a parser to stop parsing text mid-way, this can be done
+using `nargs=cmdparse.REMAINDER`. This inspired by Python argparse’s
+functionality.
+
+>lua
+    local cmdparse = require("mega.cmdparse")
+    
+    local parser = cmdparse.ParameterParser.new({ help = "Test" })
+    parser:add_parameter({ name = "paths", nargs="*", help = "Some paths on-disk or something." })
+    parser:add_parameter({ name = "remainder", nargs = cmdparse.REMAINDER, help = "Etc." })
+    
+    print(vim.inspect(parser:parse_arguments("something blah here")))
+    -- Result: { paths = {"something", "blah", "here"}, remainder = "" }
+    print(vim.inspect(parser:parse_arguments("something blah here -- more stuff")))
+    -- Result: { paths = {"something", "blah", "here"}, remainder = "more stuff" }
+<
+
+This is most useful when your arguments need to go to 2+ separate parsers or
+some other special situation.
+
+
 DYNAMIC PLUG-INS ~
 
 Dynamic Plug-ins ~
