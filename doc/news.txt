@@ -1,12 +1,12 @@
 *mega.cmdparse-news.txt*
 
-Notable changes since mega.cmdparse 1.1
+Notable changes since mega.cmdparse 1.2
 
 
 ===============================================================================
 NEW FEATURES                                     *mega.cmdparse-new-features*
 
-- Added "remainder" support. Search "REMAINDER" in the README.md for details
+- Added file and directory auto-completion functions
 
 
 ===============================================================================
