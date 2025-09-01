@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/ColinKennedy/mega.cmdparse/compare/v1.2.0...v1.2.1) (2025-09-01)
+
+
+### Bug Fixes
+
+* **parameter:** default=true now works with positional parameters ([#28](https://github.com/ColinKennedy/mega.cmdparse/issues/28)) ([7384047](https://github.com/ColinKennedy/mega.cmdparse/commit/7384047698f5ffde08df96dc9803196d281c4155))
+
 ## [1.2.0](https://github.com/ColinKennedy/mega.cmdparse/compare/v1.1.0...v1.2.0) (2025-08-30)
 
 
