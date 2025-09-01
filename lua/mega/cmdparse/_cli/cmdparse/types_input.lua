@@ -175,10 +175,10 @@ function M.expand_parameter_options(options, is_position)
     end
 
     if options.required == nil then
-        if is_position then
+        options.required = false
+
+        if is_position and not options.default then
             options.required = options.count ~= constant.Counter.zero_or_more
-        else
-            options.required = false
         end
     end
 

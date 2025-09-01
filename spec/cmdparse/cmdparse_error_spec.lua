@@ -677,12 +677,30 @@ describe("defaults", function()
         assert.is_true(vim.endswith(message, "cannot have a default and required=true at the same time. Please fix!"))
 
         success = pcall(function()
-            parser:add_parameter({ name = "bad", default = 8, required = false, help = "A bad parameter." })
+            parser:add_parameter({
+                name = "good_1",
+                default = 8,
+                required = false,
+                help = "A parameter that defines a default and a (redundant) required=false",
+            })
         end)
         assert.is_true(success)
 
         success = pcall(function()
-            parser:add_parameter({ name = "bad", required = true, help = "A bad parameter." })
+            parser:add_parameter({
+                name = "good_2",
+                default = 8,
+                help = "A parameter that is implicitly required=false.",
+            })
+        end)
+        assert.is_true(success)
+
+        success = pcall(function()
+            parser:add_parameter({
+                name = "good_3",
+                required = true,
+                help = "A position parameter with a (redundant) required=true",
+            })
         end)
         assert.is_true(success)
     end)
