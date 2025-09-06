@@ -234,7 +234,7 @@ function M.get_matching_partial_flag_text(prefix, flags, value, contexts, option
     return output
 end
 
---- Find all `options` that match `name`.
+--- Find all options of `parameters` that match `name`.
 ---
 --- By default a position option takes any argument / value. Some position parameters
 --- have specific, required choice(s) that this function means to match.
