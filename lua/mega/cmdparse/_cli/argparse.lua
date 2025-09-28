@@ -120,6 +120,11 @@ end
 ---    - `--buzz` is a multi-letter flag
 ---    - `--some="thing else" is a named argument whose value is "thing else"
 ---
+--- Backslashes, \, are also supported. This is the logic:
+---
+--- If a backslash is found within ""s or ''s, it's treated as a literal character.
+--- Otherwise a backslash is "consumed" and doesn't show up in the final parse.
+---
 ---@param text string
 ---    Some command to parse. e.g. `bar -f --buzz --some="thing else"`.
 ---@return argparse.Results

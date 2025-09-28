@@ -1,10 +1,72 @@
 --- Make sure the argument parser works as expected.
 
+---@class _ExcapePermutationCase
+---@field [1] string The user input.
+---@field [2] string[] The parsed tokens.
+
 local argparse = require("mega.cmdparse._cli.argparse")
+
+--- A quick "parse and get the parsed text back" function.
+---
+---@param text string Parse `text` into CLI tokens.
+---@return string[] # The found tokens.
+---
+local function _parse_argument_tokens(text)
+    ---@type string[]
+    local output = {}
+
+    for _, argument in ipairs(argparse.parse_arguments(text).arguments) do
+        if argument.name then
+            table.insert(output, argument.name)
+
+            if argument.value then
+                table.insert(output, argument.value)
+            end
+        else
+            table.insert(output, argument.value)
+        end
+    end
+
+    return output
+end
 
 describe("default", function()
     it("works even if #empty #simple", function()
         assert.same({ arguments = {}, text = "", remainder = { value = "" } }, argparse.parse_arguments(""))
+    end)
+end)
+
+describe("#escaped arguments", function()
+    it("works with all known permutatations", function()
+        ---@type _ExcapePermutationCase[]
+        local cases = {
+            -- NOTE: Basic position and named flag cases. With some quote-related cases.
+            {"foo", {"foo"}},
+            {"foo bar", {"foo", "bar"}},
+            {"'starting text' foo 'middle text' bar 'last text'", {"starting text", "foo", "middle text", "bar", "last text"}},
+            {'"starting text" foo "middle text" bar "last text"', {"starting text", "foo", "middle text", "bar", "last text"}},
+
+            {"-a foo -b bar -c", {"-a", "foo", "-b", "bar", "-c"}},
+            {"--aaa foo --b bar --ccccc", {"--aaa", "foo", "--b", "bar", "--ccccc"}},
+            {"--aaa=some foo --b=thing bar --ccccc=here", {"--aaa", "some", "foo", "--b", "thing", "bar", "--ccccc", "here"}},
+            {"--aaa='some quoted' foo --b='some thing' bar --ccccc='some here'", {"--aaa", "some quoted", "foo", "--b", "some thing", "bar", "--ccccc", "some here"}},
+
+
+            -- NOTE: Quote-related cases
+            -- {[[foo]], {[[foo]]}},
+            -- {[[foo\ ]], {[[foo\ ]]}},
+
+            -- {[[fizz "foo\ bar" buzz]], {"fizz", [[foo\ bar]], "buzz"}},  -- Retain the \ within ""s
+            -- {[[fizz "foo bar" buzz]], {"fizz", "foo bar", "buzz"}},  -- Concatenate within ""s
+            -- {[[fizz foo\ bar buzz]], {"fizz", "foo bar", "buzz"}},  -- Concatenate next WORD after \
+        }
+
+        for _, entry in ipairs(cases) do
+            local input = entry[1]
+            local expected = entry[2]
+
+            assert.same(expected, _parse_argument_tokens(input))
+        end
     end)
 end)
 
@@ -51,9 +113,9 @@ describe("positional arguments", function()
                     value = "foo ",
                 },
             },
-            text = "foo\\ ",
+            text = [[foo\ ]],
             remainder = { value = "" },
-        }, argparse.parse_arguments("foo\\ "))
+        }, argparse.parse_arguments([[foo\ ]]))
     end)
 
     it("#escaped #positional arguments 002", function()
@@ -65,9 +127,9 @@ describe("positional arguments", function()
                     value = "foo bar",
                 },
             },
-            text = "foo\\ bar",
+            text = [[foo\ bar]],
             remainder = { value = "" },
-        }, argparse.parse_arguments("foo\\ bar"))
+        }, argparse.parse_arguments([[foo\ bar]]))
     end)
 end)
 
@@ -189,9 +251,9 @@ describe("quotes", function()
                     range = { start_column = 1, end_column = 4 },
                 },
             },
-            text = "foo\\ ",
+            text = [[foo\ ]],
             remainder = { value = "" },
-        }, argparse.parse_arguments("foo\\ "))
+        }, argparse.parse_arguments([[foo\ ]]))
     end)
 
     it("#escaped spaces 002", function()
@@ -203,9 +265,9 @@ describe("quotes", function()
                     range = { start_column = 1, end_column = 7 },
                 },
             },
-            text = "foo\\ bar",
+            text = [[foo\ bar]],
             remainder = { value = "" },
-        }, argparse.parse_arguments("foo\\ bar"))
+        }, argparse.parse_arguments([[foo\ bar]]))
     end)
 
     it("#escaped #multiple backslashes - 001", function()
@@ -213,7 +275,7 @@ describe("quotes", function()
             arguments = {
                 {
                     argument_type = argparse.ArgumentType.position,
-                    value = "foo\\",
+                    value = [[foo\]],
                     range = { start_column = 1, end_column = 4 },
                 },
                 {
@@ -222,9 +284,9 @@ describe("quotes", function()
                     range = { start_column = 6, end_column = 8 },
                 },
             },
-            text = "foo\\\\ bar",
+            text = [[foo\\ bar]],
             remainder = { value = "" },
-        }, argparse.parse_arguments("foo\\\\ bar"))
+        }, argparse.parse_arguments([[foo\\ bar]]))
     end)
 
     it("#escaped #multiple backslashes - 002", function()
@@ -232,18 +294,18 @@ describe("quotes", function()
             arguments = {
                 {
                     argument_type = argparse.ArgumentType.position,
-                    value = "foo\\",
+                    value = [[foo\]],
                     range = { start_column = 1, end_column = 4 },
                 },
                 {
                     argument_type = argparse.ArgumentType.position,
-                    value = "b\\ar",
+                    value = [[b\ar]],
                     range = { start_column = 6, end_column = 9 },
                 },
             },
-            text = "foo\\\\ b\\\\ar",
+            text = [[foo\\ b\\ar]],
             remainder = { value = "" },
-        }, argparse.parse_arguments("foo\\\\ b\\\\ar"))
+        }, argparse.parse_arguments([[foo\\ b\\ar]]))
     end)
 
     it("#escaped #multiple backslashes - 003", function()
@@ -251,13 +313,13 @@ describe("quotes", function()
             arguments = {
                 {
                     argument_type = argparse.ArgumentType.position,
-                    value = "foo\\ bar",
+                    value = [[foo\ bar]],
                     range = { start_column = 1, end_column = 8 },
                 },
             },
-            text = "foo\\\\\\ bar",
+            text = [[foo\\\ bar]],
             remainder = { value = "" },
-        }, argparse.parse_arguments("foo\\\\\\ bar"))
+        }, argparse.parse_arguments([[foo\\\ bar]]))
     end)
 
     it("#escaped #multiple backslashes - 004", function()
@@ -265,7 +327,7 @@ describe("quotes", function()
             arguments = {
                 {
                     argument_type = argparse.ArgumentType.position,
-                    value = "foo\\",
+                    value = [[foo\]],
                     range = { start_column = 1, end_column = 4 },
                 },
                 {
@@ -284,13 +346,13 @@ describe("quotes", function()
                     range = { start_column = 8, end_column = 9 },
                 },
             },
-            text = "foo\\\\ -zzz",
+            text = [[foo\\ -zzz]],
             remainder = { value = "" },
-        }, argparse.parse_arguments("foo\\\\ -zzz"))
+        }, argparse.parse_arguments([[foo\\ -zzz]]))
     end)
 
     it("#escaped #windows path - 001 no spaces", function()
-        local path = "C:\\Users\\foo\\test.py"
+        local path = [[C:\Users\foo\test.py]]
         assert.same({
             arguments = { {
                 argument_type = "__position",
@@ -306,7 +368,7 @@ describe("quotes", function()
     end)
 
     it("#escaped #windows path - 002 with spaces", function()
-        local path = "C:\\Users\\foo\\test\\\\ with\\ spaces.py"
+        local path = [[C:\Users\foo\test\\ with\ spaces.py]]
         assert.same({
             arguments = { {
                 argument_type = "__position",
