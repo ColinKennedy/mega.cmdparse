@@ -431,6 +431,25 @@ Options:
             )
         end)
 
+        it("shows remainder at the end #ttt", function()
+            local parser = cmdparse.ParameterParser.new({ name = "top", help = "Test." })
+            parser:add_parameter({ "--items", help = "Thing." })
+            parser:add_parameter({ name = "remainder", nargs = argparse.REMAINDER, help = "Etc." })
+
+            assert.equal(
+                [[Usage: top [--items ITEMS] [--help] [-- REMAINDER]
+
+Positional Arguments:
+    REMAINDER    Etc.
+
+Options:
+    --items ITEMS    Thing.
+    --help -h    Show this help message and exit.
+]],
+                parser:get_full_help("")
+            )
+        end)
+
         it("works with a parser that has more than one choice for its name", function()
             local parser = cmdparse.ParameterParser.new({ help = "Test." })
             local subparsers = parser:add_subparsers({ destination = "commands", help = "Test." })

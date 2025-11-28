@@ -720,8 +720,15 @@ function _P.get_usage_summary(parser)
         end
     end
 
+    ---@type mega.cmdparse.Parameter[]
+    local remainder_parameters = {}
+
     for _, position in ipairs(parser:get_position_parameters()) do
-        table.insert(output, help_message.get_position_usage_help_text(position))
+        if position:get_nargs() == argparse.REMAINDER then
+            table.insert(remainder_parameters, position)
+        else
+            table.insert(output, help_message.get_position_usage_help_text(position))
+        end
     end
 
     for _, flag in ipairs(iterator_helper.sort_parameters(parser:get_flag_parameters({ hide_implicits = true }))) do
@@ -736,6 +743,11 @@ function _P.get_usage_summary(parser)
 
     for _, flag in ipairs(iterator_helper.sort_parameters(parser:get_implicit_flag_parameters())) do
         table.insert(output, string.format("[%s]", flag:get_raw_name()))
+    end
+
+    for _, position in ipairs(remainder_parameters) do
+        local label = string.format("[%s %s]", argparse.REMAINDER, help_message.get_position_usage_help_text(position))
+        table.insert(output, label)
     end
 
     return help_message.HELP_MESSAGE_PREFIX .. vim.fn.join(output, " ")
