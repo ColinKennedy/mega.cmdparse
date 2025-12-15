@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/ColinKennedy/mega.cmdparse/compare/v1.2.1...v1.2.2) (2025-11-28)
+
+
+### Bug Fixes
+
+* **help:** remainder parameters now print correctly ([#31](https://github.com/ColinKennedy/mega.cmdparse/issues/31)) ([09752e2](https://github.com/ColinKennedy/mega.cmdparse/commit/09752e22f42de245969418894c707174be2b3317))
+
 ## [1.2.1](https://github.com/ColinKennedy/mega.cmdparse/compare/v1.2.0...v1.2.1) (2025-09-01)
 
 
